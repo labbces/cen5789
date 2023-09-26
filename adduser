@@ -1,5 +1,7 @@
 sudo adduser --quiet cen5789
 sudo usermod -a -G sudo cen5789
+
+#logout and login as new user
 gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/FondoCENA.png
 
 sudo apt update
