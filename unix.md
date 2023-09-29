@@ -1,5 +1,5 @@
 # Introdução a programação de computadores aplicada a ciências biológicas - CEN0336 2020-20
-Tradução e modificação do material associado a [programmingforbiology.org](http://programmingforbiology.org), associado a disciplina ["CEN0336 - Introdução a Programação de Computadores Aplicada a Ciências Biológicas"](https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=CEN0336&codcur=11061&codhab=4)
+Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
 __Criador e Instrutor da versão em Português__
 Diego M. Riaño-Pachón
