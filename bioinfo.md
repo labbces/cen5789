@@ -48,15 +48,20 @@ Esses comandos mostram as primeirais ou ultimas 10 linhas do arquivo. O que voc�
 
 Repare na saída do comando 'head'. Está mostrando um registro de sequência no formato 'fasta'. Este formato é o mais simples para armazenar sequências, tanto de ácidos nucleicos quanto de proteínas. Sua estrutura é muito simples. Cada registro começa com uma linha que tem no seu início o sinal _>_ seguido de uma cadeia de caracteres de comprimento arbitrário que funciona como o identificador da sequência. Em seguida, nas linhas subsequentes, aparece a sequência em si, em quantas linhas forem necessárias.
 
-
 Pode usar o comando _grep_ para localizar todas as linhas que tem um padrão de texto específico, ou seja, uma cadeia de texto específica. Vamos identificar todas a linas que comecam com o sinal _>_
 
 ```
 grep ">" TAIR10_pep_20101214_updated.fasta
 ```
 
-São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 10 linas com o padrão de texto:
+São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas com o padrão de texto:
 
 ```
-grep ">" TAIR10_pep_20101214_updated.fasta | head -n 10
+grep ">" TAIR10_pep_20101214_updated.fasta | head -n 4
 ```
+
+### Formatos de sequências
+
+Existem diferentes formatos para sequências, geralmente em texto simples. Isso significa que elas podem ser visualizadas e editadas com qualquer editor de texto, como vi ou pico. Alguns desses formatos são mais comuns do que outros, e muitos programas de bioinformática aceitam vários dos formatos mais comuns ([Leonard et al., 2007](https://pubmed.ncbi.nlm.nih.gov/18428774/)).
+
+Todos os formatos de sequências têm uma característica (campo) em comum: um identificador para cada sequência, para que esta possa ser reconhecida de forma única.
