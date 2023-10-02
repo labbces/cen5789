@@ -4,9 +4,11 @@ Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://
 __Criador e Instrutor__
 Diego M. Riaño-Pachón
 
-# Bioinfo 1 - Operacoes básicas em Bioinformática
+#Bioinformática
 
-## Ferramentas do Unix úteis na bioinformática.
+## Bioinfo 1 - Operacoes básicas em Bioinformática
+
+### Ferramentas do Unix úteis na bioinformática.
 
 Após adquirir alguma familiaridade com os fundamentos do [sistema operacional Linux](unix.md), vamos explorar como alguns de seus comandos mais básicos podem ser extremamente úteis na área de bioinformática. Você entenderá por que o Linux é o sistema operacional de escolha na bioinformática.
 
@@ -18,7 +20,7 @@ mv ~/Downloads/file1.tar.gz ~/
 tar xvzf file1.tar.gz
 ```
 
-### Algumas operações básicas com arquivos.
+#### Algumas operações básicas com arquivos.
 
 Usando alguns comandos do UNIX, podemos obter informações sobre arquivos e o conteúdo deles de forma rápida e eficiente, muitas vezes sem a necessidade de abrir o arquivo, que pode ser muito grande, para obter essas informações.
 
@@ -60,13 +62,13 @@ São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas c
 grep ">" TAIR10_pep_20101214_updated.fasta | head -n 4
 ```
 
-### Formatos de sequências
+#### Formatos de sequências
 
 Existem diferentes formatos para sequências, geralmente em texto simples. Isso significa que elas podem ser visualizadas e editadas com qualquer editor de texto, como vi ou pico. Alguns desses formatos são mais comuns do que outros, e muitos programas de bioinformática aceitam vários dos formatos mais comuns ([Leonard et al., 2007](https://pubmed.ncbi.nlm.nih.gov/18428774/)).
 
 Todos os formatos de sequências têm uma característica (campo) em comum: um identificador para cada sequência, para que esta possa ser reconhecida de forma única.
 
-#### Fasta
+##### Fasta
 
 O formato mais simples é conhecido como Fasta. Nele, uma entrada, que é uma sequência, é dividida em duas partes: a linha de identificação, que deve começar com o símbolo ">" seguido imediatamente pelo identificador da sequência, que pode ser qualquer cadeia de caracteres sem espaços. As linhas imediatamente após o identificador correspondem à própria sequência.
 
@@ -83,7 +85,7 @@ HNYKAQEQPKQQSKEKVISSQKSECEWKMAEDSIKIPPSTNTVKQSWIVLENAQWNYLKNMIIGVLLFIS
 VISWIILVG
 ```
 
-#### GenBank
+##### GenBank
 
 O formato GenBank é utilizado pelo 'National Center for Biotechnology Information' ([NCBI](https://www.ncbi.nlm.nih.gov/)), o maior repositório de sequências de ácidos nucleicos e proteínas do mundo. O NCBI, juntamente com o [EMBL-EBI](https://www.ebi.ac.uk/) e o [DDBJ](https://www.ddbj.nig.ac.jp/), mantém conjuntamente o 'The International Nucleotide Sequence Database' ([Mizrachi, 2008](https://pubmed.ncbi.nlm.nih.gov/27896718/)).
 
@@ -156,7 +158,7 @@ ORIGIN
 //
 ```
 
-### Algumas operações básicas com sequências no formato Fasta
+#### Algumas operações básicas com sequências no formato Fasta
 
 Durante o restante desta seção e na próxima, usaremos apenas sequências no formato Fasta. Por favor, verifique se as sequências de _A. thaliana_ no arquivo 'TAIR10_pep_20101214_updated.fasta' estão neste formato. Você pode usar o comando `head nome_do_arquivo` ou o comando `less nome_do_arquivo` para fazer isso.
 
@@ -174,8 +176,8 @@ Em outras situações, é importante modificar o identificador de cada sequênci
 sed 's/>/>ATH_/' TAIR10_pep_20101214_updated.fasta > TAIR10_pep_20101214_updated.fasta
 ```
 
-# Bioinfo 2 - Montagem _de novo_ de genomas
+## Bioinfo 2 - Montagem _de novo_ de genomas
 
-# Bioinfo 3 - Gene Ortólogos
+## Bioinfo 3 - Gene Ortólogos
 
-# Bioinfo 4 - Transcriptômica 
+## Bioinfo 4 - Transcriptômica 
