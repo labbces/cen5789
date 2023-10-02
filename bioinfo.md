@@ -46,7 +46,7 @@ tail TAIR10_pep_20101214_updated.fasta
 ```
 Esses comandos mostram as primeirais ou ultimas 10 linhas do arquivo. O que você pode fazer para mostrar um número maior de linhas? Consulte a página de manual do  _head_ 
 
-Repare na saída do comando 'head'. Está mostrando um registro de sequência no formato 'fasta'. Este formato é o mais simples para armazenar sequências, tanto de ácidos nucleicos quanto de proteínas. Sua estrutura é muito simples. Cada registro começa com uma linha que tem no seu início o sinal _>_ seguido de uma cadeia de caracteres de comprimento arbitrário que funciona como o identificador da sequência. Em seguida, nas linhas subsequentes, aparece a sequência em si, em quantas linhas forem necessárias.
+Repare na saída do comando `head`. Está mostrando um registro de sequência no formato 'fasta'. Este formato é o mais simples para armazenar sequências, tanto de ácidos nucleicos quanto de proteínas. Sua estrutura é muito simples. Cada registro começa com uma linha que tem no seu início o sinal _>_ seguido de uma cadeia de caracteres de comprimento arbitrário que funciona como o identificador da sequência. Em seguida, nas linhas subsequentes, aparece a sequência em si, em quantas linhas forem necessárias.
 
 Pode usar o comando _grep_ para localizar todas as linhas que tem um padrão de texto específico, ou seja, uma cadeia de texto específica. Vamos identificar todas a linas que comecam com o sinal _>_
 
@@ -90,67 +90,92 @@ O formato GenBank é utilizado pelo 'National Center for Biotechnology Informati
 Uma entrada neste formato é composta por duas partes. A primeira parte abrange as posições de 1 a 10 e geralmente contém o nome do campo, como LOCUS, DEFINITION, ACCESSION ou SOURCE. A segunda parte de cada entrada contém informações correspondentes ao campo em questão. Cada entrada é finalizada com o símbolo '//'. Você pode encontrar mais informações sobre esse tipo de arquivo [aqui](http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html).
 
 ```
-LOCUS BAE98952 429 aa linear PLN 27-JUL-2006
-DEFINITION putative NAC domain protein [Arabidopsis thaliana].
-ACCESSION BAE98952
-VERSION BAE98952.1 GI:110742030
-DBSOURCE accession AK226863.1
-KEYWORDS .
-SOURCE Arabidopsis thaliana (thale cress)
-ORGANISM Arabidopsis thaliana
-Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
- Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons;
- rosids; eurosids II; Brassicales; Brassicaceae; Arabidopsis.
- REFERENCE 1
-AUTHORS Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
- Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
- Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
- Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
- Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
-TITLE Large-scale analysis of RIKEN Arabidopsis full-length (RAFL) cDNAs
-JOURNAL Unpublished
-REFERENCE 2 (residues 1 to 429)
-AUTHORS Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
- Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
- Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
- Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
- Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
-TITLE Direct Submission
-JOURNAL Submitted (26-JUL-2006) Motoaki Seki, RIKEN Plant Science Center;
- 1-7-22 Suehiro-cho, Tsurumi-ku, Yokohama, Kanagawa 230-0045, Japan
- (E-mail:mseki@psc.riken.jp, URL:http://rarge.gsc.riken.jp/,
- Tel:81-45-503-9625, Fax:81-45-503-9586)
-COMMENT An Arabidopsis full-length cDNA library was constructed essentially
- as reported previously (Seki et al. (1998) Plant J. 15:707-720;
- Seki et al. (2002) Science 296:141-145).
- This clone is in a modified pBluescript vector.
- Please visit our web site (http://rarge.gsc.riken.jp/) for further
- details.
-FEATURES Location/Qualifiers
- source 1..429
- /organism="Arabidopsis thaliana"
- /db_xref="taxon:3702"
- /chromosome="1"
- /clone="RAFL08-19-M04"
- /ecotype="Columbia"
- /note="common name: thale cress"
- Protein 1..429
- /product="putative NAC domain protein"
- Region 5..137
- /region_name="NAM"
- /note="No apical meristem (NAM) protein; pfam02365"
- /db_xref="CDD:111274"
- CDS 1..429
- /gene="At1g01010"
- /coded_by="AK226863.1:89..1378"
-ORIGIN
-1 medqvgfgfr pndeelvghy lrnkiegnts rdvevaisev nicsydpwnl rfqskyksrd
-61 amwyffsrre nnkgnrqsrt tvsgkwkltg esvevkdqwg fcsegfrgki ghkrvlafld
-121 grypdktksd wvihefhydl lpehqrtyvi crleykgdda dilsayaidp tpafvpnmts
-181 sagsvvnqsr qrnsgsynty seydsanhgq qfnensnimq qqplqgsfnp lleydfanhg
-241 gqwlsdyidl qqqvpylapy enesemiwkh vieenfeflv dertsmqqhy sdhrpkkpvs
-301 gvlpddssdt etgsmifedt ssstdsvgss depghtridd ipslniiepl hnykaqeqpk
-361 qqskekviss qksecewkma edsikippst ntvkqswivl enaqwnylkn miigvllfis
-421 viswiilvg
+LOCUS       BAE98952                 429 aa            linear   PLN 27-JUL-2006
+DEFINITION  putative NAC domain protein [Arabidopsis thaliana].
+ACCESSION   BAE98952
+VERSION     BAE98952.1
+DBSOURCE    accession AK226863.1
+KEYWORDS    .
+SOURCE      Arabidopsis thaliana (thale cress)
+  ORGANISM  Arabidopsis thaliana
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae;
+            Pentapetalae; rosids; malvids; Brassicales; Brassicaceae;
+            Camelineae; Arabidopsis.
+REFERENCE   1
+  AUTHORS   Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
+            Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
+            Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
+            Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
+            Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
+  TITLE     Large-scale analysis of RIKEN Arabidopsis full-length (RAFL) cDNAs
+  JOURNAL   Unpublished
+REFERENCE   2  (residues 1 to 429)
+  AUTHORS   Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
+            Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
+            Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
+            Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
+            Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (26-JUL-2006) Motoaki Seki, RIKEN Plant Science Center;
+            1-7-22 Suehiro-cho, Tsurumi-ku, Yokohama, Kanagawa 230-0045, Japan
+            (E-mail:mseki@psc.riken.jp, URL:http://rarge.gsc.riken.jp/,
+            Tel:81-45-503-9625, Fax:81-45-503-9586)
+COMMENT     An Arabidopsis full-length cDNA library was constructed essentially
+            as reported previously (Seki et al. (1998) Plant J. 15:707-720;
+            Seki et al. (2002) Science 296:141-145).
+            This clone is in a modified pBluescript vector.
+            Please visit our web site (http://rarge.gsc.riken.jp/) for further
+            details.
+FEATURES             Location/Qualifiers
+     source          1..429
+                     /organism="Arabidopsis thaliana"
+                     /db_xref="taxon:3702"
+                     /chromosome="1"
+                     /clone="RAFL08-19-M04"
+                     /ecotype="Columbia"
+                     /note="common name: thale cress"
+     Protein         1..429
+                     /product="putative NAC domain protein"
+     Region          5..137
+                     /region_name="NAM"
+                     /note="No apical meristem (NAM) protein; pfam02365"
+                     /db_xref="CDD:426740"
+     CDS             1..429
+                     /gene="At1g01010"
+                     /coded_by="AK226863.1:89..1378"
+ORIGIN      
+        1 medqvgfgfr pndeelvghy lrnkiegnts rdvevaisev nicsydpwnl rfqskyksrd
+       61 amwyffsrre nnkgnrqsrt tvsgkwkltg esvevkdqwg fcsegfrgki ghkrvlafld
+      121 grypdktksd wvihefhydl lpehqrtyvi crleykgdda dilsayaidp tpafvpnmts
+      181 sagsvvnqsr qrnsgsynty seydsanhgq qfnensnimq qqplqgsfnp lleydfanhg
+      241 gqwlsdyidl qqqvpylapy enesemiwkh vieenfeflv dertsmqqhy sdhrpkkpvs
+      301 gvlpddssdt etgsmifedt ssstdsvgss depghtridd ipslniiepl hnykaqeqpk
+      361 qqskekviss qksecewkma edsikippst ntvkqswivl enaqwnylkn miigvllfis
+      421 viswiilvg
 //
 ```
+
+### Algumas operações básicas com sequências no formato Fasta
+
+Durante o restante desta seção e na próxima, usaremos apenas sequências no formato Fasta. Por favor, verifique se as sequências de _A. thaliana_ no arquivo 'TAIR10_pep_20101214_updated.fasta' estão neste formato. Você pode usar o comando `head nome_do_arquivo` ou o comando `less nome_do_arquivo` para fazer isso.
+
+Você já teve que contar o número de sequências num arquivo ou alterar o identificador das sequências no formato Fasta? Se fossem apenas algumas sequências, isso poderia ser feito facilmente em qualquer editor de texto. No entanto, quando se trata de milhares de sequências, a opção de usar um editor de texto deixa de ser viável. Felizmente, alguns comandos do Unix nos permitem realizar essas tarefas simples de forma rápida.
+
+Como observado anteriormente, o comando `grep` pode nos ajudar a contar o número de sequências em um arquivo Fasta. O modificador `-c` conta o número de linhas que contêm um padrão específico em um arquivo, e podemos aproveitar o fato de que em um arquivo Fasta o símbolo _>_ aparece uma única vez para cada sequência. Para contar o número de sequencias armazenadas no arquivo pode usar o comando:
+
+```
+grep -c ">" TAIR10_pep_20101214_updated.fasta
+```
+
+Em outras situações, é importante modificar o identificador de cada sequência para incluir, por exemplo, uma abreviatura que represente o nome da espécie à qual a sequência pertence. Novamente, o Unix nos permite fazer essa alteração rapidamente usando o comando `sed`. Vamos adicionar a partícula 'ATH' a cada um dos identificadores do arquivo, aproveitando o fato de que à esquerda de cada identificador temos o símbolo '>'. Observe que os resultados desta operação estão sendo armazenados em um novo arquivo:
+
+```
+sed 's/>/>ATH_/' TAIR10_pep_20101214_updated.fasta > TAIR10_pep_20101214_updated.fasta
+```
+
+# Bioinfo 2 - Montagem _de novo_ de genomas
+
+# Bioinfo 3 - Gene Ortólogos
+
+# Bioinfo 4 - Transcriptômica 
