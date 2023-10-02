@@ -8,7 +8,6 @@ __Criadores do material na versão em Inglês__
 Simon Prochnik  
 Sofia Robb     
 
-# Unix
    * [Unix](unix.md/#unix)
       * [Unix 1](unix.md/#unix-1)
          * [Panorama de Unix](unix.md/#panorama-de-unix)
@@ -65,9 +64,14 @@ Sofia Robb
             * [Trazendo mudanças do repositório remoto para o local](unix.md/#trazendo-mudanças-do-repositório-remoto-para-o-local)
             * [Links para tópicos <em>levemente</em> menos básicos](unix.md/#links-para-tópicos-levemente-menos-básicos)
    * [<a href="problemsets/Unix_02_problemset.md">Link para o conjunto de problemas Unix 2</a>](unix.md/#link-para-o-conjunto-de-problemas-unix-2)
-   * [Bioinfo 1 - Operacoes básicas em Bioinformática](bioinfo.md/#bioinfo-1---operacoes-básicas-em-bioinformática)
-      * [Ferramentas do Unix úteis na bioinformática.](bioinfo.md/#ferramentas-do-unix-úteis-na-bioinformática)
-         * [Algumas operações básicas com arquivos.](bioinfo.md/#algumas-operações-básicas-com-arquivos)
-         * [Formatos de sequências](bioinfo.md/#formatos-de-sequências)
-            * [Fasta](bioinfo.md/#fasta)
-            * [GenBank](bioinfo.md/#genbank)
+   * [Bioinformática](bioinfo.md/#bioinformática)
+      * [Bioinfo 1 - Operacoes básicas em Bioinformática](bioinfo.md/#bioinfo-1---operacoes-básicas-em-bioinformática)
+         * [Ferramentas do Unix úteis na bioinformática.](bioinfo.md/#ferramentas-do-unix-úteis-na-bioinformática)
+            * [Algumas operações básicas com arquivos.](bioinfo.md/#algumas-operações-básicas-com-arquivos)
+            * [Formatos de sequências](bioinfo.md/#formatos-de-sequências)
+               * [Fasta](bioinfo.md/#fasta)
+               * [GenBank](bioinfo.md/#genbank)
+            * [Algumas operações básicas com sequências no formato Fasta](bioinfo.md/#algumas-operações-básicas-com-sequências-no-formato-fasta)
+      * [Bioinfo 2 - Montagem <em>de novo</em> de genomas](bioinfo.md/#bioinfo-2---montagem-de-novo-de-genomas)
+      * [Bioinfo 3 - Gene Ortólogos](bioinfo.md/#bioinfo-3---gene-ortólogos)
+      * [Bioinfo 4 - Transcriptômica](bioinfo.md/#bioinfo-4---transcriptômica)
