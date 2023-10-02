@@ -4,7 +4,7 @@ Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://
 __Criador e Instrutor__
 Diego M. Riaño-Pachón
 
-# Operacoes básicas em Bioinformática
+# Bioinfo 1 - Operacoes básicas em Bioinformática
 
 ## Ferramentas do Unix úteis na bioinformática.
 
@@ -65,3 +65,92 @@ grep ">" TAIR10_pep_20101214_updated.fasta | head -n 4
 Existem diferentes formatos para sequências, geralmente em texto simples. Isso significa que elas podem ser visualizadas e editadas com qualquer editor de texto, como vi ou pico. Alguns desses formatos são mais comuns do que outros, e muitos programas de bioinformática aceitam vários dos formatos mais comuns ([Leonard et al., 2007](https://pubmed.ncbi.nlm.nih.gov/18428774/)).
 
 Todos os formatos de sequências têm uma característica (campo) em comum: um identificador para cada sequência, para que esta possa ser reconhecida de forma única.
+
+#### Fasta
+
+O formato mais simples é conhecido como Fasta. Nele, uma entrada, que é uma sequência, é dividida em duas partes: a linha de identificação, que deve começar com o símbolo ">" seguido imediatamente pelo identificador da sequência, que pode ser qualquer cadeia de caracteres sem espaços. As linhas imediatamente após o identificador correspondem à própria sequência.
+
+O formato Fasta é o formato de sequências mais amplamente utilizado em aplicações de bioinformática.
+
+```
+>gi|110742030|dbj|BAE98952.1| putative NAC domain protein [Arabidopsis thaliana]
+MEDQVGFGFRPNDEELVGHYLRNKIEGNTSRDVEVAISEVNICSYDPWNLRFQSKYKSRDAMWYFFSRRE
+NNKGNRQSRTTVSGKWKLTGESVEVKDQWGFCSEGFRGKIGHKRVLAFLDGRYPDKTKSDWVIHEFHYDL
+LPEHQRTYVICRLEYKGDDADILSAYAIDPTPAFVPNMTSSAGSVVNQSRQRNSGSYNTYSEYDSANHGQ
+QFNENSNIMQQQPLQGSFNPLLEYDFANHGGQWLSDYIDLQQQVPYLAPYENESEMIWKHVIEENFEFLV
+DERTSMQQHYSDHRPKKPVSGVLPDDSSDTETGSMIFEDTSSSTDSVGSSDEPGHTRIDDIPSLNIIEPL
+HNYKAQEQPKQQSKEKVISSQKSECEWKMAEDSIKIPPSTNTVKQSWIVLENAQWNYLKNMIIGVLLFIS
+VISWIILVG
+```
+
+#### GenBank
+
+O formato GenBank é utilizado pelo 'National Center for Biotechnology Information' ([NCBI](https://www.ncbi.nlm.nih.gov/)), o maior repositório de sequências de ácidos nucleicos e proteínas do mundo. O NCBI, juntamente com o [EMBL-EBI](https://www.ebi.ac.uk/) e o [DDBJ](https://www.ddbj.nig.ac.jp/), mantém conjuntamente o 'The International Nucleotide Sequence Database' ([Mizrachi, 2008](https://pubmed.ncbi.nlm.nih.gov/27896718/)).
+
+Uma entrada neste formato é composta por duas partes. A primeira parte abrange as posições de 1 a 10 e geralmente contém o nome do campo, como LOCUS, DEFINITION, ACCESSION ou SOURCE. A segunda parte de cada entrada contém informações correspondentes ao campo em questão. Cada entrada é finalizada com o símbolo '//'. Você pode encontrar mais informações sobre esse tipo de arquivo [aqui](http://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html).
+
+```
+LOCUS BAE98952 429 aa linear PLN 27-JUL-2006
+DEFINITION putative NAC domain protein [Arabidopsis thaliana].
+ACCESSION BAE98952
+VERSION BAE98952.1 GI:110742030
+DBSOURCE accession AK226863.1
+KEYWORDS .
+SOURCE Arabidopsis thaliana (thale cress)
+ORGANISM Arabidopsis thaliana
+Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+ Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons;
+ rosids; eurosids II; Brassicales; Brassicaceae; Arabidopsis.
+ REFERENCE 1
+AUTHORS Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
+ Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
+ Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
+ Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
+ Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
+TITLE Large-scale analysis of RIKEN Arabidopsis full-length (RAFL) cDNAs
+JOURNAL Unpublished
+REFERENCE 2 (residues 1 to 429)
+AUTHORS Totoki,Y., Seki,M., Ishida,J., Nakajima,M., Enju,A., Morosawa,T.,
+ Kamiya,A., Narusaka,M., Shin-i,T., Nakagawa,M., Sakamoto,N.,
+ Oishi,K., Kohara,Y., Kobayashi,M., Toyoda,A., Sakaki,Y.,
+ Sakurai,T., Iida,K., Akiyama,K., Satou,M., Toyoda,T., Konagaya,A.,
+ Carninci,P., Kawai,J., Hayashizaki,Y. and Shinozaki,K.
+TITLE Direct Submission
+JOURNAL Submitted (26-JUL-2006) Motoaki Seki, RIKEN Plant Science Center;
+ 1-7-22 Suehiro-cho, Tsurumi-ku, Yokohama, Kanagawa 230-0045, Japan
+ (E-mail:mseki@psc.riken.jp, URL:http://rarge.gsc.riken.jp/,
+ Tel:81-45-503-9625, Fax:81-45-503-9586)
+COMMENT An Arabidopsis full-length cDNA library was constructed essentially
+ as reported previously (Seki et al. (1998) Plant J. 15:707-720;
+ Seki et al. (2002) Science 296:141-145).
+ This clone is in a modified pBluescript vector.
+ Please visit our web site (http://rarge.gsc.riken.jp/) for further
+ details.
+FEATURES Location/Qualifiers
+ source 1..429
+ /organism="Arabidopsis thaliana"
+ /db_xref="taxon:3702"
+ /chromosome="1"
+ /clone="RAFL08-19-M04"
+ /ecotype="Columbia"
+ /note="common name: thale cress"
+ Protein 1..429
+ /product="putative NAC domain protein"
+ Region 5..137
+ /region_name="NAM"
+ /note="No apical meristem (NAM) protein; pfam02365"
+ /db_xref="CDD:111274"
+ CDS 1..429
+ /gene="At1g01010"
+ /coded_by="AK226863.1:89..1378"
+ORIGIN
+1 medqvgfgfr pndeelvghy lrnkiegnts rdvevaisev nicsydpwnl rfqskyksrd
+61 amwyffsrre nnkgnrqsrt tvsgkwkltg esvevkdqwg fcsegfrgki ghkrvlafld
+121 grypdktksd wvihefhydl lpehqrtyvi crleykgdda dilsayaidp tpafvpnmts
+181 sagsvvnqsr qrnsgsynty seydsanhgq qfnensnimq qqplqgsfnp lleydfanhg
+241 gqwlsdyidl qqqvpylapy enesemiwkh vieenfeflv dertsmqqhy sdhrpkkpvs
+301 gvlpddssdt etgsmifedt ssstdsvgss depghtridd ipslniiepl hnykaqeqpk
+361 qqskekviss qksecewkma edsikippst ntvkqswivl enaqwnylkn miigvllfis
+421 viswiilvg
+//
+```
