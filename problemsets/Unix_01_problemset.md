@@ -30,7 +30,7 @@ comandos úteis
 
 ### Execute os seguintes comandos
 
-**Os arquivos que você vai usar nesta revisão estão no nosso [repositório github](https://github.com/labbces/cen0336). Haverá instruções sobre como recuperá-los mas para diante**
+**Os arquivos que você vai usar nesta revisão estão no nosso [repositório github](https://github.com/labbces/cen5789). Haverá instruções sobre como recuperá-los mas para diante**
 
 Vamos num diretório com muitos arquivos e faza uma lista desses arquivos
 
@@ -76,7 +76,7 @@ __Descarregando arquivos__.
 Mude para seu diretório home. Nessa pasta, geralmente, você tem permissões para escrever. Agora use o comando `wget` ou `curl` para descarregar arquivos. Em alguns sistemas só tem um desses comandos disponiveis
 ```
 cd ~
-curl -O https://raw.githubusercontent.com/labbces/cen0336/master/files/cuffdiff.txt
+curl -O https://raw.githubusercontent.com/labbces/cen5789/master/files/cuffdiff.txt
 ```
 
 __Redirecionando STDOUT__  
@@ -163,7 +163,7 @@ Problemas
 
 5. Vai na pasta problemsets. Verifique que está no diretório certo usando o comando `pwd`.
 
-6. Use o comando `wget` para descarregar uma copia do aquivo <https://raw.githubusercontent.com/labbces/cen0336/master/files/sequences.nt.fa> dentro do diretório problemsets. Se `wget` não está disponivel no sistema, pode usar `curl -O` como alternativa.
+6. Use o comando `wget` para descarregar uma copia do aquivo <https://raw.githubusercontent.com/labbces/cen5789/master/files/sequences.nt.fa> dentro do diretório problemsets. Se `wget` não está disponivel no sistema, pode usar `curl -O` como alternativa.
 
 7. Sem usar um editor de texto use comandos de unix para achar as seguintes caracteristicas do arquivo `sequences.nt.fa`.
   É o mesmo arquivo descarregado no passo anterior <https://raw.githubusercontent.com/prog4biol/pfb2019/master/files/sequences.nt.fa>
@@ -175,9 +175,9 @@ Problemas
 
 8. Renomeie o arquivo `sequences.nt.fa` como `cancer_genes.fasta`. (Dica: Leia a página de manual do comando mv)
 
-9. Descarrege o arquivo remoto, cuffdiff.txt, na sua pasta problemsets. Aquí está a URL para descarregar: <https://raw.githubusercontent.com/labbces/cen0336/master/files/cuffdiff.txt>
+9. Descarrege o arquivo remoto, cuffdiff.txt, na sua pasta problemsets. Aquí está a URL para descarregar: <https://raw.githubusercontent.com/labbces/cen5789/master/files/cuffdiff.txt>
 
-Use o comando `wget` para descarregar uma copia do aquivo <https://raw.githubusercontent.com/labbces/cen0336/master/files/cuffdiff.txt> entro do diretório problemsets. Se `wget` não está disponivel no sistema, pode usar `curl -O` como alternativa.
+Use o comando `wget` para descarregar uma copia do aquivo <https://raw.githubusercontent.com/labbces/cen5789/master/files/cuffdiff.txt> entro do diretório problemsets. Se `wget` não está disponivel no sistema, pode usar `curl -O` como alternativa.
 
 10. Faça o seguinte para o arquivo `cuffdiff.txt`. Una descrição do conteúdo de cada coluna aparece na tabela que está no final.
     - Observe as primeiras linhas do arquivo.
