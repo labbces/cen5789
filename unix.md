@@ -130,7 +130,7 @@ A maioria das shells permite editar a linha de comandos.  Até o momento em que 
 - _control-d (^d)_: Apagar o caractere atualmante abaixo do cursos. D=Delete.
 - _control-k (^k)_: Apagar a linha desde onde esteja o cursor até o final. k=kill.  Na verdade a linha não é apagada, ela é colocada num local temporario chamado de "kill buffer". Isto é como cortar texto.
 - _control-y (^y)_: Colar o conteúdo do "kill buffer" na linha de comandos, no ponto onde estiver o cursor.  y=yank.
-- _zata acima_, _zeta abaixo_: Move o cursor para acima e para abaixo na historia de comandos.  Muito útil para rodar comandos que já foram rodados, possivelmente depois de modificá-los.
+- _zeta acima_, _zeta abaixo_: Move o cursor para acima e para abaixo na historia de comandos.  Muito útil para rodar comandos que já foram rodados, possivelmente depois de modificá-los.
 
 Tem também alguns comandos úteis da shell que você pode usar:
 
