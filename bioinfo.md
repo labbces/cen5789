@@ -175,7 +175,11 @@ Em outras situações, é importante modificar o identificador de cada sequênci
 ```
 sed 's/>/>ATH_/' TAIR10_pep_20101214_updated.fasta > TAIR10_pep_20101214_updated.mod.fasta
 ```
+As linhas com os identificadores neste arquivo são muito extensas, para muitos programas isto não é desejável. Vamos eliminar tudo que aparecer depois do primeiro ' |'. Para isso vamos usar [regular expressions](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html).
 
+```
+sed -r 's/ | .*$//' TAIR10_pep_20101214_updated.mod.fasta > TAIR10_pep_20101214_updated.mod2.fasta
+```
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
