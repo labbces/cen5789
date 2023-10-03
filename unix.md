@@ -139,7 +139,7 @@ Tem também alguns comandos úteis da shell que você pode usar:
 - `!!` Executar novamente o comando imediatamente anterior.
 - `!<pedaço de um comando>`: Executar novamente um comando anterior que começava como as letras indicadas.  Por exemplo, `!l` (a letra 'ele', não o número 1) executará novamente o comando `ls -F` que usamos no inicio deste capítulo.
 
-A shell **bash** oferece os serviçoes de auto-completar e correção ortográfica. Se você escreve parte de um comando e usa a tecla de tabulação, a shell mostrará para você todas as formas possiveis de completar o comando.  Por exemplo:
+A shell **bash** oferece os serviços de auto-completar e correção ortográfica. Se você escreve parte de um comando e usa a tecla de tabulação, a shell mostrará para você todas as formas possiveis de completar o comando.  Por exemplo:
 
 ```
 (~) 51% fd<tab><tab>
