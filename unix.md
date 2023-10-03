@@ -124,7 +124,7 @@ Alguns programas podem demorar muito tempo para rodar. Depois que você executa 
 A maioria das shells permite editar a linha de comandos.  Até o momento em que você pressiona a tecla \<Enter\>, você pode voltar na linha de comandos e editá-lo usando o teclado.  Aqui tem algumas das combinações de teclas mais úteis:
 
 - _Backspace_: Apagar o caractere anterior.
-- _zatra esquerda_, _zeta direita_: Move o ponto de inserção de texto (cursor) um caractere para a esquerda ou direita.
+- _zeta esquerda_, _zeta direita_: Move o ponto de inserção de texto (cursor) um caractere para a esquerda ou direita.
 - _control-a (^a)_: Move o cursor para o início da linha. (Mnemônico: A é a primeira letra do alfabeto).
 - _control-e (^e)_: Move o cursor até o final da linha. (Mnemônico: E pela palavra "End")
 - _control-d (^d)_: Apagar o caractere atualmante abaixo do cursos. D=Delete.
