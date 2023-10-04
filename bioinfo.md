@@ -188,7 +188,7 @@ As matrizes de pontos ('Dot Plot') são ferramentas exploratórias para a compar
 
 Nesta seção, utilizaremos a implementação de matrizes de pontos do Instituto Suíço de Bioinformática, conhecida como [Dotlet JS](https://dotlet.vital-it.ch/), que está ilustrada na Figura:
 
-
+![Dotlet screenshot](images/dotlet_1.png)
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
