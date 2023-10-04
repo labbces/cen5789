@@ -180,6 +180,8 @@ As linhas com os identificadores neste arquivo são muito extensas, para muitos 
 ```
 sed -r 's/ | .*$//' TAIR10_pep_20101214_updated.mod.fasta > TAIR10_pep_20101214_updated.mod2.fasta
 ```
+## Bioinfo 2 - Análise de Sequências
+
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
