@@ -188,7 +188,37 @@ As matrizes de pontos ('Dot Plot') são ferramentas exploratórias para a compar
 
 Nesta seção, utilizaremos a implementação de matrizes de pontos do Instituto Suíço de Bioinformática, conhecida como [Dotlet JS](https://dotlet.vital-it.ch/), que está ilustrada na Figura:
 
-![Dotlet screenshot](images/dotlet_1.png)
+![Dotlet screenshot 1](images/dotlet_1.png)
+
+#### Sequências repetidas
+
+Faça uma comparação da sequência [SLIT_DROME](files/slit_drome.fa) contra ela mesma ([versão original deste exemplo](https://myhits.sib.swiss/util/dotlet/doc/repeats.html)). Copie a sequência, em seguida clique no botão 'SEQUENCE 1', faz o mesmo para o botão "SEQUENCE 2".
+
+À direita dos botões onde você carregou a sequência, encontrará uma lista suspensa que permite a seleção da matriz de substituição. Logo abaixo, há outra lista suspensa que permite escolher os tamanhos da janela a serem utilizados na comparação das duas sequências.
+
+Após o cálculo da matriz de pontos, a tela será semelhante à figura anterior. No centro da página, à esquerda, encontra-se a matriz de pontos propriamente dita, na qual padrões de linhas diagonais podem ser observados. À direita, há um histograma das pontuações das comparações dos aminoácidos.
+
+O tamanho da janela (_window size_) afeta a visualização na matriz de pontos, pois determina o tamanho da área que está sendo analisada de cada vez. Janelas maiores podem mostrar uma visão mais ampla e suavizada da comparação, enquanto janelas menores podem mostrar detalhes finos e repetições mais curtas.
+
+A linha vermelha no histograma de pontuações representa os mesmos valores das barras azuis, mas em uma escala logarítmica. Essa escala é frequentemente empregada para realçar as pontuações extremamente altas, que, de outra forma, seriam menos visíveis devido à sua baixa frequência. Isso ajuda a identificar áreas de interesse na matriz de pontos.
+
+Este dotplot é da proteína [__SLIT__ de _Drosophila melanogaster_](https://www.uniprot.org/uniprotkb/P24014/entry) em relação a si mesma. Ela possui várias regiões repetidas. Na parte N-terminal (A), observamos quatro regiões repetidas, que são compostas por unidades menores repetidas (neste caso, repetições ricas em leucina). Em seguida, há outro domínio que se repete pelo menos seis vezes em um aglomerado compacto (B), com uma ocorrência adicional próxima ao C-terminus. Este último é um domínio EGF (fator de crescimento epidérmico).
+
+A figura abaixo mostra a disposição dos domínios ao longo da sequência da proteína, conforme descrito na entrada do [Swiss-Prot](https://www.uniprot.org/uniprotkb/P24014/entry).
+
+![Dotlet screenshot 1](https://myhits.sib.swiss/util/dotlet/doc/slit_drome.gif)
+
+Repetições invertidas na matriz de pontos podem sugerir regiões onde há duplicações inversas na sequência. Isso significa que as sequências são semelhantes quando lidas de trás para frente. Essas repetições podem ter significados funcionais ou evolutivos, e sua detecção pode fornecer insights sobre a biologia da sequência.
+
+Quanto à comparação da sequência de cDNA e seu correspondente genômico do ANAC0922, descreva os resultados."
+
+Esta última parte da pergunta requer que você descreva os resultados da comparação entre a sequência de cDNA e seu correspondente genômico do ANAC0922 usando a matriz de pontos, com base nas análises realizadas.
+
+
+
+
+
+
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
