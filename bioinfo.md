@@ -190,9 +190,11 @@ Nesta seção, utilizaremos a implementação de matrizes de pontos do Instituto
 
 ![Dotlet screenshot 1](images/dotlet_1.png)
 
+Em seguida, estudaremos alguns exemplos provenientes da documentação do [DotLet](https://myhits.sib.swiss/util/dotlet/doc/dotlet_help.html).
+
 #### Sequências repetidas
 
-Faça uma comparação da sequência [SLIT_DROME](files/slit_drome.fa) contra ela mesma ([versão original deste exemplo](https://myhits.sib.swiss/util/dotlet/doc/repeats.html)). Copie a sequência, em seguida clique no botão 'SEQUENCE 1', faz o mesmo para o botão "SEQUENCE 2".
+Faça uma comparação da sequência [SLIT_DROME](files/slit_drome.fa) contra ela mesma . Copie a sequência, em seguida clique no botão 'SEQUENCE 1', faz o mesmo para o botão "SEQUENCE 2".
 
 À direita dos botões onde você carregou a sequência, encontrará uma lista suspensa que permite a seleção da matriz de substituição. Logo abaixo, há outra lista suspensa que permite escolher os tamanhos da janela a serem utilizados na comparação das duas sequências.
 
@@ -207,6 +209,13 @@ Este dotplot é da proteína [__SLIT__ de _Drosophila melanogaster_](https://www
 A figura abaixo mostra a disposição dos domínios ao longo da sequência da proteína, conforme descrito na entrada do [Swiss-Prot](https://www.uniprot.org/uniprotkb/P24014/entry).
 
 ![Dotlet screenshot 1](https://myhits.sib.swiss/util/dotlet/doc/slit_drome.gif)
+
+#### Domínios proteicos conservados
+
+Agora carregue as sequencias [MS2_HUMAN](https://www.uniprot.org/uniprotkb/MS2_HUMAN) e [ADAM_CROAD](https://www.uniprot.org/uniprotkb/ADAM_CROAD).
+
+A sequência horizontal representa o antígeno de superfície celular MS2 humano, enquanto a vertical representa a adamalisina II, uma metaloprotease proveniente do veneno da serpente _Crotalus adamanteus_ (cascavel de cauda de chocalho do leste). Ambos contêm um domínio de metaloprotease de zinco; como a imagem mostra, a adamalisina consiste apenas deste domínio, enquanto ele representa aproximadamente um quarto da proteína MS2.
+
 
 Repetições invertidas na matriz de pontos podem sugerir regiões onde há duplicações inversas na sequência. Isso significa que as sequências são semelhantes quando lidas de trás para frente. Essas repetições podem ter significados funcionais ou evolutivos, e sua detecção pode fornecer insights sobre a biologia da sequência.
 
