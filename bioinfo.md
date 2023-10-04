@@ -182,6 +182,13 @@ sed -r 's/ | .*$//' TAIR10_pep_20101214_updated.mod.fasta > TAIR10_pep_20101214_
 ```
 ## Bioinfo 2 - Análise de Sequências
 
+### Dotplots - Matrices de pontos
+
+As matrizes de pontos ('Dot Plot') são ferramentas exploratórias para a comparação de cadeias de texto, ou seja, sequências. Entre outras funcionalidades, elas nos permitem facilmente identificar regiões repetidas em uma sequência ao compará-la com ela mesma. Também podemos obter uma ideia bastante clara da estrutura de um gene ao comparar a sequência de sua região codificante com a sequência do locus onde ele se encontra.
+
+Nesta seção, utilizaremos a implementação de matrizes de pontos do Instituto Suíço de Bioinformática, conhecida como [Dotlet JS](https://dotlet.vital-it.ch/), que está ilustrada na Figura:
+
+
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
