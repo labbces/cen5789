@@ -78,6 +78,8 @@ Sofia Robb
             * [Sequências repetidas](bioinfo.md/#sequências-repetidas)
             * [Domínios proteicos conservados](bioinfo.md/#domínios-proteicos-conservados)
             * [Éxons e Íntrons](bioinfo.md/#éxons-e-íntrons)
+            * [Dotplots com EMBOSS e outros applicativos](bioinfo.md/#dotplots-com-emboss-e-outros-applicativos)
+         * [Alinhamentos exatos de pares de sequências](bioinfo.md/#alinhamentos-exatos-de-pares-de-sequências)
       * [Bioinfo 2 - Montagem <em>de novo</em> de genomas](bioinfo.md/#bioinfo-2---montagem-de-novo-de-genomas)
       * [Bioinfo 3 - Gene Ortólogos](bioinfo.md/#bioinfo-3---gene-ortólogos)
       * [Bioinfo 4 - Transcriptômica](bioinfo.md/#bioinfo-4---transcriptômica)
