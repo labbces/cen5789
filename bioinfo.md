@@ -196,7 +196,7 @@ Em seguida, estudaremos alguns exemplos provenientes da documentação do [DotLe
 
 #### Sequências repetidas
 
-Faça uma comparação da sequência [SLIT_DROME](files/slit_drome.fa) contra ela mesma . Copie a sequência, em seguida clique no botão 'SEQUENCE 1', faz o mesmo para o botão "SEQUENCE 2".
+Faça uma comparação da sequência [SLIT_DROME](files/slit_drome.fa) contra ela mesma . Copie a sequência, em seguida clique no botão 'SEQUENCE 1', faz o mesmo para o botão 'SEQUENCE 2'.
 
 À direita dos botões onde você carregou a sequência, encontrará uma lista suspensa que permite a seleção da matriz de substituição. Logo abaixo, há outra lista suspensa que permite escolher os tamanhos da janela a serem utilizados na comparação das duas sequências.
 
@@ -221,6 +221,16 @@ A sequência horizontal representa o antígeno de superfície celular MS2 humano
 ![Dotlet screenshot 2](images/dotlet_2.png)
 
 Modifique os valores de _Window Size_ para 15, 25, 35 e 45, por exemplo, e a _Scoring Matrix_ para cada uma das matrizes BLOSUM. Como esses parâmetros afetam o dotplot?
+
+#### Éxons e Íntrons
+
+O [ANAC092](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3001574/) é um fator de transcrição da família NAC em _Arabidopsis thaliana_, identificado com o código [AT5G39610.1](https://www.arabidopsis.org/servlets/TairObject?id=133421&type=locus) no genoma da planta. O gene que codifica este produto gênico tem três éxons e dois íntrons.
+
+Carregue a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) como 'SEQUENCE 1' e a sequência de [cDNA](files/ANAC092_cDNA.fasta) como 'SEQUENCE 2' no Dotlet. Selecione a matriz Identity como Scoring Matrix e utilize vários valores de Window Size na análise. Como este parâmetro afeta a análise?
+
+![Dotlet screenshot 3](images/dotlet_3.png)
+
+Pode identificar algum valor do parâmetro Window Size que permita visualizar sequências repetitivas no cDNA?"
 
 Repetições invertidas na matriz de pontos podem sugerir regiões onde há duplicações inversas na sequência. Isso significa que as sequências são semelhantes quando lidas de trás para frente. Essas repetições podem ter significados funcionais ou evolutivos, e sua detecção pode fornecer insights sobre a biologia da sequência.
 
