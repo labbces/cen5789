@@ -297,6 +297,7 @@ Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a 
 ```
 conda activate emboss
 ```
+### Alinhamentos heurísticos de pares de sequências - Buscas em bancos de dados
 
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
