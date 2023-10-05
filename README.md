@@ -8,6 +8,7 @@ __Criadores do material na versão em Inglês__
 Simon Prochnik  
 Sofia Robb     
 
+# Unix
    * [Unix](unix.md/#unix)
       * [Unix 1](unix.md/#unix-1)
          * [Panorama de Unix](unix.md/#panorama-de-unix)
@@ -72,6 +73,11 @@ Sofia Robb
                * [Fasta](bioinfo.md/#fasta)
                * [GenBank](bioinfo.md/#genbank)
             * [Algumas operações básicas com sequências no formato Fasta](bioinfo.md/#algumas-operações-básicas-com-sequências-no-formato-fasta)
+      * [Bioinfo 2 - Análise de Sequências](bioinfo.md/#bioinfo-2---análise-de-sequências)
+         * [Dotplots - Matrices de pontos](bioinfo.md/#dotplots---matrices-de-pontos)
+            * [Sequências repetidas](bioinfo.md/#sequências-repetidas)
+            * [Domínios proteicos conservados](bioinfo.md/#domínios-proteicos-conservados)
+            * [Éxons e Íntrons](bioinfo.md/#éxons-e-íntrons)
       * [Bioinfo 2 - Montagem <em>de novo</em> de genomas](bioinfo.md/#bioinfo-2---montagem-de-novo-de-genomas)
       * [Bioinfo 3 - Gene Ortólogos](bioinfo.md/#bioinfo-3---gene-ortólogos)
       * [Bioinfo 4 - Transcriptômica](bioinfo.md/#bioinfo-4---transcriptômica)
