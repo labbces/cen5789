@@ -251,16 +251,23 @@ Quando terminar de usar os aplicativos do EMBOSS, é importante desativar o ambi
 conda deactivate
 ```
 
-
 Tanto o Dotlet JS quanto os programas de dotplot em EMBOSS têm algumas limitações, talvez a mais importante seja que não conseguem detectar facilmente repetições invertidas, como as que aparecem em estruturas secundárias de RNA.
 
-Vamos usar o programa [Re-Dot-Table](https://www.bioinformatics.babraham.ac.uk/projects/redotable/) para comparar a sequência do arquivo [secondatystructure.fasta](files/secondatystructure.fasta) com ela mesma. Para fazer isso, é necessário ativar um ambiente Conda no qual o software foi previamente instalado:
+Vamos usar o programa [Re-Dot-Table](https://www.bioinformatics.babraham.ac.uk/projects/redotable/) para comparar a sequência do arquivo [secondatystructure.fasta](files/secondatystructure.fasta) com ela mesma. 
+
+Esta sequência adquire a estrutura secundária que aparece abaixo. Nesta estrutura, as regiões que formam _stems_ correspondem a repetições invertidas, que podem ser visualizadas como diagonais com inclinação oposta à diagonal principal no dotplot.
+
+![secondary structure](images/secondarystructure.png)
+
+Para gerar o dotplot com o software __Re-Dot-Table__, é necessário ativar um ambiente Conda no qual o software foi previamente instalado e, em seguida, executar o aplicativo:
 
 ```
 conda activate redotable
+redotable
 ```
+A seguinte figura mostra o resultado dessa comparação. Explore o efeito do tamanho da janela para gerar o dotplot.
 
-
+![redotable screenshot 1](images/redotable_1.png)
 
 
 
