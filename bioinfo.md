@@ -269,6 +269,13 @@ A seguinte figura mostra o resultado dessa comparação. Explore o efeito do tam
 
 ![redotable screenshot 1](images/redotable_1.png)
 
+Lembre-se de desativar seu ambiente.
+
+```
+conda deactivate
+```
+
+
 ### Alinhamentos exatos de pares de sequências
 
 Além da substituição de um resíduo (aminoácido ou nucleotídeo) por outro, as sequências podem sofrer perdas ou ganhos de resíduos, ou seja, deleções ou inserções, comumente chamadas em conjunto de _indels_. Os dotplots não permitem incluir esse tipo de variações nas análises. Para isso, precisamos de algoritmos mais sofisticados de comparação de sequências, é aí que entram os algoritmos exatos de comparação de pares de sequências. Esses algoritmos podem ser globais ou locais. 
@@ -285,7 +292,11 @@ Nesta aula prática vamos usar o programa `est2genome` da suite _EMBOSS_ para al
 
 Por que você considera importante começar com uma varredura usando o algoritmo de Smith-Waterman?
 
-Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a sequência de [cDNA](files/ANAC092_cDNA.fasta) para identificar o alinhamento que mostre as posições dos éxons e dos íntrons no genoma. Consulte a página de manual do `est2genome` e visualize o resultado do alinhamento com seu editor de texto favorito.
+Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a sequência de [cDNA](files/ANAC092_cDNA.fasta) para identificar o alinhamento que mostre as posições dos éxons e dos íntrons no genoma. Consulte a página de manual do `est2genome` e visualize o resultado do alinhamento com seu editor de texto favorito. Lembre-se de ativar o ambiente de emboss.
+
+```
+conda activate emboss
+```
 
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
