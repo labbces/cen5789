@@ -232,12 +232,33 @@ Carregue a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) como '
 
 Pode identificar algum valor do parâmetro Window Size que permita visualizar sequências repetitivas no cDNA?"
 
-Repetições invertidas na matriz de pontos podem sugerir regiões onde há duplicações inversas na sequência. Isso significa que as sequências são semelhantes quando lidas de trás para frente. Essas repetições podem ter significados funcionais ou evolutivos, e sua detecção pode fornecer insights sobre a biologia da sequência.
+#### Dotplots com EMBOSS e outros applicativos
 
-Quanto à comparação da sequência de cDNA e seu correspondente genômico do ANAC0922, descreva os resultados."
+O European Molecular Biology Open Software Suite [EMBOSS](http://emboss.open-bio.org/) é uma suite de software com mais de 200 aplicativos para a análise de sequências.
 
-Esta última parte da pergunta requer que você descreva os resultados da comparação entre a sequência de cDNA e seu correspondente genômico do ANAC0922 usando a matriz de pontos, com base nas análises realizadas.
+Nesta seção, vamos refazer os dotplots anteriores usando um aplicativo do EMBOSS. Qual aplicativo usar? Na linha de comandos, você pode usar o programa `wossname` para procurar aplicativos que tenham na sua descrição uma palavra-chave específica. Por exemplo, você pode procurar a palavra _dotplot_. Para obter mais informações sobre um aplicativo específico, você pode utilizar a página de manual `man` ou o comando `tfm`, seguido do nome do aplicativo.
 
+Antes de utilizar os aplicativos do EMBOSS, é necessário ativar o ambiente onde o software foi instalado. Execute o seguinte comando no seu terminal. Os pacotes do EMBOSS estarão disponíveis nesse terminal. Se trocar de terminal, será necessário ativar o ambiente novamente.
+
+```
+conda activate emboss
+```
+
+Quando terminar de usar os aplicativos do EMBOSS, é importante desativar o ambiente para evitar conflitos com outros aplicativos que possam ser utilizados.
+
+
+```
+conda deactivate
+```
+
+
+Tanto o Dotlet JS quanto os programas de dotplot em EMBOSS têm algumas limitações, talvez a mais importante seja que não conseguem detectar facilmente repetições invertidas, como as que aparecem em estruturas secundárias de RNA.
+
+Vamos usar o programa [Re-Dot-Table](https://www.bioinformatics.babraham.ac.uk/projects/redotable/) para comparar a sequência do arquivo [secondatystructure.fasta](files/secondatystructure.fasta) com ela mesma. Para fazer isso, é necessário ativar um ambiente Conda no qual o software foi previamente instalado:
+
+```
+conda activate redotable
+```
 
 
 

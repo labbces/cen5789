@@ -20,10 +20,24 @@ rm -rf ~/miniconda3/miniconda.sh
 conda config --add channels conda-forge
 conda config --add channels bioconda
 
-conda create -n emboss -c bioconda emboss
-conda create -n blast -c bioconda blast
-conda create -n flye -c bioconda flye
-conda create -n hifiasm -c bioconda hifiasm
-conda create -n bandage -c bioconda bandage
-conda create -n quast -c bioconda quast
-conda create -n genomescope2 -c bioconda genomescope2
+conda create -y -n emboss -c bioconda emboss
+conda create -y -n blast -c bioconda blast
+conda create -y -n flye -c bioconda flye
+conda create -y -n hifiasm -c bioconda hifiasm
+conda create -y -n bandage -c bioconda bandage
+conda create -y -n quast -c bioconda quast
+conda create -y -n genomescope2 -c bioconda genomescope2
+
+#
+
+conda create -y -n redotable -c bioconda java-jdk
+conda activate redotable
+wget https://www.bioinformatics.babraham.ac.uk/projects/redotable/redotable_v1.2.zip
+unzip redotable_v1.2.zip
+cd redotable
+mv redotable ~/.conda/envs/redotable/bin/
+mv uk/ ~/.conda/envs/redotable/bin/
+cd ..
+rm -rf redotable
+conda deactivate
+
