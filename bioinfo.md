@@ -12,7 +12,7 @@ Diego M. Riaño-Pachón
 
 Após adquirir alguma familiaridade com os fundamentos do [sistema operacional Linux](unix.md), vamos explorar como alguns de seus comandos mais básicos podem ser extremamente úteis na área de bioinformática. Você entenderá por que o Linux é o sistema operacional de escolha na bioinformática.
 
-Para realizar esses exercícios, você precisa baixar o arquivo file1.tar.gz disponível no e-Disciplinas. Após baixá-lo, o arquivo deve estar na sua pasta "Downloads". Você deve descompactá-lo em seu diretório HOME.
+Para realizar esses exercícios, você precisa usar o arquivo [file1.tar.gz](files/file1.tar.gz). Após baixá-lo, o arquivo deve estar na sua pasta "Downloads". Você deve descompactá-lo em seu diretório HOME.
 
 ```
 cd
@@ -218,6 +218,9 @@ Agora carregue as sequencias [MS2_HUMAN](https://www.uniprot.org/uniprotkb/MS2_H
 
 A sequência horizontal representa o antígeno de superfície celular MS2 humano, enquanto a vertical representa a adamalisina II, uma metaloprotease proveniente do veneno da serpente _Crotalus adamanteus_ (cascavel de cauda de chocalho do leste). Ambos contêm um domínio de metaloprotease de zinco; como a imagem mostra, a adamalisina consiste apenas deste domínio, enquanto ele representa aproximadamente um quarto da proteína MS2.
 
+![Dotlet screenshot 2](images/dotlet_2.png)
+
+Modifique os valores de _Window Size_ para 15, 25, 35 e 45, por exemplo, e a _Scoring Matrix_ para cada uma das matrizes BLOSUM. Como esses parâmetros afetam o dotplot?
 
 Repetições invertidas na matriz de pontos podem sugerir regiões onde há duplicações inversas na sequência. Isso significa que as sequências são semelhantes quando lidas de trás para frente. Essas repetições podem ter significados funcionais ou evolutivos, e sua detecção pode fornecer insights sobre a biologia da sequência.
 
