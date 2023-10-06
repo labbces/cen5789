@@ -299,7 +299,7 @@ conda activate emboss
 ```
 ### Alinhamentos heurísticos de pares de sequências - Buscas em bancos de dados
 
-Os alinhamentos exatos representam um grande desafio computacional em termos de recursos necessários. Quando estamos buscando uma sequência semelhante a um alvo em um banco de dados que contém milhões de sequências, muitas vezes é necessário relaxar os critérios de busca para obter respostas rápidas e satisfatórias, mesmo que não sejam a resposta perfeita (exata). É aqui que ferramentas como o __B__asic __L__ocal __A__lignment __S__earch __T__ool, podem e devem ser empregadas. É importante destacar que o BLAST é uma ferramenta projetada para realizar alinhamentos __locais__, permitindo encontrar regiões similares em sequências, em vez de buscar por correspondências globais.
+Os alinhamentos exatos representam um grande desafio computacional em termos de recursos necessários. Quando estamos buscando uma sequência semelhante a um alvo em um banco de dados que contém milhões de sequências, muitas vezes é necessário relaxar os critérios de busca para obter respostas rápidas e satisfatórias, mesmo que não sejam a resposta perfeita (exata). É aqui que ferramentas como o __Basic Local Alignment Search Tool__ ([Altschul et al., 1990](https://pubmed.ncbi.nlm.nih.gov/2231712/)), podem e devem ser empregadas. É importante destacar que o BLAST é uma ferramenta projetada para realizar alinhamentos __locais__, permitindo encontrar regiões similares em sequências, em vez de buscar por correspondências globais.
 
 O BLAST possui uma interface gráfica (_Grafical User Interface_ ou _GUI_) muito boa para buscar sequências no banco de dados da NCBI. No entanto, executar o BLAST através da linha de comando tem muitos benefícios:
 
@@ -309,6 +309,112 @@ O BLAST possui uma interface gráfica (_Grafical User Interface_ ou _GUI_) muito
 - Você pode criar seus próprios bancos de dados para pesquisa em vez de usar os bancos de dados pré-construídos da NCBI.
 - Isso permite a automação das consultas.
 - Isso permite que você use um servidor remoto para executar as consultas do BLAST.
+
+Ao utilizar o __BLAST__, é comum termos uma sequência de interesse, conhecida como _query_, que será comparada com sequências de um banco de dados, chamadas de _subject_. Neste exercício, iremos comparar as sequências de proteínas do camundongo (_Mus musculus_) com as sequências de proteínas do zebrafish (_Danio rerio_). O objetivo principal é encontrar, para cada proteína do camundongo, a proteína mais semelhante no zebrafish.
+
+Vamos baixar os arquivos com as sequências das proteínas no formato FASTA:
+
+```
+curl -o mouse.1.protein.faa.gz -L https://osf.io/v6j9x/download
+curl -o zebrafish.1.protein.faa.gz -L https://osf.io/68mgf/download
+```
+
+Descompacte-os:
+
+```
+gunzip *.faa.gz
+```
+
+E vamos dar uma olhada nas primeiras sequências no arquivo:
+
+```
+head mouse.1.protein.faa
+```
+
+Essas são sequências de proteínas no formato FASTA. O formato FASTA é algo que muitos de vocês provavelmente já viram de uma forma ou de outra - é bastante comum. É um arquivo de texto que contém registros; cada registro começa com uma linha que começa com um '>' e, em seguida, contém uma ou mais linhas de texto de sequência.
+
+Vamos pegar essas duas primeiras sequências e salvá-las em um arquivo. Faremos isso usando a redireção de saída com o '>' que diz "pegue toda a saída e coloque-a neste arquivo aqui."
+
+```
+head -n 11 mouse.1.protein.faa > mm-first.faa
+```
+
+Agora, por exemplo, você pode usar cat mm-first.faa para ver o conteúdo desse arquivo (ou less mm-first.faa). DICA: se você tentar less mm-first.faa, precisará sair pressionando a tecla 'q' no teclado.
+
+Agora vamos fazer um BLAST com essas duas sequências em relação a todo o conjunto de dados de proteínas do zebrafish. Primeiro, precisamos informar ao BLAST que as sequências do zebrafish são (a) um banco de dados e (b) um banco de dados de proteínas. Isso é feito chamando o 'makeblastdb'. Observe que você precisará primeiro ativar seu ambiente Conda que possui o BLAST instalado.
+
+```
+conda activate blast
+makeblastdb -in zebrafish.1.protein.faa -dbtype prot
+```
+
+Em seguida, chamamos o BLAST para fazer a pesquisa:
+
+```
+blastp -query mm-first.faa -db zebrafish.1.protein.faa
+```
+
+Isso não deve tardar muito, mas você receberá muita saída na tela do computador!! Para salvá-lo em um arquivo em vez de vê-lo na tela, peça ao BLAST para salvar a saída em um arquivo que chamaremos de mm-first.x.zebrafish.txt:
+
+```
+blastp -num_threads 5 -query mm-first.faa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
+```
+
+Agora, você pode 'navegar' por este arquivo à vontade digitando:
+
+```
+less mm-first.x.zebrafish.txt
+```
+
+(Tecle espaço para mudar de página e 'q' para sair do modo de navegação.)
+
+Vamos trabalhar com algumas sequências adicionais (este levará um pouco mais de tempo para ser executado):
+
+```
+head -n 498 mouse.1.protein.faa > mm-second.faa
+grep -c ">" mm-second.faa
+```
+
+Em seguida, faremos a comparação das primeiras 96 sequências:
+
+```
+blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
+```
+
+Você pode visualizar o arquivo de saída com:
+
+```
+less mm-second.x.zebrafish.txt
+```
+
+(E novamente, digite 'q' para sair do modo de visualização.)
+
+Observações:
+
+
+Por que levou mais tempo para fazer o BLAST em mm-second.faa do que em mm-first.faa?
+Coisas para mencionar e discutir:
+
+- Opções do blastp e -help.
+- Qual valor de e-value foi usado para filtrar os resultados?
+- Qual foi o valor da palavra usado para iniciar a busca?
+- Opções da linha de comando, mais especificamente, por que tantas?
+
+Automação é maravilhosa!
+
+Por último, mas não menos importante, vamos gerar uma versão mais legível para máquinas daquele último arquivo:
+
+```
+blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.tsv -outfmt 6
+```
+
+Você pode abrir o arquivo com less mm-second.x.zebrafish.tsv para ver como ele é formatado.
+
+Em alguns casos mais do que uma proteina do zebrafish aparece no resultado. Vamos modificar os argumentos do `blastp` para retornar máximo uma proteina _subject_ para cada _query_. Para evitar _hits_ de fracoes das proteínas, vamos a pedir para o `blastp` so relatar hits onde a cobertura do query seja pelo menos 80% do seu comprimento.
+
+```
+blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -subject_besthit -qcov_hsp_perc 80 -max_target_seqs 1 -out mm-second.x.zebrafish_best.tsv -outfmt 6
+```
 
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
