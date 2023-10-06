@@ -299,6 +299,17 @@ conda activate emboss
 ```
 ### Alinhamentos heurísticos de pares de sequências - Buscas em bancos de dados
 
+Os alinhamentos exatos representam um grande desafio computacional em termos de recursos necessários. Quando estamos buscando uma sequência semelhante a um alvo em um banco de dados que contém milhões de sequências, muitas vezes é necessário relaxar os critérios de busca para obter respostas rápidas e satisfatórias, mesmo que não sejam a resposta perfeita (exata). É aqui que ferramentas como o __B__asic __L__ocal __A__lignment __S__earch __T__ool, podem e devem ser empregadas. É importante destacar que o BLAST é uma ferramenta projetada para realizar alinhamentos __locais__, permitindo encontrar regiões similares em sequências, em vez de buscar por correspondências globais.
+
+O BLAST possui uma interface gráfica (_Grafical User Interface_ ou _GUI_) muito boa para buscar sequências no banco de dados da NCBI. No entanto, executar o BLAST através da linha de comando tem muitos benefícios:
+
+- É muito mais fácil executar várias consultas do BLAST usando a linha de comando do que a GUI.
+- A execução do BLAST com a linha de comando é reprodutível e pode ser documentada em um script.
+- Os resultados podem ser salvos em um formato legível por máquina que pode ser analisado posteriormente.
+- Você pode criar seus próprios bancos de dados para pesquisa em vez de usar os bancos de dados pré-construídos da NCBI.
+- Isso permite a automação das consultas.
+- Isso permite que você use um servidor remoto para executar as consultas do BLAST.
+
 ## Bioinfo 2 - Montagem _de novo_ de genomas
 
 ## Bioinfo 3 - Gene Ortólogos
