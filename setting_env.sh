@@ -41,3 +41,6 @@ cd ..
 rm -rf redotable
 conda deactivate
 
+conda create -y -n fastqc -c bioconda fastqc
+conda create -y -n bbmap -c bioconda bbmap
+
