@@ -297,6 +297,7 @@ Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a 
 ```
 conda activate emboss
 ```
+
 ### Alinhamentos heurísticos de pares de sequências - Buscas em bancos de dados
 
 Os alinhamentos exatos representam um grande desafio computacional em termos de recursos necessários. Quando estamos buscando uma sequência semelhante a um alvo em um banco de dados que contém milhões de sequências, muitas vezes é necessário relaxar os critérios de busca para obter respostas rápidas e satisfatórias, mesmo que não sejam a resposta perfeita (exata). É aqui que ferramentas como o __Basic Local Alignment Search Tool__ ([Altschul et al., 1990](https://pubmed.ncbi.nlm.nih.gov/2231712/)), podem e devem ser empregadas. É importante destacar que o BLAST é uma ferramenta projetada para realizar alinhamentos __locais__, permitindo encontrar regiões similares em sequências, em vez de buscar por correspondências globais.
@@ -333,7 +334,15 @@ head mouse.1.protein.faa
 
 Essas são sequências de proteínas no formato FASTA. O formato FASTA é algo que muitos de vocês provavelmente já viram de uma forma ou de outra - é bastante comum. É um arquivo de texto que contém registros; cada registro começa com uma linha que começa com um '>' e, em seguida, contém uma ou mais linhas de texto de sequência.
 
-Vamos pegar essas duas primeiras sequências e salvá-las em um arquivo. Faremos isso usando a redireção de saída com o '>' que diz "pegue toda a saída e coloque-a neste arquivo aqui."
+Vamos pegar essas duas primeiras sequências e salvá-las em um arquivo. Faremos isso usando a redireção de saída com o '>' que diz "pegue toda a saída e coloque-a neste arquivo aqui.". Vamos utilizar o comando `head` para visualizar as _X_ primeiras linhas que contêm as duas primeiras sequências? Como podemos encontrar o valor de _X_?
+
+Já estamos familiarizados com o comando `grep`, que nos ajuda a encontrar padrões em arquivos de texto. Neste caso, podemos procurar pelo padrão _'>'_. Consultando a documentação do comando grep, encontraremos a opção `-n`, que, além de mostrar a linha que contém o padrão, também exibirá o número da linha no arquivo. Portanto, vamos usar o grep para exibir as três primeiras linhas que contêm o sinal _'>'_ e seus números de linha correspondentes no arquivo:"
+
+```
+grep -n ">" mouse.1.protein.faa|head -n3
+```
+
+Com esse resultado, agora sabemos que a terceira sequência começa na linha 12, ou seja, a segunda sequência termina na linha 11. O valor de _X_ é 11, agora podemos extrair as duas primeiras sequencias do arquivo usando o comando `head`:
 
 ```
 head -n 11 mouse.1.protein.faa > mm-first.faa
@@ -371,11 +380,11 @@ less mm-first.x.zebrafish.txt
 Vamos trabalhar com algumas sequências adicionais (este levará um pouco mais de tempo para ser executado):
 
 ```
-head -n 498 mouse.1.protein.faa > mm-second.faa
+head -n 519 mouse.1.protein.faa > mm-second.faa
 grep -c ">" mm-second.faa
 ```
 
-Em seguida, faremos a comparação das primeiras 96 sequências:
+Em seguida, faremos a comparação das primeiras 100 sequências:
 
 ```
 blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
@@ -416,8 +425,24 @@ Em alguns casos mais do que uma proteina do zebrafish aparece no resultado. Vamo
 blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -subject_besthit -qcov_hsp_perc 80 -max_target_seqs 1 -out mm-second.x.zebrafish_best.tsv -outfmt 6
 ```
 
-## Bioinfo 2 - Montagem _de novo_ de genomas
+Por favor, revise a documentação do BLAST. Quais campos ou colunas são exibidos quando o formato de saída é configurado como `outfmt 6`?
 
-## Bioinfo 3 - Gene Ortólogos
+```
+blastp -help
+```
 
-## Bioinfo 4 - Transcriptômica 
+Lembre-se de que inicialmente tínhamos 100 sequências do camundongo para realizar o BLAST. Será que todas elas resultaram em correspondências (hits) contra o peixe-zebra (zebrafish)? Como poderíamos verificar isso?
+
+Vamos alterar o formato de saída para incluir duas colunas adicionais que mostrarão os comprimentos das sequências _query_ e do _subject_. Posteriormente, utilizaremos essas informações para filtrar os resultados utilizando o comando [`awk`](https://www.howtogeek.com/562941/how-to-use-the-awk-command-on-linux/), para só manter os _hits_ onde pelo menos 80% do _subject_ participou do alinhamento com o _query_.
+
+```
+awk '$14*0.8 <= ($10-$9+1) {print $0}' mm-second.x.zebrafish_best.tsv > mm-second.x.zebrafish_best_subject80percent.tsv
+```
+
+Você pode identificar quantas proteínas _query_ se mantem nesse arquivo final? É quantas subject?
+
+## Bioinfo 3 - Montagem _de novo_ de genomas
+
+## Bioinfo 4 - Gene Ortólogos
+
+## Bioinfo 5 - Transcriptômica 
