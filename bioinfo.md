@@ -6,6 +6,8 @@ Diego M. Riaño-Pachón
 
 # Bioinformática
 
+Os exercícios serão realizados nos computadores da sala de computadores da central de aulas do CENA/USP. Por favor, entre no computador usando o sistema operacional Ubuntu e o usuário cen5789.
+
 ## Bioinfo 1 - Operacoes básicas em Bioinformática
 
 ### Ferramentas do Unix úteis na bioinformática.
@@ -183,6 +185,8 @@ sed -r 's/ | .*$//' TAIR10_pep_20101214_updated.mod.fasta > TAIR10_pep_20101214_
 ## Bioinfo 2 - Análise de Sequências
 
 ### Dotplots - Matrices de pontos
+
+Eu recomendo que você trabalhe na pasta `~/dia2`.
 
 As matrizes de pontos ('Dot Plot') são ferramentas exploratórias para a comparação de cadeias de texto, ou seja, sequências. Entre outras funcionalidades, elas nos permitem facilmente identificar regiões repetidas em uma sequência ao compará-la com ela mesma. Também podemos obter uma ideia bastante clara da estrutura de um gene ao comparar a sequência de sua região codificante com a sequência do locus onde ele se encontra.
 
@@ -512,6 +516,13 @@ awk '$14*0.8 <= ($10-$9+1) {print $0}' mm-second.x.zebrafish_best.tsv > mm-secon
 Você pode identificar quantas proteínas _query_ se mantem nesse arquivo final? É quantas subject?
 
 ## Bioinfo 3 - Análise de dados de sequenciamento em larga escala
+
+Crie uma nova pasta no seu HOME chamda `dia3`:
+
+```
+mkdir ~/dia3
+cd ~/dia3
+```
 
 ### Avaliando a qualidade de sequencias Illumina
 
