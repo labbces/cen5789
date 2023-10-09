@@ -511,8 +511,26 @@ awk '$14*0.8 <= ($10-$9+1) {print $0}' mm-second.x.zebrafish_best.tsv > mm-secon
 
 Você pode identificar quantas proteínas _query_ se mantem nesse arquivo final? É quantas subject?
 
-## Bioinfo 3 - Montagem _de novo_ de genomas
+## Bioinfo 3 - Análise de dados de sequenciamento em larga escala
 
-## Bioinfo 4 - Gene Ortólogos
+### Avaliando a qualidade de sequencias Illumina
 
-## Bioinfo 5 - Transcriptômica 
+Sempre que receber suas sequências da Illumina, é muito importante conferir a qualidade. Deve-se prestar atenção à presença de adaptadores (sequências adicionadas aos alvos de sequenciamento que precisam ser removidas antes de continuar com as análises), regiões de baixa qualidade (que geralmente também precisam ser removidas) e qualquer viés que possa levantar suspeitas sobre o sequenciamento. Os resultados da análise de qualidade sempre devem ser interpretados à luz do seu conhecimento sobre o tipo de amostra que foi sequenciada, incluindo os kits que foram usados para a criação das bibliotecas.
+
+Vamos verificar diferentes métricas da qualidade de 4 corridas de sequenciamento nos arquivos:
+
+- [qc1.fq.gz](files/qc1.fq.gz)
+- [qc2.fq.gz](files/qc2.fq.gz)
+- [qc3.fq.gz](files/qc3.fq.gz)
+- [qc4.fq.gz](files/qc4.fq.gz)
+
+Observe que os arquivos estão compactados, isso é sempre feito para economizar espaço de armazenamento. A maioria dos programas que iremos usar pode trabalhar com os dados nesse formato.
+
+Vamos visualizar
+
+
+## Bioinfo 4 - Montagem _de novo_ de genomas
+
+## Bioinfo 5 - Gene Ortólogos
+
+## Bioinfo 6 - Transcriptômica 
