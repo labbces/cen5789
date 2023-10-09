@@ -278,6 +278,8 @@ conda deactivate
 
 ### Alinhamentos exatos de pares de sequências
 
+#### cDNA vs Genoma
+
 Além da substituição de um resíduo (aminoácido ou nucleotídeo) por outro, as sequências podem sofrer perdas ou ganhos de resíduos, ou seja, deleções ou inserções, comumente chamadas em conjunto de _indels_. Os dotplots não permitem incluir esse tipo de variações nas análises. Para isso, precisamos de algoritmos mais sofisticados de comparação de sequências, é aí que entram os algoritmos exatos de comparação de pares de sequências. Esses algoritmos podem ser globais ou locais. 
 
 O algoritmo para alinhamento global exato foi proposto por [Needleman e Wuhsch em 1970](https://pubmed.ncbi.nlm.nih.gov/5420325/), usa a estratégia de [programação](https://www.spiceworks.com/tech/devops/articles/what-is-dynamic-programming/) [dinâmica](https://www.nature.com/articles/nbt0704-909) e, para um conjunto selecionado de parâmetros, garante encontrar o melhor alinhamento possível, por isso é considerado _exato_. É chamado de global porque seu objetivo é encontrar o alinhamento que envolve todos os resíduos das duas sequências sendo comparadas.
@@ -297,6 +299,59 @@ Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a 
 ```
 conda activate emboss
 ```
+
+#### Proteínas
+
+##### Matrices de substituição
+
+Vamos inspecionar a matriz _BLOSUM62_ que está incluída no _EMBOSS_. Para isso, precisamos encontrar a pasta onde o _EMBOSS_ armazena as matrizes. Execute o seguinte comando:
+
+```
+embossdata EBLOSUM62
+```
+
+Alguma saída conterá a palavra '_exists_'. No meu caso, o caminho para a matriz BLOSUM62 é `/usr/share/EMBOSS/data/EBLOSUM62`, e é nesse arquivo que a matriz BLOSUM62 está armazenada. Pode visualizar o conteúdo do arquivo com o comando `less`. Basta executar o seguinte comando:
+
+```
+less /usr/share/EMBOSS/data/EBLOSUM62
+```
+
+Isso abrirá o arquivo EBLOSUM62 no visualizador de texto "less", permitindo que você role e visualize seu conteúdo.
+
+Responda as seguintes perguntas:
+- Onde estão as maiores pontuações? Explique.
+- Qual é a substituição com a maior pontuação?
+- Por que as identidades não têm sempre a mesma pontuação?
+
+##### NACs
+
+Os NACs são uma família de fatores de transcrição específicos de plantas [(Han et al., 2023)](https://pubmed.ncbi.nlm.nih.gov/37623750/). Neste exercício, vamos comparar uma proteína NAC de angiosperma [_Arabidopsis thaliana_](files/ANAC092_pep.fasta) e uma proteína NAC do musgo [_Physcomitrium patens_](files/PpNAC_pep.fasta).
+
+Vamos realizar um alinhamento global entre as duas proteínas. Lembre-se de que o algoritmo de alinhamento global procura o alinhamento ideal que envolva as duas sequências inteiras.
+
+Quais programas do EMBOSS podem realizar alinhamentos globais?
+
+```
+wossname global
+```
+
+Usaremos o programa `needle` para realizar uma comparação global entre essas duas sequências. Verifique em [timetree.org](https://timetree.org/) oo tempo de divergência entre as duas espécies.
+
+Qual matriz BLOSUM considera mais adequada para comparar as duas sequências?
+
+Execute a comparação das duas sequências, especificando a matriz selecionada, e compare os resultados usando a matriz BLOSUM90. Você pode consultar a página de manual do `needle` para aprender como especificar as opções:
+
+```
+man needle
+```
+
+Agora realizaremos um alinhamento local. O objetivo do alinhamento local é encontrar regiões de similaridade local, e não é necessário incluir as sequências completas. Esse tipo de alinhamento é muito útil para pesquisar bancos de dados ou quando você não tem uma ideia clara sobre a semelhança da sequência de interesse com sequências no banco de dados. Usaremos o programa `water` para realizar uma comparação local entre essas duas sequências. Você pode consultar a página de manual do `water` para ajudar na selecao de opções:
+
+```
+man water
+```
+
+Quão significativos são esses alinhamentos? Tente gerar uma sequência aleatória a partir de [ANAC092](files/ANAC092_pep.fasta) e refaça os alinhamentos exatos. Como a pontuação do alinhamento muda?
 
 ### Alinhamentos heurísticos de pares de sequências - Buscas em bancos de dados
 
@@ -402,6 +457,7 @@ Observações:
 
 
 Por que levou mais tempo para fazer o BLAST em mm-second.faa do que em mm-first.faa?
+
 Coisas para mencionar e discutir:
 
 - Opções do blastp e -help.
