@@ -597,6 +597,17 @@ Para obter uma compreensão mais detalhada da discrepância observada na extremi
 
 Nesse contexto, no processo de limpeza, é igualmente crucial eliminar as sequências de adaptadores.
 
+Para realizar a limpeza, podemos utilizar o programa `bbduk.sh` da suíte `bbmap`. Para utilizá-lo, é necessário desativar qualquer ambiente Conda previamente ativado e ativar o ambiente `bbmap` da seguinte maneira:
+
+```
+conda deactivate
+conda activate bbmap
+bbduk.sh in=qc3.fq.gz ref=adapters.fa out=qc3.clean.fq.gz ktrim=r qtrim=w trimq=20 minlength=70 k=15
+conda deactivate
+```
+
+Em seguida, verifique a qualidade das sequências limpas usando o `fastqc`. Execute este procedimento para todos os arquivos neste exercício.
+
 ## Bioinfo 4 - Montagem _de novo_ de genomas
 
 ## Bioinfo 5 - Gene Ortólogos
