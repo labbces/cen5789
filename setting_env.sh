@@ -35,10 +35,12 @@ conda activate redotable
 wget https://www.bioinformatics.babraham.ac.uk/projects/redotable/redotable_v1.2.zip
 unzip redotable_v1.2.zip
 cd redotable
-chmod a+x redotable
 mv redotable ~/miniconda3/envs/redotable/bin/
 mv uk/ ~/miniconda3/envs/redotable/bin/
 cd ..
+rm redotable_v1.2.zip
 rm -rf redotable
 conda deactivate
 
+conda create -y -n fastqc -c bioconda fastqc
+conda create -y -n bbmap -c bioconda bbmap
