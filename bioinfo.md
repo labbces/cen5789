@@ -608,8 +608,52 @@ conda deactivate
 
 Em seguida, verifique a qualidade das sequências limpas usando o `fastqc`. Execute este procedimento para todos os arquivos neste exercício.
 
+### Analise de espectros de k-mers
+
+Os [k-mer](https://en.wikipedia.org/wiki/K-mer) são sequências de DNA de tamanho _k_ encontradas em uma sequência maior. É importante observar que para obter todos os k-mer de uma sequência, você começa no primeiro nucleotídeo da sequência e pega os próximos k nucleotídeos. Em seguida, você desloca-se um nucleotídeo à frente e pega os k nucleotídeos, repete o processo até chegar no fim da sequencia, i.e., até não conseguir pegar k nucleotídeos. Vamos a listar todos os k-mer, com k=3, isto é vamos gerar o catálogo de k-mers da sequência abaixo:
+
+```
+Sequência:   ACGTAGCGTAGGT
+3-mer 1:     ACG
+3-mer 2:      CGT
+3-mer 3:       GTA
+3-mer 4:        TAG
+3-mer 5:         TGC
+3-mer 6:          GCG
+3-mer 7:           CGT
+3-mer 8:            GTA
+3-mer 9:             TAG
+3-mer 10:             AGG
+3-mer 11:              GGT
+
+```
+
+Observe que a quantidade de k-mers distintos corresponde a 4 elevado à k potência (__4^k__). Ao analisar estatísticas relacionadas aos k-mers em dados brutos de sequenciamento, é viável adquirir _insights_ sobre as características do genoma em estudo, mesmo antes de iniciar o processo de montagem. Além disso, muitas dessas estimativas, obtidas por meio das estatísticas dos k-mers, podem informar e influenciar os procedimentos de montagem e anotação do genoma. Através do catálogo de k-mers, é possível calcular as frequências empíricas dos k-mers em um conjunto de dados, ou até mesmo em um genoma montado, resultando no espectro de k-mers desses dados. A frequência empírica dos k-mers na sequência acima é a seguinte:
+
+```
+k-mer	Freq
+ACG	1
+AGG	1
+CGT	2
+GCG	1
+GTA	2
+GGT	1
+TAG	2
+TGC	1
+TTG	1
+```
+
+A partir da frequência empírica de k-mers, podemos calcular o espectro de k-mers, que nada mais é do que um histograma da coluna _Freq_ da tabela acima. Ou seja, o espectro de k-mers informa quantos k-mers distintos aparecem com uma frequência _x_ (multiplicidade ou profundidade), da seguinte maneira:
+
+```
+Número kmers	Multiplicidade
+6		1
+3		2
+```
+
+
 ## Bioinfo 4 - Montagem _de novo_ de genomas
 
 ## Bioinfo 5 - Gene Ortólogos
 
-## Bioinfo 6 - Transcriptômica 
+## Bioinfo 6 - Transcriptômica
