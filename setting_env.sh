@@ -6,6 +6,7 @@ gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgr
 
 sudo apt update
 sudo apt upgrade
+sudo apt-get install -y libcurl4-openssl-dev
 
 #miniconda3
 mkdir -p ~/miniconda3
@@ -27,8 +28,9 @@ conda create -y -n hifiasm -c bioconda hifiasm
 conda create -y -n bandage -c bioconda bandage
 conda create -y -n quast -c bioconda quast
 conda create -y -n genomescope2 -c bioconda genomescope2
-
-#
+conda activate genomescope2
+R -e 'install.packages("viridis", repos="https://brieger.esalq.usp.br/CRAN/")'
+conda deactivate
 
 conda create -y -n redotable -c bioconda java-jdk
 conda activate redotable
