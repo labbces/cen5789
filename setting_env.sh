@@ -6,7 +6,7 @@ gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgr
 
 sudo apt update
 sudo apt upgrade
-sudo apt-get install -y libcurl4-openssl-dev
+sudo apt-get install -y libcurl4-openssl-dev zlib1g-dev libbz2-dev build-essential
 
 #miniconda3
 mkdir -p ~/miniconda3

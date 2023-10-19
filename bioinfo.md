@@ -690,12 +690,12 @@ git clone -b sploidyplot https://github.com/KamilSJaron/smudgeplot
 git clone https://github.com/thegenemyers/FastK
 
 cd smudgeplot
-make -s INSTALL_PREFIX=/home/cen5789/anaconda3/envs/genomescope2/
+make -s INSTALL_PREFIX=/home/cen5789/miniconda3/envs/genomescope2/
 R -e 'install.packages(".", repos = NULL, type="source")'
 cd ..
 smudgeplot.py -h # Teste se a instalação foi bem-sucedida.
 cd FastK && make
-install -c FastK Fastrm Fastmv Fastcp Fastmerge Histex Tabex Profex Logex Vennex Symmex Haplex Homex Fastcat /home/cen5789/anaconda3/envs/genomescope2/bin/
+install -c FastK Fastrm Fastmv Fastcp Fastmerge Histex Tabex Profex Logex Vennex Symmex Haplex Homex Fastcat /home/cen5789/miniconda3/envs/genomescope2/bin/
 FastK # Teste se a instalação foi bem-sucedida.
 cd ../.. 
 pwd # Você tem que estar na pasta ~/dia3/espectro
@@ -709,7 +709,7 @@ Este processo opera com leituras de sequenciamento cruas ou limpas. A partir del
 Então, por favor, construa o banco de dados utilizando o `FastK`. Este processo levará alguns minutos (15-20). Certifique-se de utilizar o arquivo de leituras correto, e eu recomendaria nomear o banco de dados com o número de acesso do SRA correspondente. Vamos realizar estas analises com varios valores de k:{17,21,31,41,51,71}, e vamos comparar os resultados. No `FastK` você pode modificar o tamanho do k-mer com o argumento `-k`.
 
 ```
-FastK -v -t4 -k17 -M16 -T4 SRR926312_[12].fastq.gz -NSRR926312_k31
+FastK -v -t4 -k17 -M16 -T4 SRR926312_[12].fastq.gz -NSRR926312_k17
 ```
 
 Agora, Você pode obter o espectro de k-mers a partir do banco de dados usando o Histex, uma ferramenta diferente da mesma suíte.
