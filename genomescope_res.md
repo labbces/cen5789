@@ -1,6 +1,6 @@
 | SRR | KMER | GenomeScope2 | GenomeScope -kcov | Fixed GenomeScope | SmudgePlot -L | SmudgePlot |
 | --- | --- | --- | --- | --- | --- | --- |
-| ERR3154977 | k17 | ![ERR3154977_k17_transformed_linear_plot.png](images/ERR3154977_k17_transformed_linear_plot.png) | 80 | ![ERR3154977_k17_kcov_transformed_linear_plot.png](images/ERR3154977_k17_kcov_transformed_linear_plot.png) |
+| ERR3154977 | k17 | ![ERR3154977_k17_transformed_linear_plot.png](images/ERR3154977_k17_transformed_linear_plot.png =250x) | 80 | ![ERR3154977_k17_kcov_transformed_linear_plot.png](images/ERR3154977_k17_kcov_transformed_linear_plot.png =250x) |
 | ERR3154977 | k21 | ![ERR3154977_k21_transformed_linear_plot.png](images/ERR3154977_k21_transformed_linear_plot.png) | 80 | ![ERR3154977_k21_kcov_transformed_linear_plot.png](images/ERR3154977_k21_kcov_transformed_linear_plot.png) |
 | ERR3154977 | k31 | ![ERR3154977_k31_transformed_linear_plot.png](images/ERR3154977_k31_transformed_linear_plot.png) | 75 | ![ERR3154977_k31_kcov_transformed_linear_plot.png](images/ERR3154977_k31_kcov_transformed_linear_plot.png) |
 | ERR3154977 | k41 | ![ERR3154977_k41_transformed_linear_plot.png](images/ERR3154977_k41_transformed_linear_plot.png) | 60 | ![ERR3154977_k41_kcov_transformed_linear_plot.png](images/ERR3154977_k41_kcov_transformed_linear_plot.png) |
