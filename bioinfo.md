@@ -772,11 +772,11 @@ Neste exemplo, o SmudgePlot sugere um organismo tetraploide, mas observe que a p
 
 ## Bioinfo 4 - Montagem _de novo_ de genomas
 
-Vamos trabalhar na pasta ~/dia4, se ele não existe por favor crie-la na sua pasta HOME.
+Vamos trabalhar na pasta ~/dia4. Caso ela não exista, por favor, crie-a em sua pasta HOME.
 
 ### Obtendo os dados e calculando métricas do genoma
 
-Vamos montar o genoma da uma levedura, a _Kazachstania bulderi_ cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0).  Primeiro teremos que descarregar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/) um banco do NCBI que mantem dados brutos de sequenciamento massivo.
+Vamos montar o genoma de uma levedura, a Kazachstania bulderi da cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0). Para começar, precisaremos baixar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/), um banco de dados do NCBI que armazena informações brutas de sequenciamento em larga escala.
 
 ```
 conda activate sratoolkit
@@ -785,7 +785,7 @@ conda deactivate
 gzip SRR25033384.fq
 ```
 
-Num primeiro passo vamos remover remascentes dos adaptaores da biblioteca com HiFiAdapterFilt. Para isso vamos instalar primeiro o software:
+No primeiro passo, vamos remover os resíduos dos adaptadores da biblioteca utilizando o software HiFiAdapterFilt. Para fazer isso, primeiro precisamos instalar o software.
 
 ```
 conda activate blast
@@ -795,9 +795,9 @@ bash HiFiAdapterFilt/pbadapterfilt.sh -t 4 -p SRR25033384
 conda deactivate
 ```
 
-Pode conferir o arquivo `SRR25033384.stats` pare ter um resumo do processo de limpeza. Agora continuaremos com o arquivo `SRR25033384.filt.fastq.gz`
+Você pode conferir o arquivo `SRR25033384.stats` para obter um resumo do processo de limpeza. Agora, vamos continuar com o arquivo `SRR25033384.filt.fastq.gz`.
 
-Vamos processa-lo com o GenomeScope2 para ter uma ideia das principais métricas do genoma e com o SmudgePlot para conferir ploidia. Lembre-se que a semana passada instalamos o SmudgePlot, se isso não funcionou, tente de novo.
+Vamos processá-lo com o GenomeScope2 para obter uma ideia das principais métricas do genoma e usar o SmudgePlot para verificar a ploidia. Lembre-se de que instalamos o SmudgePlot na semana passada. Se isso não funcionou, tente novamente. Lembre-se de escolher corretamente o parámetro `-L` para o `smudgeplot.py`.
 
 ```
 conda activate genomescope2
@@ -813,23 +813,49 @@ conda deactivate
 | --- | --- |
 | ![GenomeScope SRR25033384 ](images/SRR25033384_k31_transformed_linear_plot.png) | [SmudgePlot SRR25033384](images/SRR25033384_k31_smudgeplot_smudgeplot_log10.png) |
 
-Lembre-se a cobertura do genoma 1n (monoploide)temque ser a mesma detectada pelo SmudgePlot e o GenomeScope, caso constratio você tem que pensar oq ue está acontecendo.
-Neste caso, temos un claro diploide, com uma cobertura do genoma monoploide de ~38x, e uma alta taxa de heterozigosidade.
+Lembre-se de que a cobertura do genoma 1n (monoploide) deve ser a mesma detectada tanto pelo SmudgePlot quanto pelo GenomeScope. Se houver uma discrepância, é necessário investigar o que está ocorrendo.
+
+Neste caso, parece que temos um claro genoma diploide, com uma cobertura do genoma monoploide de aproximadamente 38x e uma alta taxa de heterozigosidade.
 
 ### A montar!
 
-Vamos continuar com a montagem. Usaremos dois montadores e compararemos os resultados, o [HiFiASM](https://github.com/chhylp123/hifiasm) e o [Flye](https://github.com/fenderglass/Flye). A metade da sala vai usar um montador a outra metada outro.
+Vamos prosseguir com o processo de montagem. Utilizaremos dois montadores e compararemos os resultados: o [HiFiASM](https://github.com/chhylp123/hifiasm) e o [Flye](https://github.com/fenderglass/Flye). Metade da equipe usará um montador, e a outra metade usará o outro.
 
 #### Hifiasm
 
 ```
+conda activate hifiasm
 hifiasm  -o NRRLY27205.asm -t 5 SRR25033384.fq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
+awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap1.p_ctg.gfa > NRRLY27205.asm.bp.hap1.p_ctg.fa
+awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap2.p_ctg.gfa > NRRLY27205.asm.bp.hap2.p_ctg.fa
+awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.p_ctg.gfa > NRRLY27205.asm.bp.p_ctg.fa
+conda deactivate
 ```
 
-A montagem toma por volta de 30 minutos usando 5 threads.
+A montagem deve levar cerca de 30 minutos, considerando o uso de 5 threads e requerendo aproximadamente 16 GB de RAM.
 
 #### Flye
- 
+
+```
+conda activate flye
+flye  --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
+
+```
+
+### Examinando as montagens.
+
+Interaja com a equipe que usou um montador diferente e procure identificar as diferenças entre as montagens realizadas por ambos os softwares.
+
+Para visualizar as montagens, você pode usar ferramentas específicas, como o software Bandage, que é útil para visualizar gráficos de montagem de genomas. Certifique-se de instalar o Bandage e, em seguida, utilize-o para carregar os resultados das montagens produzidas pelos montadores HiFiASM e Flye. Isso permitirá que você examine e compare as montagens de forma mais detalhada.
+
+Utilize o Bandage para visualizar os arquivos GFA. Certifique-se de ativar o ambiente do Bandage após desativar qualquer outro ambiente utilizado anteriormente. O Bandage é um software com interface gráfica. Carregue o gráfico da montagem (Load Graph) e, em seguida, desenhe o gráfico (Draw Graph). Não deixe de discutir suas observações e resultados com seu instrutor e colegas.
+
+```
+conda deactivate
+conda activate bandage
+Bandage
+```
+
 ## Bioinfo 5 - Gene Ortólogos
 
 ## Bioinfo 6 - Transcriptômica
