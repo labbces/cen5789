@@ -46,3 +46,7 @@ conda deactivate
 
 conda create -y -n fastqc -c bioconda fastqc
 conda create -y -n bbmap -c bioconda bbmap
+
+
+ conda create -y -n sratoolkit -c bioconda sra-tools
+ conda create -n tidk -c bioconda tidk

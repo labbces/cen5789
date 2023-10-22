@@ -772,6 +772,64 @@ Neste exemplo, o SmudgePlot sugere um organismo tetraploide, mas observe que a p
 
 ## Bioinfo 4 - Montagem _de novo_ de genomas
 
+Vamos trabalhar na pasta ~/dia4, se ele não existe por favor crie-la na sua pasta HOME.
+
+### Obtendo os dados e calculando métricas do genoma
+
+Vamos montar o genoma da uma levedura, a _Kazachstania bulderi_ cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0).  Primeiro teremos que descarregar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/) um banco do NCBI que mantem dados brutos de sequenciamento massivo.
+
+```
+conda activate sratoolkit
+fasterq-dump --threads 3 --progress --outfile SRR25033384.fq SRR25033384
+conda deactivate
+gzip SRR25033384.fq
+```
+
+Num primeiro passo vamos remover remascentes dos adaptaores da biblioteca com HiFiAdapterFilt. Para isso vamos instalar primeiro o software:
+
+```
+conda activate blast
+git clone https://github.com/sheinasim/HiFiAdapterFilt.git
+export PATH=$PATH:$HOME/dia4/HiFiAdapterFilt/:$HOME/dia4/HiFiAdapterFilt/DB
+bash HiFiAdapterFilt/pbadapterfilt.sh -t 4 -p SRR25033384
+conda deactivate
+```
+
+Pode conferir o arquivo `SRR25033384.stats` pare ter um resumo do processo de limpeza. Agora continuaremos com o arquivo `SRR25033384.filt.fastq.gz`
+
+Vamos processa-lo com o GenomeScope2 para ter uma ideia das principais métricas do genoma e com o SmudgePlot para conferir ploidia. Lembre-se que a semana passada instalamos o SmudgePlot, se isso não funcionou, tente de novo.
+
+```
+conda activate genomescope2
+FastK -v -t16 -k31 -M16 -T4 SRR25033384.filt.fastq.gz -NSRR25033384_k31
+Histex -G SRR25033384_k31 > SRR25033384_k31.histo
+genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
+smudgeplot.py hetmers -L 18 -t 4 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
+smudgeplot.py plot -t SRR25033384_k31 -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs_text.smu
+conda deactivate
+```
+
+| GenomeScope | SmudgePlot | 
+| --- | --- |
+| ![GenomeScope SRR25033384 ](images/SRR25033384_k31_transformed_linear_plot.png) | [SmudgePlot SRR25033384](images/SRR25033384_k31_smudgeplot_smudgeplot_log10.png) |
+
+Lembre-se a cobertura do genoma 1n (monoploide)temque ser a mesma detectada pelo SmudgePlot e o GenomeScope, caso constratio você tem que pensar oq ue está acontecendo.
+Neste caso, temos un claro diploide, com uma cobertura do genoma monoploide de ~38x, e uma alta taxa de heterozigosidade.
+
+### A montar!
+
+Vamos continuar com a montagem. Usaremos dois montadores e compararemos os resultados, o [HiFiASM](https://github.com/chhylp123/hifiasm) e o [Flye](https://github.com/fenderglass/Flye). A metade da sala vai usar um montador a outra metada outro.
+
+#### Hifiasm
+
+```
+hifiasm  -o NRRLY27205.asm -t 5 SRR25033384.fq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
+```
+
+A montagem toma por volta de 30 minutos usando 5 threads.
+
+#### Flye
+ 
 ## Bioinfo 5 - Gene Ortólogos
 
 ## Bioinfo 6 - Transcriptômica
