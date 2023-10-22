@@ -48,5 +48,8 @@ conda create -y -n fastqc -c bioconda fastqc
 conda create -y -n bbmap -c bioconda bbmap
 
 
- conda create -y -n sratoolkit -c bioconda sra-tools
- conda create -n tidk -c bioconda tidk
+conda create -y -n sratoolkit -c bioconda sra-tools
+conda create -n tidk -c bioconda tidk
+conda create -n compleasm -c conda-forge -c bioconda compleasm
+conda create -n merqury -c bioconda merqury
+conda create -n funannotate "python>=3.6,<3.9" funannotate

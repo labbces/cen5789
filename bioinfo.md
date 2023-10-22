@@ -776,7 +776,7 @@ Vamos trabalhar na pasta ~/dia4. Caso ela não exista, por favor, crie-a em sua 
 
 ### Obtendo os dados e calculando métricas do genoma
 
-Vamos montar o genoma de uma levedura, a Kazachstania bulderi da cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0). Para começar, precisaremos baixar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/), um banco de dados do NCBI que armazena informações brutas de sequenciamento em larga escala.
+Vamos montar o genoma de uma levedura, a _Kazachstania bulderi_ da cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0). Para começar, precisaremos baixar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/), um banco de dados do NCBI que armazena informações brutas de sequenciamento em larga escala.
 
 ```
 conda activate sratoolkit
@@ -839,8 +839,11 @@ A montagem deve levar cerca de 30 minutos, considerando o uso de 5 threads e req
 ```
 conda activate flye
 flye  --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
+conda deactivate
 
 ```
+
+A montagem deve levar cerca de 45 minutos, considerando o uso de 5 threads e requerendo aproximadamente 7.5 GB de RAM.
 
 ### Examinando as montagens.
 
@@ -855,6 +858,58 @@ conda deactivate
 conda activate bandage
 Bandage
 ```
+
+#### Métricas de continuidade
+
+Certifique-se de copiar a montagem realizada com o outro programa antes de calcular as métricas. Você precisará dos seguintes arquivos:
+
+- `assembly.fasta` gerado pelo Flye
+- `NRRLY27205.asm.bp.hap1.p_ctg.fa`, `NRRLY27205.asm.bp.hap2.p_ctg.fa` e `NRRLY27205.asm.bp.p_ctg.fa` gerados pelo HiFiasm
+
+Esses arquivos são essenciais para a análise das métricas de montagem.
+
+```
+conda activate quast
+quast.py --fungus --est-ref-size 13000000 --threads 5 NRRLY27205.asm.bp.hap1.p_ctg.fa NRRLY27205.asm.bp.hap2.p_ctg.fa NRRLY27205.asm.bp.p_ctg.fa NRRLY27205.flye/assembly.fasta
+conda deactivate
+```
+Revisite o arquivo report.html e analise cuidadosamente os valores de NG50 e o tamanho total da montagem. Certifique-se de inspecionar minuciosamente essas métricas a fim de assegurar a precisão e qualidade da montagem.
+
+#### Métricas de completude
+
+##### Espaço gênico
+
+```
+conda activate compleasm
+compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 5
+compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 5
+compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 5
+compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
+```
+
+##### Merqury
+
+###### Create meryl database of the reads
+
+```
+module load merqury
+best_k.sh 13m
+meryl k=7 count SRR25033384.filt.fastq.gz output SRR25033384.meryl
+
+```
+
+###### HiFiasm
+
+```
+merqury.sh SRR25033384.meryl NRRLY27205.asm.bp.hap1.p_ctg.fa NRRLY27205.asm.bp.hap2.p_ctg.fa NRRLY27205.hifiasm.merqury
+```
+
+###### Flye
+
+```
+merqury.sh SRR25033384.meryl NRRLY27205.flye/assembly.fasta NRRLY27205.flye.merqury
+```
+
 
 ## Bioinfo 5 - Gene Ortólogos
 
