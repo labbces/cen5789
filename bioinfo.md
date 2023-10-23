@@ -889,14 +889,35 @@ compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.comp
 
 ### Genome annotation
 
-Download all the proteins from teh same genus from NCBI. 
+#### Obter evidência extrínseca - Proteínas de espécies próximas.
 
-Link your genome assembly files and proteins to your HOME directory
+Vamos anotar apenas a montagem que apresentar as melhores métricas de completude e continuidade.
+
+Faça o download de todas as proteínas do mesmo gênero no NCBI. Para fazer isso, acesse o banco de dados de taxonomia do NCBI em seu navegador e procure pelo nome do gênero Kazachstania na lista de nomes. Clique no nome do gênero, conforme mostrado na figura:
+
+![GetProteinsFromTaxonomy_1](images/GetProteinsFromTaxonomy_1.png)
+
+Na página em que você chegou, identifique a tabela que mostra a figura, onde todos os registros associados a esse gênero em outros bancos de dados do NCBI estão listados. Clique na seção "Proteins", onde deve haver um número aproximado de 53.000 proteínas.
+
+![GetProteinsFromTaxonomy_2](images/GetProteinsFromTaxonomy_2.png)
+
+Finalmente descarregue um arquivo com essas proteinas em formato fasta.
+
+![GetProteinsFromTaxonomy_2](images/GetProteinsFromTaxonomy_2.png)
+
+#### Anotando o Genoma - GALBA
+
+Vamos a anotar o genoma usando [GALBA](https://github.com/Gaius-Augustus/GALBA). Outras alternativas incluem o uso do [BRAKER](https://github.com/Gaius-Augustus/BRAKER) ou [EASEL](https://gitlab.com/PlantGenomicsLab/easel), porém, essas ferramentas exigem dados de RNA-Seq e são mais intensivas em termos computacionais. Em cenários reais, a recomendação é empregar várias estratégias e gerar um conjunto de genes previstos com base nos melhores resultados de cada ferramenta, utilizando, por exemplo [EVidenceModeler](https://github.com/EVidenceModeler/EVidenceModeler)
+
+Vamos usar um container do singularity para rodar mais facilmente o GALBA, para que isso funcione linque os arquivos de montagem do genoma e as proteínas para o diretório HOME.
 
 ```
+ln -s ~/Downloads/sequence.fasta ~/
+ln -s ~/dia4/NRRLY27205.asm.bp.p_ctg.fa ~/
+
 conda activate singularity
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
-singularity exec galba.sif galba.pl --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.fa --prot_seq=sequence.fasta
+singularity exec galba.sif galba.pl --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.p_ctg.fa --prot_seq=sequence.fasta
 ```
 
 ## Bioinfo 5 - Gene Ortólogos
