@@ -15,6 +15,7 @@ bash HiFiAdapterFilt/pbadapterfilt.sh -t 4 -p SRR25033384
 conda deactivate
 
 mkdir -p asm/hifiasm
+cd asm/hifiasm
 
 conda activate hifiasm
 \time -v hifiasm  -o NRRLY27205.asm -t 5 ../../SRR25033384.fq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
@@ -25,6 +26,7 @@ conda deactivate
 
 cd ..
 mkdir flye
+cd flye
 conda activate flye
 \time -v flye  --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
 conda deactivate
