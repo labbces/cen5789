@@ -887,6 +887,18 @@ compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm
 compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
 ```
 
+### Genome annotation
+
+Download all the proteins from teh same genus from NCBI. 
+
+Link your genome assembly files and proteins to your HOME directory
+
+```
+conda activate singularity
+singularity build galba.sif docker://katharinahoff/galba-notebook:latest
+singularity exec galba.sif galba.pl --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.fa --prot_seq=sequence.fasta
+```
+
 ## Bioinfo 5 - Gene Ortólogos
 
 ## Bioinfo 6 - Transcriptômica

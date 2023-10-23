@@ -59,3 +59,5 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 
 conda create -n funannotate "python>=3.6,<3.9" funannotate
+
+conda create -n singularity -c conda-forge singularity
