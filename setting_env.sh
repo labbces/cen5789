@@ -49,15 +49,15 @@ conda create -y -n bbmap -c bioconda bbmap
 
 
 conda create -y -n sratoolkit -c bioconda sra-tools
-conda create -n tidk -c bioconda tidk
-conda create -n compleasm -c conda-forge -c bioconda compleasm
-conda create -n merqury -c bioconda merqury
+conda create -y -n tidk -c bioconda tidk
+conda create -y -n compleasm -c conda-forge -c bioconda compleasm
+conda create -y -n merqury -c bioconda merqury
 
 #For funannotate
 conda config --add channels defaults
 conda config --add channels bioconda
 conda config --add channels conda-forge
 
-conda create -n funannotate "python>=3.6,<3.9" funannotate
+conda create -y -n funannotate "python>=3.6,<3.9" funannotate
 
-conda create -n singularity -c conda-forge singularity
+conda create -y -n singularity -c conda-forge singularity
