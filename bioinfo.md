@@ -893,8 +893,8 @@ compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.comp
 
 ```
 module load merqury
-best_k.sh 13m
-meryl k=7 count SRR25033384.filt.fastq.gz output SRR25033384.meryl
+best_k.sh 13000000
+meryl k=17 count SRR25033384.filt.fastq.gz output SRR25033384.meryl
 
 ```
 

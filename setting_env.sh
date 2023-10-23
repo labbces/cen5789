@@ -52,4 +52,10 @@ conda create -y -n sratoolkit -c bioconda sra-tools
 conda create -n tidk -c bioconda tidk
 conda create -n compleasm -c conda-forge -c bioconda compleasm
 conda create -n merqury -c bioconda merqury
+
+#For funannotate
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
 conda create -n funannotate "python>=3.6,<3.9" funannotate
