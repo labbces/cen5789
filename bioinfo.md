@@ -887,30 +887,6 @@ compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm
 compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
 ```
 
-##### Merqury
-
-###### Create meryl database of the reads
-
-```
-module load merqury
-best_k.sh 13000000
-meryl k=17 count SRR25033384.filt.fastq.gz output SRR25033384.meryl
-
-```
-
-###### HiFiasm
-
-```
-merqury.sh SRR25033384.meryl NRRLY27205.asm.bp.hap1.p_ctg.fa NRRLY27205.asm.bp.hap2.p_ctg.fa NRRLY27205.hifiasm.merqury
-```
-
-###### Flye
-
-```
-merqury.sh SRR25033384.meryl NRRLY27205.flye/assembly.fasta NRRLY27205.flye.merqury
-```
-
-
 ## Bioinfo 5 - Gene Ortólogos
 
 ## Bioinfo 6 - Transcriptômica
