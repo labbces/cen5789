@@ -53,11 +53,6 @@ conda create -y -n tidk -c bioconda tidk
 conda create -y -n compleasm -c conda-forge -c bioconda compleasm
 conda create -y -n merqury -c bioconda merqury
 
-#For funannotate
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-
-conda create -y -n funannotate "python>=3.6,<3.9" funannotate
-
 conda create -y -n singularity -c conda-forge singularity
+
+conda create -n jupiterplot -c bioconda circos samtools minimap2
