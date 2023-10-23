@@ -952,6 +952,10 @@ Aqui está a figura que compara a montagem principal (primary assembly) com o ha
 
 ### Genome annotation
 
+#### Mascare repetições
+
+Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/contigs da montagem por meio de uma biblioteca de repetições adaptada ao genoma em questão. Entre as estratégias frequentemente empregadas, destacam-se o uso do [RepeatModeler](https://github.com/Dfam-consortium/RepeatModeler)/[RepeatMasker](https://www.repeatmasker.org/), [EDTA](https://github.com/oushujun/EDTA) e [Earl Grey](https://github.com/TobyBaril/EarlGrey). No entanto, é importante observar que esse processo costuma demandar considerável capacidade computacional. Por isso, hoje optaremos por omiti-lo.
+
 #### Obter evidência extrínseca - Proteínas de espécies próximas.
 
 Vamos anotar apenas a montagem que apresentar as melhores métricas de completude e continuidade.
