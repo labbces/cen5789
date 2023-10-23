@@ -108,6 +108,7 @@ Sofia Robb
             * [Telômeros](bioinfo.md/#telômeros)
          * [Comparando as montagens](bioinfo.md/#comparando-as-montagens)
          * [Genome annotation](bioinfo.md/#genome-annotation)
+            * [Mascare repetições](bioinfo.md/#mascare-repetições)
             * [Obter evidência extrínseca - Proteínas de espécies próximas.](bioinfo.md/#obter-evidência-extrínseca---proteínas-de-espécies-próximas)
             * [Anotando o Genoma - GALBA](bioinfo.md/#anotando-o-genoma---galba)
       * [Bioinfo 5 - Gene Ortólogos](bioinfo.md/#bioinfo-5---gene-ortólogos)
