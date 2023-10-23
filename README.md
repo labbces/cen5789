@@ -106,6 +106,7 @@ Sofia Robb
             * [Métricas de completude](bioinfo.md/#métricas-de-completude)
                * [Espaço gênico](bioinfo.md/#espaço-gênico)
             * [Telômeros](bioinfo.md/#telômeros)
+         * [Comparando as montagens](bioinfo.md/#comparando-as-montagens)
          * [Genome annotation](bioinfo.md/#genome-annotation)
             * [Obter evidência extrínseca - Proteínas de espécies próximas.](bioinfo.md/#obter-evidência-extrínseca---proteínas-de-espécies-próximas)
             * [Anotando o Genoma - GALBA](bioinfo.md/#anotando-o-genoma---galba)
