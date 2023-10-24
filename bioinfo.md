@@ -926,7 +926,7 @@ Agora, vamos representar graficamente o número de repetições encontradas ao l
 ```
 mv ~/Downloads/plotTelomericRepeatPositions.R ~/dia4
 conda activate genomescope2
-Rscript NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT.tsv_telomeric_repeat_windows.tsv
+Rscript plotTelomericRepeatPositions.R NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT_telomeric_repeat_windows.tsv
 conda deactivate
 evince Rplots.pdf
 ```
