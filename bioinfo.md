@@ -984,7 +984,7 @@ ln -s ~/dia4/NRRLY27205.asm.bp.p_ctg.fa ~/
 
 conda activate singularity
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
-singularity exec -B ${PWD}:${PWD} galba.sif galba.pl --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
+singularity exec -B ${PWD}:${PWD} galba.sif galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
 ```
 
 ## Bioinfo 5 - Gene Ortólogos
