@@ -53,9 +53,8 @@ conda create -y -n tidk -c bioconda tidk
 conda create -y -n compleasm -c conda-forge -c bioconda compleasm
 conda create -y -n merqury -c bioconda merqury
 
-conda create -y -n singularity -c conda-forge singularity
-
 conda create -y -n jupiterplot -c bioconda circos samtools minimap2
 
+conda create -y -n singularitycew -c wallaulab singularityce
 conda create -y -n igv -c bioconda igv
 conda create -y -n busco -c bioconda busco
