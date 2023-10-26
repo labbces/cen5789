@@ -55,4 +55,7 @@ conda create -y -n merqury -c bioconda merqury
 
 conda create -y -n singularity -c conda-forge singularity
 
-conda create -n jupiterplot -c bioconda circos samtools minimap2
+conda create -y -n jupiterplot -c bioconda circos samtools minimap2
+
+conda create -y -n igv -c bioconda igv
+conda create -y -n busco -c bioconda busco
