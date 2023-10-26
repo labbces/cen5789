@@ -979,12 +979,13 @@ Vamos a anotar o genoma usando [GALBA](https://github.com/Gaius-Augustus/GALBA).
 Vamos usar um container do singularity para rodar mais facilmente o GALBA, para que isso funcione linque os arquivos de montagem do genoma e as proteínas para o diretório HOME.
 
 ```
-ln -s ~/Downloads/sequence.fasta ~/
-ln -s ~/dia4/NRRLY27205.asm.bp.p_ctg.fa ~/
-
-conda activate singularity
+conda activate singularitycew
+ln -s /usr/bin/mksquashfs /usr/local/bin/
+ln -s /usr/bin/unsquashfs /usr/local/bin/
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
-singularity exec -B ${PWD}:${PWD} galba.sif galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
+singularity shell galba.sif
+export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
+galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
 ```
 
 ## Bioinfo 5 - Gene Ortólogos
