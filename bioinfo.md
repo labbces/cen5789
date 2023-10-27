@@ -950,13 +950,13 @@ Aqui está a figura que compara a montagem principal (primary assembly) com o ha
 
 ![jupiterplot_primary_vs_hap1](images/jupiterplot_primary_vs_hap1.png)
 
-### Genome annotation
+## Bioinfo 5 -  Genome annotation
 
-#### Mascare repetições
+### Mascare repetições
 
 Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/contigs da montagem por meio de uma biblioteca de repetições adaptada ao genoma em questão. Entre as estratégias frequentemente empregadas, destacam-se o uso do [RepeatModeler](https://github.com/Dfam-consortium/RepeatModeler)/[RepeatMasker](https://www.repeatmasker.org/), [EDTA](https://github.com/oushujun/EDTA) e [Earl Grey](https://github.com/TobyBaril/EarlGrey). No entanto, é importante observar que esse processo costuma demandar considerável capacidade computacional. Por isso, hoje optaremos por omiti-lo.
 
-#### Obter evidência extrínseca - Proteínas de espécies próximas.
+### Obter evidência extrínseca - Proteínas de espécies próximas.
 
 Vamos anotar apenas a montagem que apresentar as melhores métricas de completude e continuidade.
 
@@ -972,7 +972,7 @@ Finalmente descarregue um arquivo com essas proteinas em formato fasta.
 
 ![GetProteinsFromTaxonomy_2](images/GetProteinsFromTaxonomy_2.png)
 
-#### Anotando o Genoma - GALBA
+### Anotando o Genoma - GALBA
 
 Vamos a anotar o genoma usando [GALBA](https://github.com/Gaius-Augustus/GALBA). Outras alternativas incluem o uso do [BRAKER](https://github.com/Gaius-Augustus/BRAKER) ou [EASEL](https://gitlab.com/PlantGenomicsLab/easel), porém, essas ferramentas exigem dados de RNA-Seq e são mais intensivas em termos computacionais. Em cenários reais, a recomendação é empregar várias estratégias e gerar um conjunto de genes previstos com base nos melhores resultados das ferramentas, utilizando, por exemplo [EVidenceModeler](https://github.com/EVidenceModeler/EVidenceModeler). Sempre é importante utilizar evidência extrínseca, e na maioria dos casos, o RNA-Seq é a fonte de dados que oferece os melhores resultados.
 
@@ -1010,6 +1010,6 @@ conda deactivate
 
 Os resultados do BUSCO estão disponíveis na pasta GALBA_BUSCO. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do BUSCO das proteínas previstas com os resultados do `compleasm` para o genoma montado.
 
-## Bioinfo 5 - Gene Ortólogos
+## Bioinfo 6 - Gene Ortólogos
 
-## Bioinfo 6 - Transcriptômica
+## Bioinfo 7 - Transcriptômica
