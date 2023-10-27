@@ -60,4 +60,4 @@ ln -s /usr/bin/mksquashfs /usr/local/bin/
 ln -s /usr/bin/unsquashfs /usr/local/bin/
 
 conda create -y -n igv -c bioconda igv
-conda install -c bioconda eggnog-mapper
+conda create -y -n eggnogmapper -c bioconda eggnog-mapper
