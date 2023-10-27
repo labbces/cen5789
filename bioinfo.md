@@ -1021,6 +1021,10 @@ conda deactivate
 
 Agora podemos inicializar o IGV, que tem ambiente gráfico. Primeiramente, carregaremos a montagem no menu __"File"__ -> __"Load From File"__, utilizando o arquivo `NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta`. Em seguida, utilizando o mesmo menu, procederemos ao carregamento do arquivo com as leituras mapeadas, denominado `NRRLY27205.asm.reads.sorted.bam`. Por fim, carregaremos o arquivo contendo a anotação do genoma a partir de `GALBAL/galba.gtf`.
 
+```
+conda activate igv
+igv
+```
 ## Bioinfo 6 - Gene Ortólogos
 
 ## Bioinfo 7 - Transcriptômica
