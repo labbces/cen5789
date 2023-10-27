@@ -56,5 +56,8 @@ conda create -y -n merqury -c bioconda merqury
 conda create -y -n jupiterplot -c bioconda circos samtools minimap2
 
 conda create -y -n singularitycew -c wallaulab singularityce
+ln -s /usr/bin/mksquashfs /usr/local/bin/
+ln -s /usr/bin/unsquashfs /usr/local/bin/
+
 conda create -y -n igv -c bioconda igv
 conda create -y -n busco -c bioconda busco
