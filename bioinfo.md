@@ -983,7 +983,8 @@ conda activate singularitycew
 ln -s /usr/bin/mksquashfs /usr/local/bin/
 ln -s /usr/bin/unsquashfs /usr/local/bin/
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
-singularity shell galba.sif
+singularity shell -B $PWD:$PWD galba.sif
+cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
 export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
 galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
 ```
