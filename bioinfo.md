@@ -980,14 +980,35 @@ Vamos usar um container do singularity para rodar mais facilmente o GALBA, para 
 
 ```
 conda activate singularitycew
-ln -s /usr/bin/mksquashfs /usr/local/bin/
-ln -s /usr/bin/unsquashfs /usr/local/bin/
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
 singularity shell -B $PWD:$PWD galba.sif
 cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
 export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
 galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
+exit
+conda deactivate
 ```
+
+Você pode encontrar o rfesultado da previsão de genes na pasta GALBA. A saída do programa GALBA é gerada principalmente em três arquivos distintos:
+
+- galba.gtf
+- galba.codingseq
+- galba.aa
+
+Por favor, analise esses arquivos para compreender o conteúdo presente. Discuta com seus colegas e seu professor para obter uma compreensão completa.
+
+Após o primeiro passo de anotação estrutural do genoma, é fundamental avaliar a qualidade da anotação. Uma maneira de realizar essa avaliação é examinando a completude. Nesse contexto, esperamos que o nível de completude da anotação seja pelo menos tão bom quanto a análise da completude do espaço gênico durante a avaliação do genoma. Lembre-se de que, anteriormente, avaliamos o genoma com o software `compleasm`. No entanto, a versão atual desse programa é destinada exclusivamente à avaliação de genomas. Para avaliar a previsão de genes, utilizaremos o [BUSCO](https://busco.ezlab.org/). Para isso, faremos uso de uma imagem do BUSCO executando com o Singularity, o que simplifica significativamente a instalação do software.
+
+```
+conda activate singularitycew
+singularity build busco.sif docker://ezlabgva/busco:v5.5.0_cv1
+singularity shell -B $PWD:$PWD busco.sif
+busco -i GALBA/galba.aa -o GALBA_BUSCO -m protein -l saccharomycetes_odb10 --cpu 10
+exit
+conda deactivate
+```
+
+Os resultados do BUSCO estão disponíveis na pasta GALBA_BUSCO. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do BUSCO das proteínas previstas com os resultados do `compleasm` para o genoma montado.
 
 ## Bioinfo 5 - Gene Ortólogos
 
