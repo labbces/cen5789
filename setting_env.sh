@@ -61,3 +61,6 @@ ln -s /usr/bin/unsquashfs /usr/local/bin/
 
 conda create -y -n igv -c bioconda igv
 conda create -y -n eggnogmapper -c bioconda -c conda-forge eggnog-mapper
+wget https://github.com/gpertea/gffread/releases/download/v0.12.7/gffread-0.12.7.Linux_x86_64.tar.gz
+tar xzf gffread-0.12.7.Linux_x86_64.tar.gz
+sudo mv gffread-0.12.7.Linux_x86_64/gffread /usr/local/bin
