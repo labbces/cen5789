@@ -1044,6 +1044,8 @@ igv
 
 Por exemplo, localize o contig h1tg000003l nas posições que vão de 988,344 até 1,001,558. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" O que representa a região marcada com o número 8.024? É possível que haja um gene anotado nesta região?
 
+Combine os contigs com mais de 100 kbp dos dois haplótipos (hap1 e hap2) em um único arquivo e, posteriormente, mapeie as leituras contra este arquivo. Você consegue identificar alguma diferença nos resultados?
+
 ## Bioinfo 6 - Gene Ortólogos
 
 ## Bioinfo 7 - Transcriptômica
