@@ -1,7 +1,7 @@
 # Genômica e Bioinformática - CEN5789 
 Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
-__Criador e Instrutor__
+__Criador e Instrutor__²
 Diego M. Riaño-Pachón
 
 # Bioinformática
@@ -986,7 +986,7 @@ Vamos usar um container do singularity para rodar mais facilmente o GALBA, para 
 
 ```
 conda activate singularitycew
-singularity build galba.sif docker://katharinahoff/galba-notebook:latest
+#singularity build galba.sif docker://katharinahoff/galba-notebook:latest
 singularity shell -B $PWD:$PWD galba.sif
 cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
 export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
@@ -1009,7 +1009,7 @@ Após o primeiro passo de anotação estrutural do genoma, é fundamental avalia
 
 ```
 conda activate singularitycew
-singularity build busco.sif docker://ezlabgva/busco:v5.5.0_cv1
+#singularity build busco.sif docker://ezlabgva/busco:v5.5.0_cv1
 singularity shell -B $PWD:$PWD busco.sif
 busco -i GALBA/galba.aa -o GALBA_BUSCO -m protein -l saccharomycetes_odb10 --cpu 10
 exit
@@ -1018,7 +1018,7 @@ conda deactivate
 
 Os resultados do BUSCO estão disponíveis na pasta GALBA_BUSCO. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do BUSCO das proteínas previstas com os resultados do `compleasm` para o genoma montado. Quantos genes foram preditos?
 
-Com a conclusão da anotação estrutural, estamos prontos para iniciar a anotação funcional. Para isso, faremos uso do banco de dados [EGGNOG](http://eggnog5.embl.de/) e da ferramenta de software [Eggnog-Mapper](http://eggnog-mapper.embl.de/). Procederemos à anotação das proteínas preditas, ou seja, dos produtos gênicos, utilizando os dados relacionados aos fungos do EGGNOG.":
+Com a conclusão da anotação estrutural, estamos prontos para iniciar a anotação funcional. Para isso, faremos uso do banco de dados [EGGNOG](http://eggnog5.embl.de/) e da ferramenta de software [Eggnog-Mapper](http://eggnog-mapper.embl.de/). Procederemos à anotação das proteínas preditas, ou seja, dos produtos gênicos, utilizando os dados relacionados aos fungos do EGGNOG.". Antes de avançarmos nos exercícios, é essencial realizar a conversão do arquivo de anotação gerado por GALBA, que está no formato GFF, para o formato GTF. Faremos essa conversão utilizando a ferramenta `gffread`. Isso é um passo importante antes de prosseguir.
 
 ```
 conda activate eggnogmapper
