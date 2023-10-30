@@ -1018,6 +1018,7 @@ export EGGNOG_DATA_DIR=/home/cen5789/dia6
 download_eggnog_data.py -P  -y
 emapper.py  -m diamond --cpu 10 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --decorate_gff_ID_field gene_id
 conda deactivate
+```
 
 Agora, procederemos à visualização da montagem, juntamente com as leituras mapeadas nela e a anotação estrutural do genoma, usando o [Integrative Genomics Viewer (IGV)](https://igv.org/). Primeiro vamos mapear as leituras no genoma usando o `minimap2` e o `samtools`:
 
