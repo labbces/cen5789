@@ -952,6 +952,10 @@ Aqui está a figura que compara a montagem principal (primary assembly) com o ha
 
 ## Bioinfo 5 -  Genome annotation
 
+### Realize a avaliação de contaminações.
+
+Antes de prosseguirmos com a anotação estrutural, é crucial aprimorar nossa avaliação das montagens. Para isso, é de extrema importância realizar uma análise detalhada da possível contaminação por meio da ferramenta [BlobToolKit](https://github.com/blobtoolkit/blobtoolkit). Essa etapa adicional de avaliação nos permitirá garantir a qualidade e confiabilidade das montagens, fornecendo uma visão abrangente da integridade dos dados genômicos. Por razões de tempo, optaremos por pular esta etapa hoje, mas é fundamental ressaltar que em projetos reais, a execução desta análise é essencial.
+
 ### Mascare repetições
 
 Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/contigs da montagem por meio de uma biblioteca de repetições adaptada ao genoma em questão. Entre as estratégias frequentemente empregadas, destacam-se o uso do [RepeatModeler](https://github.com/Dfam-consortium/RepeatModeler)/[RepeatMasker](https://www.repeatmasker.org/), [EDTA](https://github.com/oushujun/EDTA) e [Earl Grey](https://github.com/TobyBaril/EarlGrey). No entanto, é importante observar que esse processo costuma demandar considerável capacidade computacional. Por isso, hoje optaremos por omiti-lo.
@@ -960,7 +964,7 @@ Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/con
 
 Vamos anotar apenas a montagem que apresentar as melhores métricas de completude e continuidade.
 
-Faça o download de todas as proteínas do mesmo gênero no NCBI. Para fazer isso, acesse o banco de dados de taxonomia do NCBI em seu navegador e procure pelo nome do gênero Kazachstania na lista de nomes. Clique no nome do gênero, conforme mostrado na figura:
+Faça o download de todas as proteínas do mesmo gênero no NCBI. Para fazer isso, acesse o banco de dados de taxonomia do NCBI em seu navegador e procure pelo nome do gênero _Kazachstania_ na lista de nomes. Clique no nome do gênero, conforme mostrado na figura:
 
 ![GetProteinsFromTaxonomy_1](images/GetProteinsFromTaxonomy_1.png)
 
