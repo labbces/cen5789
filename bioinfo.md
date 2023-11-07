@@ -1081,6 +1081,13 @@ cd  dia7
 
 Anteriormente, utilizamos funcionalidades do SRA Toolkit para baixar dados do SRA. Agora, vamos empregar outra ferramenta que pode agilizar ainda mais o processo em comparação com o fasterq-dump que usamos anteriormente. Utilizaremos a ferramenta [`ffq`](https://github.com/pachterlab/ffq), a diferença, em relação ao fasterq-dump, faz o download dos dados diretamente no formato fastq. 
 
+Vamos analisar dados de RNASeq de mutantes de _Arabidopsis thaliana_ em diversas condições ambientais. Os mutantes ros1-3, dml2 e dml3 são alelos mutantes que resultam na perda de função dos genes ROS1, DML2 e DML3, que fazem parte da família DEMETER (DME). Essa família está envolvida no processo de desmetilação do DNA.
+
+O ROS1 atua como um repressor do silenciamento da expressão gênica. Sua função envolve a remoção da metilação do DNA do promotor do gene alvo. Ele interage fisicamente com RPA2/ROR1. Nos mutantes _ros1_ (como _ros1-3_), é observado um aumento na metilação nos promotores de vários genes. Dentre os loci afetados por _ros1_, alguns (RD29A e At1g76930) sofrem alterações na metilação de citosina em todos os contextos de sequência (CpG, CpNpG ou CpNpN), embora muitos outros sejam afetados principalmente em contextos não-CpG. O mutante _ros1_ demonstra maior suscetibilidade a patógenos biotróficos e possui redução em sua capacidade de resposta aos genes de defesa dependentes do ácido salicílico. O _ros1-3_ é um alelo de T-DNA, onde o T-DNA está inserido no gene ROS1, gerando a perda de funcão. ([Penterman, et al., 2007](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1847597/), [TAIR - AT2G36490](https://arabidopsis.org/servlets/TairObject?id=32321&type=locus)).
+
+Os genes DML2 ([AT3G10010](https://arabidopsis.org/servlets/TairObject?id=40110&type=locus)) e DML3 ([AT4G34060](https://arabidopsis.org/servlets/TairObject?id=127923&type=locus)) são homólogos de ROS1. Mutacões nos genes DML resultam em hipermetilação do DNA em locais específicos. Dos locais desmetilados pelas enzimas DML, mais de 80% estão próximos ou se sobrepõem a genes. A desmetilação gênica pelas enzimas DML ocorre principalmente nas extremidades 5' e 3', um padrão oposto à distribuição geral da metilação de DNA do tipo selvagem ([Penterman, et al., 2007](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1847597/)).
+
+
 A tabela a seguir apresenta uma lista dos números de acesso do SRA para cada amostra, juntamente com uma descrição das condições experimentais às quais foram submetidas.
 
 | Number | Identifiers | Genotype | Environmental Stress | 
