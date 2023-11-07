@@ -66,3 +66,10 @@ tar xzf gffread-0.12.7.Linux_x86_64.tar.gz
 sudo mv gffread-0.12.7.Linux_x86_64/gffread /usr/local/bin
 
 conda create -y -n transcriptomics -c conda-forge -c bioconda ffq python r-base r-ggplot2 bioconductor-tximport bioconductor-deseq2 fastqc bbmap multiqc
+
+#R - From https://cran.r-project.org/bin/linux/ubuntu/#install-r
+sudo apt update -qq
+sudo apt install --no-install-recommends software-properties-common dirmngr
+wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+sudo apt install --no-install-recommends r-base
