@@ -1267,7 +1267,7 @@ A quantificacao está disponivel no arquivo `~/dia7/quantification/${ID}/quant.s
 Agora, vamos compactar toda a pasta de quantificação e compartilhá-la com os colegas. Para isso, utilizaremos o programa `tar`. 
 
 ```
-cd ~/dia7/quanfication
+cd ~/dia7/quantification
 tar cvzf ${ID}.tar.gz ${ID}
 ```
 
