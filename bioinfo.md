@@ -1066,3 +1066,200 @@ Para resolver esses exercícios, é altamente recomendado consultar regularmente
 
 
 ## Bioinfo 7 - Transcriptômica
+
+Vamos analisar a resposta dos genes de Arabidopsis thaliana considerando dois fatores: 1) o genótipo e 2) o estresse ambiental. O fator genótipo é composto por três níveis: 1.a) selvagem, 1.b) mutante no gene ros1-3, 1.c) duplo mutante nos genes dml2 e dml3, e 1.d) triplo mutante nos genes ros1, dml2 e dml3. Enquanto o fator estresse ambiental possui também quatro níveis: 2.a) sem tratamento, 2.b) tratamento com ácido abscísico, 2.c) tratamento com cloreto de sódio e 2.d) tratamento com seca. [Mais detalhes](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-4477/). Os transcritos em cada condição foram sequenciados usando a tecnologia Illumina, resultando na geração de leituras em pares (paired-end), e os dados estão disponiveis no [SRA](https://www.ncbi.nlm.nih.gov/sra?linkname=bioproject_sra_all&from_uid=282863).
+
+Crie uma pasta com o nome `dia7` dentro do diretório $HOME. Todos os exercícios de hoje devem ser realizados dentro dessa pasta.
+
+```
+cd
+mkdir dia7
+cd  dia7
+```
+
+### Descarregando os dados de repositórios públicos
+
+Anteriormente, utilizamos funcionalidades do SRA Toolkit para baixar dados do SRA. Agora, vamos empregar outra ferramenta que pode agilizar ainda mais o processo em comparação com o fasterq-dump que usamos anteriormente. Utilizaremos a ferramenta [`ffq`](https://github.com/pachterlab/ffq), a diferença, em relação ao fasterq-dump, faz o download dos dados diretamente no formato fastq. 
+
+A tabela a seguir apresenta uma lista dos números de acesso do SRA para cada amostra, juntamente com uma descrição das condições experimentais às quais foram submetidas.
+
+| Number | Identifiers | Genotype | Environmental Stress | 
+| --- | --- | --- | --- |
+| 01 | DRR016125 | wild type | None |
+| 02 | DRR016126 | wild type | abscisic acid |
+| 03 | DRR016127 | wild type | sodium chloride |
+| 04 | DRR016128 | wild type | drought |
+| 05 | DRR016129 | ros1-3 mutant | none |
+| 06 | DRR016130 | ros1-3 mutant | abscisic acid |
+| 07 | DRR016131 | ros1-3 mutant | sodium chloride |
+| 08 | DRR016132 | ros1-3 mutant | drought |
+| 09 | DRR016133 | dml2, dml3 double mutant | none |
+| 10 | DRR016134 | dml2, dml3 double mutant | abscisic acid |
+| 11 | DRR016135 | dml2, dml3 double mutant | sodium chloride |
+| 12 | DRR016136 | dml2, dml3 double mutant | drought |
+| 13 | DRR016137 | ros1, dml2, dml3 triple mutant | none |
+| 14 | DRR016138 | ros1, dml2, dml3 triple mutant | abscisic acid |
+| 15 | DRR016139 | ros1, dml2, dml3 triple mutant | sodium chloride |
+| 16 | DRR016140 | ros1, dml2, dml3 triple mutant | drought |
+
+Vamos descarregar os links de acceso dos aruivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário ativar o ambiente Conda denominado "transcriptomics," no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
+
+```
+conda activate transcriptomics
+ffq --ftp DRR016125
+```
+
+Isso deve gerar uma saída semelhante a esta:
+
+```
+[2023-11-07 00:19:53,630]    INFO Parsing run DRR016125
+[
+    {
+        "accession": "DRR016125",
+        "filename": "DRR016125_1.fastq.gz",
+        "filetype": "fastq",
+        "filesize": 967794560,
+        "filenumber": 1,
+        "md5": "36beaacaff3a9903d5c57a2c73525ae8",
+        "urltype": "ftp",
+        "url": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/DRR016/DRR016125/DRR016125_1.fastq.gz"
+    },
+    {
+        "accession": "DRR016125",
+        "filename": "DRR016125_2.fastq.gz",
+        "filetype": "fastq",
+        "filesize": 1001146319,
+        "filenumber": 2,
+        "md5": "d3f0203f534e35fa370b2a6c5e238944",
+        "urltype": "ftp",
+        "url": "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/DRR016/DRR016125/DRR016125_2.fastq.gz"
+    }
+]
+```
+
+Observe que existem duas linhas que começam com "url":, que são os endereços dos arquivos fastq.gz na internet, localizados no servidor do SRA do Instituto Europeu de Bioinformática. Você pode usar esses endereços com o programa "wget" ou "curl" para fazer o download dos arquivos para o seu computador. Isso precisaria ser repetido para cada uma das amostras deste experimento.
+
+Como esses arquivos são pesados, o professor já os baixou em um servidor do [CENA](http://labbces.cena.usp.br/CEN5789/transcriptomics/RAWREADS). Os arquivos contendo as leituras de todas as amostras requerem aproximadamente 30GB de armazenamento, um espaço que talvez não esteja disponível nos computadores que estamos usando. Portanto, cada aluno fará o download de apenas um par de arquivos (R1 e R2) de uma única amostra e trabalhará apenas com eles. Dessa forma, iremos paralelizar nosso trabalho, executando os processos de verificação de qualidade, limpeza e quantificação. Após a quantificação, compartilharemos os resultados de modo que todos os alunos tenham acesso às quantificações de todos os genes em todas as amostras. Siga as instruções do professor. 
+
+Faça o download dos seus dados na pasta "RAWREADS" dentro da pasta "dia7". Se essa pasta ainda não existir, crie-a. Lembre que estamos usando o ambiente conda chamado `transcriptomics`. Lembre-se também de substituir o identificador da SUA amostra.
+
+```
+mkdir -p ~/dia7/RAWREADS
+cd ~/dia7/RAWREADS
+ID=DRR016125
+curl -O http://labbces.cena.usp.br//CEN5789/transcriptomics/RAWREADS/${ID}_[1-2].fastq.gz
+
+```
+
+### Pre-processando os dados de RNASeq
+
+Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
+
+```
+cd ~/dia7/
+mkdir FastQC_pre
+fastqc --threads 2 --nogroup  --outdir FastQC_pre RAWREADS/${ID}_[1-2].fastq.gz
+```
+
+Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca MRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
+
+Agora, vamos proceder com a limpeza usando o programa `bbduk` da suíte "bbmap". A qualidade das leituras, em termos da distribuição do escore Phred, está muito boa, e acredito que não seja necessário realizar o processo de _quality trimming_. No entanto, foi detectada a presença residual de adaptadores no extremo 3' em algumas amostras, os quais precisam ser removidos. Além disso, é aconselhável quantificar a quantidade de leituras que têm origem no rRNA, pois isso pode fornecer uma indicação da qualidade das amostras ainda nesta etapa de limpeza.
+
+Primeiro removemos adaptadores:
+
+```
+cd ~/dia7
+bbduk.sh in=RAWREADS/${ID}_1.fastq.gz in2=RAWREADS/${ID}_2.fastq.gz out=CLEANREADS/${ID}_cleana_1.fastq.gz out2=CLEANREADS/${ID}_cleana_2.fastq.gz ref=adapters refstats=CLEANREADS/${ID}_cleana_adapters_refstats ktrim=r threads=10
+```
+
+Agora, vamos filtrar (excluir) as leituras que correspondem ao rRNA, utilizando como entrada as leituras nas quais os adaptadores foram removidos no passo anterior. Mas antes de prosseguirmos, é necessário fazer o download do banco de dados contendo as sequências de rRNA. Este banco é derivado do [SILVA NR](https://www.arb-silva.de/), e as sequências foram agrupadas com 90% de identidade.
+
+```
+cd ~/dia7
+mkdir -p ~/dia7/References
+cd ~/dia7/References
+wget http://labbces.cena.usp.br//CEN5789/transcriptomics/References/rRNA.tar.gz
+tar xvzf rRNA.tar.gz
+rm -rf rRNA.tar.gz
+cd ..
+bbduk.sh in=CLEANREADS/${ID}_cleana_1.fastq.gz in2=CLEANREADS/${ID}_cleana_2.fastq.gz out=CLEANREADS/${ID}_cleanf_1.fastq.gz out2=CLEANREADS/${ID}_cleanf_2.fastq.gz ref=References/rRNA_LSU_SILVA_Archaea.nr90.fasta,References/rRNA_LSU_SILVA_Bacteria.nr90.fasta,References/rRNA_LSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Archaea.nr90.fasta,References/rRNA_SSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Bacteria.nr90.fasta ktrim=f threads=10  minlength=85 refstats=CLEANREADS/${ID}_cleanf_rRNA_refstats
+```
+
+Confira o arquivo `*_cleanf_rRNA_refstats` dentro da pasta `CLEANEADS`. Uma proporção elevada de leituras de rRNA pode indicar problemas com a amostra. Se teve algum problema realizando a limpeza das leituras, pode descarregar os arquivos já limpos [aqui](http://labbces.cena.usp.br//CEN5789/transcriptomics/CLEANREADS/).
+
+### Estimando os Níveis de Expressão de Transcritos e Genes
+
+Com as leituras limpas em mãos, podemos começar a planejar a estimativa dos níveis de expressão dos transcritos e/ou genes. Para esta tarefa, utilizaremos o programa [Salmon](https://salmon.readthedocs.io/en/latest/), que emprega a estratégia de "quasi-mapping", conhecida por sua alta precisão e rapidez. É importante notar que o Salmon realiza a comparação em relação a uma referência que consiste nas sequências dos transcritos de interesse e pode lidar com a estimativa de valores de expressão para sequências muito semelhantes.
+
+Vamos baixar a versão mais recente do Salmon e instalá-la na pasta `~/dia7/`:
+
+```
+wget https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz
+tar xvzf salmon-1.10.0_linux_x86_64.tar.gz
+rm salmon-1.10.0_linux_x86_64.tar.gz
+export PATH=/home/cen5789/dia7/salmon-latest_linux_x86_64/bin/:$PATH
+salmon
+```
+
+A última linha do bloco anterior deveria ter exibido a ajuda do programa, algo similar a:
+
+```
+salmon v1.10.0
+
+Usage:  salmon -h|--help or
+        salmon -v|--version or
+        salmon -c|--cite or
+        salmon [--no-version-check] <COMMAND> [-h | options]
+
+Commands:
+     index      : create a salmon index
+     quant      : quantify a sample
+     alevin     : single cell analysis
+     swim       : perform super-secret operation
+     quantmerge : merge multiple quantifications into a single file
+
+```
+
+A referência que usaremos é composta por todos os transcritos (cDNAs) anotados no genoma de _Arabidopsis thaliana_, os quais podem ser baixados do [TAIR](https://www.arabidopsis.org), também pode encontrar o arquivo [aqui](http://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz), descarreguelo dentro da sua pasta `~/dia7/` e dentro de uma subpasta chamada `References`. Esta referência precisa ser complementada com sequências decoy, ou seja, sequências que não deveriam estar presentes para a quantificação. Neste caso, usaremos o genoma completo como decoy. Recomendo a leitura [deste articulo](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02151-8) aqui para entender a importância do uso de decoy em análises de RNASeq.
+
+```
+mkdir -p ~/dia7/References
+cd ~/dia7/References
+#Os transcritos
+wget http://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz
+#O genoma
+wget http://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_genome.fasta.gz
+```
+
+Vamos gerar um arquivo de texto contendo os identificadores das sequências que serão usadas como decoy:
+
+```
+grep "^>" <(gunzip -c TAIR10_genome.fasta.gz) | cut -d " " -f 1 > decoys.txt
+sed -i.bak -e 's/>//g' decoys.txt
+```
+
+Em seguida, podemos construir o índice para que o Salmon possa realizar a quantificação dos transcritos:
+
+```
+salmon index -t gentrome.fa.gz -d decoys.txt -p 10 -i salmon_index --gencode
+cd ../
+```
+
+Finalmente, podemos iniciar o processo de quantificação das amostras propriamente dito:
+
+```
+mkdir -p ~/dia7/quantification
+cd ~/dia7/
+salmon quant -i References/salmon_index -l A -1 CLEANREADS/${ID}_cleanf_1.fastq.gz -2 CLEANREADS/${ID}_cleanf_2.fastq.gz --validateMappings -o ~/dia7/quantification/${ID} --threads 10 --seqBias --gcBias
+```
+
+Isso criará a pasta `quantification/${ID}`. Dentro dela, por favor, verifique o arquivo `logs/salmon_quant.log` e identifique o tipo de biblioteca detectado pelo Salmon e a taxa de mapeamento. Vamos tabular os resultados [neste arquivo](https://docs.google.com/spreadsheets/d/1-fUxJtmPMlMUwqPslSh2tBKUKKr-uDXZS8YVf8W2wqc/edit?usp=sharing).
+
+A quantificacao está disponivel no arquivo `~/dia7/quantification/${ID}/quant.sf`. Identifique as informações contidas no arquivo.
+
+Agora, vamos compactar toda a pasta de quantificação e compartilhá-la com os colegas. Para isso, utilizaremos o programa `tar`. 
+```
+cd ~/dia7/quanfication
+tar cvzf ${ID}.tar.gz ${ID}
+```
+Copie o seu arquivo ${ID}.tar.gz para a pasta compartilhada no Google Drive. Lembre-se de substituir o identificador da SUA amostra (ID). Quando todos tiverem copiado seus arquivos, faremos o download e descompactaremos todos os arquivos na pasta `~/dia7/quantification/` para que possamos acessar a quantificação de todas as amostras.
