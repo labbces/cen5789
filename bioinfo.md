@@ -1265,8 +1265,10 @@ Isso criará a pasta `quantification/${ID}`. Dentro dela, por favor, verifique o
 A quantificacao está disponivel no arquivo `~/dia7/quantification/${ID}/quant.sf`. Identifique as informações contidas no arquivo.
 
 Agora, vamos compactar toda a pasta de quantificação e compartilhá-la com os colegas. Para isso, utilizaremos o programa `tar`. 
+
 ```
 cd ~/dia7/quanfication
 tar cvzf ${ID}.tar.gz ${ID}
 ```
+
 Copie o seu arquivo `${ID}.tar.gz` para a [pasta compartilhada no Google Drive](https://drive.google.com/drive/folders/134yKyPHqroURe4kxHm6HkCoaZTd8NjXR?usp=sharing). Lembre-se de substituir o identificador da SUA amostra (ID). Quando todos tiverem copiado seus arquivos, faremos o download e descompactaremos todos os arquivos na pasta `~/dia7/quantification/` para que possamos acessar a quantificação de todas as amostras.
