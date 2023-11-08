@@ -1272,3 +1272,19 @@ tar cvzf ${ID}.tar.gz ${ID}
 ```
 
 Copie o seu arquivo `${ID}.tar.gz` para a [pasta compartilhada no Google Drive](https://drive.google.com/drive/folders/134yKyPHqroURe4kxHm6HkCoaZTd8NjXR?usp=sharing). Lembre-se de substituir o identificador da SUA amostra (ID). Quando todos tiverem copiado seus arquivos, faremos o download e descompactaremos todos os arquivos na pasta `~/dia7/quantification/` para que possamos acessar a quantificação de todas as amostras.
+
+### Vamos nos preparar para a detecção de GENES diferencialmente expressos.
+
+Lembre-se de que a quantificação realizada pelo Salmon foi de transcritos, e a partir de um único gene, vários transcritos podem ser produzidos. Hoje, vamos realizar a detecção de GENES diferencialmente expressos nas condições experimentais. Por isso, precisamos indicar quais transcritos são originados a partir do mesmo gene, a fim de transformar as quantificações de cada transcrito em quantificações de cada gene. Basicamente, iremos somar as quantificações de todos os transcritos do mesmo gene.
+
+Você pode estar interessado em detectar os transcritos diferencialmente expressos, o que é outro tipo de análise. Isso requer a execução do Salmon com diferentes parâmetros e o uso de um software estatístico diferente.
+
+Então, agora precisamos obter um mapa que relacione o identificador do transcrito com o identificador do gene que o origina. Felizmente, com os identificadores dos transcritos de _A. thaliana_, isso é muito fácil. Esses identificadores têm o formato:
+
+AT**X**G**YYYYY**.**Z**
+
+Onde **X** é o cromossomo e pode ter os valores 1, 2, 3, 4, 5, M ou C. **YYYYY** é um número serial. Essa cadeia de texto **ATXGYYYYY** representa o identificador do gene.
+
+```
+zcat TAIR10_cdna_20101214_updated.gz |grep  ">" | cut -f 1 -d' '|sed 's/>//'| sed -r 's/((AT.G[0-9]*)\.[0-9]*)/\1\t\2/' > tx2gene.txt
+```
