@@ -1288,3 +1288,127 @@ Onde **X** é o cromossomo e pode ter os valores 1, 2, 3, 4, 5, M ou C. **YYYYY*
 ```
 zcat TAIR10_cdna_20101214_updated.gz |grep  ">" | cut -f 1 -d' '|sed 's/>//'| sed -r 's/((AT.G[0-9]*)\.[0-9]*)/\1\t\2/' > tx2gene.txt
 ```
+
+Agora temos tudo pronto para iniciar a análise em [R](https://cran.r-project.org/).
+
+No seu terminal, execute o comando:
+
+```
+rstudio
+```
+
+Uma janela como a seguinte deveria aparecer na sua tela:
+
+![Screendhot Rstudio](images/rstudio.png)
+
+A grosso modo, podemos dividir a área de trabalho do RStudio em quatro regiões:
+
+- Na área superior esquerda, você encontrará abas que hospedam seus scripts e projetos. Isso permite que você organize e acesse facilmente seu código-fonte e trabalhe em diferentes projetos de análise de dados.
+- Na área inferior esquerda, estão localizadas as abas Console, Terminal e Background Jobs, que permitem interagir com o ambiente do R. O Console é onde você pode executar comandos e ver a saída imediata. O Terminal permite interações mais avançadas com o sistema operacional, enquanto as Tarefas em Segundo Plano rastreiam e gerenciam tarefas em execução.
+- A área superior direita exibe as abas Environment, History, Connections e Tutorial. São abas que fornecem informações e recursos adicionais. O Ambiente mostra os objetos em sua sessão R atual. O Histórico registra comandos anteriores. Conexões permitem a integração com outros serviços e tutoriais fornecem orientações úteis.
+- A área inferior direita inclui as abas Files, Plots, Packages, Help, Viewer e Presentation. Arquivos gerencia seus arquivos e diretórios. Gráficos exibe gráficos gerados durante sua análise. Pacotes ajuda a gerenciar pacotes R. Ajuda fornece informações detalhadas sobre funções e pacotes. O Visualizador permite visualizar conjuntos de dados e gráficos interativamente. Apresentação ajuda a criar apresentações R Markdown.
+
+Essas abas tornam o RStudio uma ferramenta versátil e eficaz para o desenvolvimento e análise de projetos em R.
+
+No exemplo abaixo, criamos duas variáveis no console: greeting <- "Hola, Mundo!" e meuVector <- c(1, 2, 3, 4). Observe como elas são exibidas na aba Ambiente:
+
+![Screendhot Rstudio2](images/rstudio2.png)
+
+Para a análise de dados de transcriptômica, vamos criar um novo script no qual armazenaremos todos os passos da análise. Para começar a gravar um script, clique em Arquivo - Novo Arquivo - Script R. Isso abrirá um editor de texto no canto superior esquerdo da interface do RStudio (acima da guia Console).
+
+Primeiramente, precisamos carregar algumas bibliotecas do R que estendem as funcionalidades básicas da linguagem e nos permitem lidar com dados de expressão gênica.
+
+```R
+library(DESeq2)
+library(tximport)
+library(ggplot2)
+```
+Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
+
+```R
+rm(list=ls())
+```
+Agora, vamos definir o seu diretório de trabalho. Ele deve ser o diretório que contém todos os resultados do Salmon. Lembre-se de que você deve ter 16 pastas com os resultados do Salmon.
+
+```R
+wd<-"/data/diriano/cen5789_salmon/"
+setwd(wd)
+```
+
+Agora, antes de importar os dados de quantificação para o R, é crucial possuir uma descrição do plano experimental. Para carregar essa descrição, utilizamos a função `read.delim` para importar um arquivo de texto chamado [targets.txt](files/targets.txt) com colunas separadas por TAB. Os dados são armazenados em um objeto denominado `targets`, o qual é um `data.frame`.
+
+```R
+targets<-read.delim("targets.txt",header=T)
+rownames(targets)<-targets$SampleName
+targets$Genotype<-as.factor(targets$Genotype)
+targets$EnvironmentalStress<-as.factor(targets$EnvironmentalStress)
+```
+Você pode inspecionar o objeto `targets` agora, basta digitar o nome do objeto em seu Console. Como alternativa, você pode clicar no nome do objeto na aba "Environment" localizada na área superior direita.
+
+```R
+> targets
+#          Number SampleName     Genotype EnvironmentalStress
+#DRR016125      1  DRR016125           WT                None
+#DRR016126      2  DRR016126           WT                 ABA
+#DRR016127      3  DRR016127           WT                NaCl
+#DRR016128      4  DRR016128           WT             Drought
+#DRR016129      5  DRR016129        ros13                None
+#DRR016130      6  DRR016130        ros13                 ABA
+#DRR016131      7  DRR016131        ros13                NaCl
+#DRR016132      8  DRR016132        ros13             Drought
+#DRR016133      9  DRR016133     dml2dml3                None
+#DRR016134     10  DRR016134     dml2dml3                 ABA
+#DRR016135     11  DRR016135     dml2dml3                NaCl
+#DRR016136     12  DRR016136     dml2dml3             Drought
+#DRR016137     13  DRR016137 ros1dml2dml3                None
+#DRR016138     14  DRR016138 ros1dml2dml3                 ABA
+#DRR016139     15  DRR016139 ros1dml2dml3                NaCl
+#DRR016140     16  DRR016140 ros1dml2dml3             Drought
+```
+Precisamos carregar o arquivo que contém a correspondência entre identificadores de genes e transcritos que você criou anteriormente.
+
+```R
+tx2gene<-read.delim("tx2gene.txt",header=F)
+head(tx2gene)
+```
+Vamos ver um exemplo de um gene que possui 3 transcritos.
+
+```R
+tx2gene[which(tx2gene$V2=='AT1G51370'),]
+#               V1        V2
+#1     AT1G51370.2 AT1G51370
+#8384  AT1G51370.1 AT1G51370
+#10296 AT1G51370.3 AT1G51370
+```
+Para nos prepararmos para carregar as quantificações do Salmon, precisamos criar um objeto que contenha os nomes das amostras e a localização no disco dos arquivos `quant.sf` produzidos pelo Salmon.
+
+Os nomes das amostras estão no objeto "target" na coluna `SampleName`. Além disso, sabemos que no nosso diretório de trabalho temos uma pasta para cada amostra, com o mesmo nome da coluna `SampleName` e o arquivo `quant.sf` está dentro dessa pasta.
+
+```R
+myFiles<-paste(wd, targets$SampleName,"/quant.sf",sep="")
+myFiles
+```
+Inspecione o objeto `myFiles` e verifique se os caminho dos arquivos estão corretos. Agora vamos a adicionar o nome da amostra como o nome de cada caminho.
+
+```R
+names(myFiles)<-targets$SampleName
+myFiles
+```
+
+E verificamos se os arquivos de fato existem no disco. O resultado dessa operação deve ser TRUE na sua tela. Caso contrário, significa que algum arquivo não está presente ou que o caminho está errado.
+
+```R
+all(file.exists(myFiles))
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
