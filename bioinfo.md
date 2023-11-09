@@ -1400,14 +1400,23 @@ E verificamos se os arquivos de fato existem no disco. O resultado dessa operaç
 ```R
 all(file.exists(myFiles))
 ```
+Agora, vamos importar os dados de quantificação do Salmon para o R, utilizando o pacote tximport. É importante observar que, neste caso, o tximport irá resumir os dados de expressão no nível dos genes.
 
 ```R
+txi.salmon<-tximport(files = myFiles, type = 'salmon', tx2gene = tx2gene, txIn = TRUE, txOut = FALSE)
+```
+Apenas para fins de comparação entre a quantificação no nível de gene e no nível de transcrito, carregaremos os dados no nível de transcritos.
+
+```R
+txi.salmon.tx<-tximport(files = myFiles, type = 'salmon', tx2gene = tx2gene, txIn = TRUE, txOut = TRUE)
 ```
 
-```R
-```
+Vamos examinar os dados para um gene e, em seguida, remover o objeto `txi.salmon.tx`.
 
 ```R
+head(txi.salmon$counts['AT1G51370',])
+head(txi.salmon.tx$counts[c('AT1G51370.1','AT1G51370.2','AT1G51370.3'),])
+rm(txi.salmon.tx)
 ```
 
 ```R
