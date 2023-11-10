@@ -1418,6 +1418,70 @@ head(txi.salmon$counts['AT1G51370',])
 head(txi.salmon.tx$counts[c('AT1G51370.1','AT1G51370.2','AT1G51370.3'),])
 rm(txi.salmon.tx)
 ```
+Observe que o valor de expressão do gene é a soma dos valores de expressão de seus transcritos. Isso ocorre porque o Salmon, ao realizar a quantificação, fornece estimativas de abundância para cada transcrito individualmente. Ao importar esses dados no R usando o pacote tximport, com os argumentos `txIn = TRUE, txOut = FALSE`, a função automaticamente realiza a agregação dos valores de expressão dos transcritos para calcular a expressão a nível de gene.
+
+Essa abordagem é útil porque muitos experimentos de RNA-Seq fornecem dados de expressão em nível de transcrito, mas, muitas vezes, estamos mais interessados na expressão a nível de gene para análises mais globais. A soma dos valores de expressão dos transcritos para um gene específico oferece uma medida geral da expressão desse gene no contexto do experimento.
+
+Portanto, ao usar Salmon para a quantificação e tximport para a importação e agregação dos dados no R, obtemos uma representação mais consolidada da expressão gênica em termos de valores agregados a nível de gene.
+
+Agora, vamos avaliar se todas as amostras foram sequenciadas com a mesma intensidade (esforço de sequenciamento). Embora seja ideal que isso aconteça, na prática, devido a diversos fatores, é difícil alcançar essa uniformidade. Portanto, é necessário calcular fatores de normalização que levem em consideração a profundidade de sequenciamento de cada amostra.
+
+```R
+seqEffort<-as.data.frame(colSums(txi.salmon$counts))
+seqEffort$Samples<-rownames(seqEffort)
+colnames(seqEffort)<-c('NumberFragments', 'Samples')
+seqEffort
+```
+
+Vamos gerar uma figura com esses dados utilizando o pacote [ggplot2](https://ggplot2.tidyverse.org/) (observe que já carregamos o pacote no início do script). O ggplot2 é uma poderosa biblioteca de visualização em R, amplamente utilizada para criar gráficos estatísticos de alta qualidade. Desenvolvido por [Hadley Wickham](https://en.wikipedia.org/wiki/Ggplot2), o ggplot2 segue uma abordagem de "[gramática de gráficos](https://link.springer.com/book/10.1007/0-387-28695-0)", o que significa que você constrói visualizações adicionando camadas de elementos gráficos.
+
+Para criar um gráfico com ggplot2, você especifica os dados, mapeia variáveis às propriedades estéticas (como cor, forma ou tamanho), e adiciona camadas geométricas para representar os dados visualmente (pontos, linhas, barras, etc.). Além disso, é possível personalizar a aparência do gráfico ajustando temas, escalas e legendas.
+
+Aqui, utilizamos a função `ggplot` com o data.frame `seqEffort`, definindo os nomes das amostras no eixo X e a quantidade de fragmentos sequenciados no eixo Y. Em seguida, especificamos que desejamos criar um gráfico de colunas com esses dados.
+
+```R
+p<- ggplot(seqEffort, aes(x=Samples,y=NumberFragments))+ 
+  geom_col()
+```
+
+Esse gráfico inicial não é esteticamente muito agradável. Vamos aprimorá-lo removendo o fundo cinza e posicionando os nomes das amostras em um ângulo.
+
+```R
+p + theme_bw() +
+  theme(axis.text.x = element_text(angle=60, size = 12, hjust = 1))
+```
+Isso já está muito melhor. Vamos agora alterar os nomes dos eixos para deixá-los em português.
+
+```R
+p + theme_bw() +
+  theme(axis.text.x = element_text(angle=60, size = 12, hjust = 1)) +
+  xlab("Amostras") +
+  ylab("Número de fragmentos sequenciados")
+```
+
+Agora, por favor, discuta com seus colegas o efeito da profundidade de sequenciamento na estimação dos valores de expressão. Pode ser interessante examinar os dados de alguns genes, por exemplo:
+
+```R
+txi.salmon$counts['AT1G51370',]
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
+
+```R
+```
 
 ```R
 ```
