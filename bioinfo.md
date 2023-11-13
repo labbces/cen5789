@@ -1467,11 +1467,14 @@ Agora, por favor, discuta com seus colegas o efeito da profundidade de sequencia
 txi.salmon$counts['AT1G51370',]
 ```
 
-### Identificacão de genes diferencialmente expressos com DESeq2
+### DESeq2
 
 Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
 
 Nesta seção, iremos utilizar o pacote DESeq2, e primeiramente, vamos apresentar o modelo estatístico empregado por este pacote. O DESeq2 utiliza um modelo linear generalizado baseado na distribuição  binomial negativa das contagens de cada gene en cada condicao ([Negative Binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) [Generalized Linear Model](https://en.wikipedia.org/wiki/Generalized_linear_model)). Esse modelo considera a variabilidade intrínseca aos dados de RNA-Seq.
+
+
+#### Modelo estatístico no DESeq2
 
 No modelo de DESEq2, as contagens _y_ do gene _g_ na amostra _i_, são amostradas de uma distribuição binomial negativa com média _μ_ e parâmetro de dispersão _α_.
 
@@ -1495,10 +1498,11 @@ Esse parametro $` s_i `$, pode incorporar a profundidade da amostra, a composica
 log_2(q_{gi}) = \sum_r x_{ri} \beta_{rg}
 ```
 
-Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene $` g `$ na amostra $` i `$, é está relacionao a mudanca (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
+Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene $` g `$ na amostra $` i `$, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
 
+#### Identificacão de genes diferencialmente expressos com DESseq2
 
 Agora, vamos fornecer os dados ao DESeq2. Este pacote possui rotinas que podem importar os dados diretamente do objeto criado pelo ``tximport``. Durante este processo, vamos especificar quais são os níveis de referência para os dois fatores controlados no planejamento experimental: Genotype e EnvironmentalStress.
 
