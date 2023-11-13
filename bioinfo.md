@@ -1483,10 +1483,10 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 
 - As observações (contagens) são assumidas como independentes entre si.
 - O parametro de dispersão _α_ é constante para todos os genes.
-- O média das contagens para um gene numa amostra (μ_gi) está diretamente relacionada a verdadeira abundancia desse gene ($ q_gi $), ajustada (_scaled_) pelo um parametro especifico para a amostra  $ s_i $.
+- O média das contagens para um gene numa amostra ($` μ_{gi} `$) está diretamente relacionada a verdadeira abundancia desse gene ($`` q_{gi} `$), ajustada (_scaled_) pelo um parametro especifico para a amostra  $`` s_i `$.
 
 ```math
-μ_gi =: q_gi * s_i
+μ_{gi} =: q_{gi} * s_i
 ```
 
 
