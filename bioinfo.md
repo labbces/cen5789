@@ -1568,8 +1568,7 @@ colData(dds)
 rowData(dds)
 ```
 
-```R
-```
+Agora, chegou o momento crucial de realizar a análise diferencial de expressão (DESeq), a qual realiza o ajuste dos dados ao modelo e estima os parâmetros essenciais, tais como $` \beta `$ (coeficientes de regressão) e $` \log_2FC `$ (logaritmo na base 2 do fold change).
 
 ```R
 dds <- DESeq(dds)
