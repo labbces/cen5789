@@ -1486,7 +1486,7 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 
 - As observações (contagens) são assumidas como independentes entre si.
 - O parametro de dispersão _α_ é constante para todos os genes.
-- O média das contagens para um gene numa amostra ($` μ_{gi} `$) está diretamente relacionada a verdadeira abundancia desse gene ($` q_{gi} `$), ajustada (_scaled_) pelo um parametro especifico para a amostra  $` s_i `$.
+- O média das contagens para um gene numa amostra ($` μ_{gi} `$) está diretamente relacionada a verdadeira abundancia desse gene ($` q_{gi} `$), ajustada (_scaled_) por um fator especifico (_size factor_) para a amostra  $` s_i `$.
 
 ```math
 μ_{gi} =: q_{gi} * s_i
@@ -1495,10 +1495,17 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 Esse parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que tenham que ser normalizados. O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$.
 
 ```math
-log_2(q_{gi}) = \sum_r x_{ri} \beta_{rg}
+log(q_{gi}) = \sum_r x_{ri} \beta_{rg}
 ```
 
-Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene $` g `$ na amostra $` i `$, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
+Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene _g_ na amostra _i_, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
+
+O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas.
+
+```math
+\begin{bmatrix} X \\\ Y \end{bmatrix}
+```
+
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
 
