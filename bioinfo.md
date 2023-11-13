@@ -1489,8 +1489,13 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 μ_{gi} =: q_{gi} * s_i
 ```
 
+Esse parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que tenham que ser normalizados. O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$.
 
-O modelo estatístico incorpora fatores de amostragem, como o efeito do genótipo e estresse ambiental, permitindo uma análise robusta e adaptável às nuances do conjunto de dados específico. Além disso, o DESeq2 incorpora ajustes para a normalização dos dados, levando em consideração diferenças na profundidade de sequenciamento entre as amostras, por exemplo.
+```math
+log_2(q_{gi}) = \sum_r x_{ri} \beta_{rg}
+```
+
+Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene $` g `$ na amostra $` i `$, é está relacionao a mudanca (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
 
