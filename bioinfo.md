@@ -1503,7 +1503,7 @@ Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg
 O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas.
 
 ```math
-\begin{bmatrix} X \\\ Y \end{bmatrix}
+\begin{bmatrix} X X \\\ Y Y \end{bmatrix}
 ```
 
 
