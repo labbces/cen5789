@@ -1325,6 +1325,8 @@ library(DESeq2)
 library(tximport)
 library(ggplot2)
 library(pheatmap)
+library(reshape2)
+library(vidger)
 ```
 Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
 
@@ -1543,7 +1545,6 @@ Agora sim, vamos fornecer os dados ao DESeq2. Este pacote possui rotinas que pod
 dds <- DESeqDataSetFromTximport(txi.salmon, colData = targets, design = ~Condition)
 dds$Genotype <-relevel(dds$Genotype, ref='WT')
 dds$EnvironmentalStress <-relevel(dds$EnvironmentalStress, ref='None')
-
 ```
 
 Vale a pena discutir um pouco sobre o tipo de objeto criado pelo DESeq com a função DESeqDataSetFromTximport. Este é um objeto do tipo `RangedSummarizedExperiment`, que pos sua vez é uma extensão do `SummarizedExperiment`, como apresentado de forma resumida na figura seguinte.
@@ -1569,7 +1570,37 @@ colData(dds)
 rowData(dds)
 ```
 
-Agora, chegou o momento crucial de realizar a análise diferencial de expressão (DESeq), a qual estima os dados para normalizacão, realiza o ajuste dos dados ao modelo e estima os parâmetros essenciais, tais como $` \beta `$ (coeficientes de regressão) e $` \log_2FC `$ (logaritmo na base 2 do fold change).
+Geralmente, é conveniente excluir genes com níveis muito baixos de expressão. Neste caso, vamos remover os genes nos quais a soma das contagens seja menor que 1.
+
+Essa prática é comumente adotada para filtrar genes com expressão extremamente baixa, os quais podem contribuir pouco para a análise global e introduzir ruído desnecessário nos resultados. Eliminar genes com somas de contagens muito baixas pode melhorar a sensibilidade da análise, focando nos genes mais relevantes e robustos para o experimento em questão.
+
+É importante ressaltar que a escolha do limiar de expressão a ser utilizado pode depender do contexto específico do estudo e da natureza dos dados. Portanto, a definição desse limiar deve ser cuidadosamente considerada em cada análise para garantir resultados mais precisos e interpretáveis.
+
+Vamos a estudar primeiro a distribucao do número de fragmentos por gene por amostra, para isso vamos reformar nosso objeto `assay(dds)` numa forma que o ggplot reconheca facilmente e criaremos entao um boxplot
+
+```R
+counts_melt<-melt(assay(dds))
+colnames(counts_melt)<-c("Gene","Sample","Count")
+ggplot(counts_melt,aes(x=Sample,y=Count)) + 
+  geom_boxplot()+
+  scale_y_log10()+
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=60, size = 12, hjust = 1)) +
+  xlab("Amostras") +
+  ylab("Número de fragmentos sequenciados")
+```
+
+Agora, vamos remover os genes com soma de contagens menor que 1. O resultado da funcão `table` nos mostra quantos genes serão removidos.
+
+```R
+keep <- rowSums(counts(dds) >= 1) >= 1
+table(keep)
+dim(dds)
+dds <- dds[keep,]
+dim(dds)
+```
+
+Chegou o momento crucial de realizar a análise diferencial de expressão (DESeq), a qual estima os dados para normalizacão, realiza o ajuste dos dados ao modelo e estima os parâmetros essenciais, tais como $` \beta `$ (coeficientes de regressão) e $` \log_2FC `$ (logaritmo na base 2 do fold change).
 
 ```R
 dds <- DESeq(dds)
@@ -1590,13 +1621,27 @@ Ao aplicar a transformação vst, busca-se tornar a distribuição das variaçõ
 Portanto, a transformação vst desempenha um papel fundamental na preparação dos dados, melhorando a capacidade de detecção de padrões biologicamente relevantes e contribuindo para resultados mais robustos em análises exploratórias e inferenciais.
 
 ```R
-vsd <- vst(dds, blind=TRUE)
+vsd <- vst(dds, blind=TRUE, )
 ```
 
+Vamos conduzir uma análise de componentes principais com o objetivo de compreender o comportamento dos dados. Para isso, utilizaremos a função plotPCA do pacote DESeq2, que seleciona automaticamente os 500 genes mais variáveis e os utiliza como base para a análise.
+
+A análise de componentes principais (PCA) é uma técnica exploratória poderosa que nos permite visualizar a estrutura e a variabilidade nos dados. Ao selecionar os genes mais variáveis, podemos capturar as principais fontes de variação e examinar como as amostras se diferenciam em relação a esses genes.
+
+A interpretação dos resultados da PCA nos ajudará a identificar padrões, agrupamentos ou possíveis outliers nos dados. Esse passo é fundamental para a compreensão inicial da estrutura dos dados antes de prosseguirmos com análises mais específicas de expressão gênica diferencial. Esperamos observar uma tendência de agrupamento nas amostras de acordo com o planejamento experimental, ou seja, que a separação nos dois primeiros componentes principais seja congruente com o fator experimental em questão.
+
 ```R
-plotPCA(vsd, intgroup=c("Genotype"),ntop=500)
-plotPCA(vsd, intgroup=c("EnvironmentalStress"),ntop=500)
+plotPCA(vsd, intgroup=c("Genotype"),ntop=500) + theme_bw()
+plotPCA(vsd, intgroup=c("EnvironmentalStress"),ntop=500) + theme_bw()
+plotPCA(vsd, intgroup=c("EnvironmentalStress", "Genotype"),ntop=500) + theme_bw()
 ```
+
+Desta análise, torna-se evidente que o principal fator que influencia os níveis de expressão é a condição ambiental. O genótipo não exerce uma influência significativa na expressão dos genes; na nossa matriz de design, ele atua mais como um fator de lotes ou bloqueio. Observe que esses dois primeiros componentes explicam 82% da variância observada nos dados.
+
+![PCA](images/transcriptomicsPCA_DESeq2.png)
+
+Outra análise exploratorio importante é a análise de correlação entre as amostras. 
+
 
 ```R
 sampleDists <- dist(t(assay(vsd)))

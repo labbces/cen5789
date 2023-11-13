@@ -1,7 +1,8 @@
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
-BiocManager::install("tximport")
-BiocManager::install("DESeq2")
+BiocManager::install("tximport",update = FALSE,ask = FALSE)
+BiocManager::install("DESeq2",update = FALSE,ask = FALSE)
+BiocManager::install("vidger",update = FALSE,ask = FALSE)
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
 
@@ -10,11 +11,13 @@ library(DESeq2)
 library(tximport)
 library(ggplot2)
 library(pheatmap)
+library(reshape2)
+library(vidger)
 #Delete everithing in your R environment
 rm(list=ls())
 
 #Set your working directory. This should be the directory containing all the Salmon results, remember you should have 16 folders with salmon results
-wd<-"/data/diriano/cen5789_salmon/"
+wd<-"D:/cen5789/salmon_quantification/"
 setwd(wd)
 
 #Loading the experimental design
@@ -90,6 +93,22 @@ colData(dds)
 rowData(dds)
 dimnames(dds)
 metadata(dds)
+
+counts_melt<-melt(assay(dds))
+colnames(counts_melt)<-c("Gene","Sample","Count")
+ggplot(counts_melt,aes(x=Sample,y=Count)) + 
+  geom_boxplot()+
+  scale_y_log10()+
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=60, size = 12, hjust = 1)) +
+  xlab("Amostras") +
+  ylab("Número de fragmentos sequenciados")
+
+keep <- rowSums(counts(dds) >= 1) >= 1
+table(keep)
+dim(dds)
+dds <- dds[keep,]
+dim(dds)
 
 dds <- DESeq(dds)
 
