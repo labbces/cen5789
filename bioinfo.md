@@ -1542,30 +1542,37 @@ Agora sim, vamos fornecer os dados ao DESeq2. Este pacote possui rotinas que pod
 dds <- DESeqDataSetFromTximport(txi.salmon, colData = targets, design = ~Condition)
 dds$Genotype <-relevel(dds$Genotype, ref='WT')
 dds$EnvironmentalStress <-relevel(dds$EnvironmentalStress, ref='None')
-dds <- DESeq(dds)
+
 ```
 
 Vale a pena discutir um pouco sobre o tipo de objeto criado pelo DESeq com a função DESeqDataSetFromTximport. Este é um objeto do tipo `RangedSummarizedExperiment`, que pos sua vez é uma extensão do `SummarizedExperiment`, como apresentado de forma resumida na figura seguinte.
 
+[![SummarizedExperiment object](images/SummarizedExperiment.png)](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html
+)
 
 O objeto `SummarizedExperiment` é uma classe que serve como um recipiente eficiente para armazenar dados experimentais. Ele é utilizado para representar conjuntos de dados tabulares associados a uma matriz de dados principal, onde as linhas geralmente representam recursos biológicos (genes, por exemplo) e as colunas representam amostras. O `SummarizedExperiment` é projetado para armazenar informações adicionais sobre os dados, como metadados sobre as amostras e características biológicas, proporcionando uma estrutura organizada e completa.
 
 A classe `RangedSummarizedExperiment` inclui informações adicionais sobre a localização física dos recursos biológicos em um genoma. Isso é particularmente útil para dados genômicos, como dados de sequenciamento de RNA (RNA-Seq), onde é importante entender a posição dos genes em um genoma.
 
-![SummarizedExperiment object](images/SummarizedExperiment.png)
-
-https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html
+Os dados das contagens por gene e amostra podem ser acessados com a função `assay`, os nomes dos genes e das amostras com a funcão `dimnames`:
 
 ```R
+assay(dds)
+dimnames(dds)
+```
+
+A informação das amostras pode ser acessada com `colData`, e a dos genes com `rowData`:
+
+```R
+colData(dds)
+rowData(dds)
 ```
 
 ```R
 ```
 
 ```R
-```
-
-```R
+dds <- DESeq(dds)
 ```
 
 ```R
