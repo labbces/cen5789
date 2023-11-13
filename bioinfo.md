@@ -1503,7 +1503,7 @@ Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg
 O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas.
 
 ```math
-\begin{bmatrix} 1 0 \\\ 1 0 \\\ 0 1 0 1 \end{bmatrix}
+\begin{bmatrix} 1  0 \\\ 1  0 \\\ 0  1 \\\ 0  1 \end{bmatrix}
 ```
 
 \\[ J(\theta) = \frac{1}{2m}[\sum_{i=1}^m(h_\theta (x^{(i)}) - y^{(i)})^2 + \lambda\sum_{j=1}^n\theta^2_j] \\]
