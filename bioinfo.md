@@ -1476,7 +1476,7 @@ Nesta seção, iremos utilizar o pacote DESeq2, e primeiramente, vamos apresenta
 No modelo de DESEq2, as contagens _y_ do gene _g_ na amostra _i_, são amostradas de uma distribuição binomial negativa com média _μ_ e parâmetro de dispersão _α_.
 
 ```math
-y_gi ~ NB(μ_gi, α_g)
+y_{gi} ~ NB(μ_{gi}, α_g)
 ```
 
 O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) importantes e só deveria ser usado se você tiver certeza de que seus dados satisfazem essas suposições. Essas suposições são:
