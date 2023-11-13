@@ -1324,6 +1324,7 @@ Primeiramente, precisamos carregar algumas bibliotecas do R que estendem as func
 library(DESeq2)
 library(tximport)
 library(ggplot2)
+library(pheatmap)
 ```
 Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
 
@@ -1568,10 +1569,49 @@ colData(dds)
 rowData(dds)
 ```
 
-Agora, chegou o momento crucial de realizar a análise diferencial de expressão (DESeq), a qual realiza o ajuste dos dados ao modelo e estima os parâmetros essenciais, tais como $` \beta `$ (coeficientes de regressão) e $` \log_2FC `$ (logaritmo na base 2 do fold change).
+Agora, chegou o momento crucial de realizar a análise diferencial de expressão (DESeq), a qual estima os dados para normalizacão, realiza o ajuste dos dados ao modelo e estima os parâmetros essenciais, tais como $` \beta `$ (coeficientes de regressão) e $` \log_2FC `$ (logaritmo na base 2 do fold change).
 
 ```R
 dds <- DESeq(dds)
+```
+
+Por favor, reveja os resultados da função `rowData`:
+
+```R
+rowData(dds)
+```
+
+Vamos agora transformar os dados de expressão usando o método de estabilização de variância (vst), a fim de conduzir análises exploratórias. 
+
+A transformação de estabilização de variância (vst) é um método comumente aplicado em análises de dados de expressão gênica, especialmente em dados provenientes de sequenciamento de RNA (RNA-seq). Seu objetivo principal é reduzir a heteroscedasticidade, ou seja, a variabilidade não constante ao longo da faixa de intensidades de expressão gênica.
+
+Ao aplicar a transformação vst, busca-se tornar a distribuição das variações de expressão mais homogênea, o que pode ser crucial para garantir a validade estatística de análises subsequentes. Isso é particularmente relevante em estudos de expressão gênica, nos quais as variações nas contagens de RNA podem ser desproporcionalmente grandes em regiões de baixa expressão, tornando difícil a comparação e interpretação correta.
+
+Portanto, a transformação vst desempenha um papel fundamental na preparação dos dados, melhorando a capacidade de detecção de padrões biologicamente relevantes e contribuindo para resultados mais robustos em análises exploratórias e inferenciais.
+
+```R
+vsd <- vst(dds, blind=TRUE)
+```
+
+```R
+plotPCA(vsd, intgroup=c("Genotype"),ntop=500)
+plotPCA(vsd, intgroup=c("EnvironmentalStress"),ntop=500)
+```
+
+```R
+sampleDists <- dist(t(assay(vsd)))
+sampleDistMatrix <- as.matrix(sampleDists)
+rownames(sampleDistMatrix) <- paste(vsd$Condition, vsd$Genotype, sep="-")
+colnames(sampleDistMatrix) <- paste(vsd$Condition, vsd$Genotype, sep="-")
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows=sampleDists,
+         clustering_distance_cols=sampleDists)
+```
+
+```R
+```
+
+```R
 ```
 
 ```R
