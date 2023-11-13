@@ -1289,6 +1289,8 @@ Onde **X** é o cromossomo e pode ter os valores 1, 2, 3, 4, 5, M ou C. **YYYYY*
 zcat TAIR10_cdna_20101214_updated.gz |grep  ">" | cut -f 1 -d' '|sed 's/>//'| sed -r 's/((AT.G[0-9]*)\.[0-9]*)/\1\t\2/' > tx2gene.txt
 ```
 
+### Carregando os dados em R
+
 Agora temos tudo pronto para iniciar a análise em [R](https://cran.r-project.org/).
 
 No seu terminal, execute o comando:
@@ -1465,8 +1467,45 @@ Agora, por favor, discuta com seus colegas o efeito da profundidade de sequencia
 txi.salmon$counts['AT1G51370',]
 ```
 
-```R
+### Identificacão de genes diferencialmente expressos com DESeq2
+
+Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
+
+Nesta seção, iremos utilizar o pacote DESeq2, e primeiramente, vamos apresentar o modelo estatístico empregado por este pacote. O DESeq2 utiliza um modelo linear generalizado baseado na distribuição  binomial negativa das contagens de cada gene en cada condicao ([Negative Binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) [Generalized Linear Model](https://en.wikipedia.org/wiki/Generalized_linear_model)). Esse modelo considera a variabilidade intrínseca aos dados de RNA-Seq.
+
+No modelo de DESEq2, as contagens _y_ do gene _g_ na amostra _i_, são amostradas de uma distribuição binomial negativa com média _μ_ e parâmetro de dispersão _α_.
+
+```math
+y_gi ~ NB(μ_gi, α_g)
 ```
+
+O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) importantes e só deveria ser usado se você tiver certeza de que seus dados satisfazem essas suposições. Essas suposições são:
+
+- As observações (contagens) são assumidas como independentes entre si.
+- O parametro de dispersão _α_ é constante para todos os genes.
+- O média das contagens para um gene numa amostra (μ_gi) está diretamente relacionada a verdadeira abundancia desse gene ($ q_gi $), ajustada (_scaled_) pelo um parametro especifico para a amostra  $ s_i $.
+
+```math
+μ_gi =: q_gi * s_i
+```
+
+
+O modelo estatístico incorpora fatores de amostragem, como o efeito do genótipo e estresse ambiental, permitindo uma análise robusta e adaptável às nuances do conjunto de dados específico. Além disso, o DESeq2 incorpora ajustes para a normalização dos dados, levando em consideração diferenças na profundidade de sequenciamento entre as amostras, por exemplo.
+
+Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
+
+
+Agora, vamos fornecer os dados ao DESeq2. Este pacote possui rotinas que podem importar os dados diretamente do objeto criado pelo ``tximport``. Durante este processo, vamos especificar quais são os níveis de referência para os dois fatores controlados no planejamento experimental: Genotype e EnvironmentalStress.
+
+```R
+dds <- DESeqDataSetFromTximport(txi.salmon, colData = targets, design = ~Condition)
+dds$Genotype <-relevel(dds$Genotype, ref='WT')
+dds$EnvironmentalStress <-relevel(dds$EnvironmentalStress, ref='None')
+dds <- DESeq(dds)
+```
+
+Vale a pena iscutir um pocuo do tipo de objeto criado pelo DESeq com a funcao DESeqDataSetFromTximport, esté é um objeto `SummarizedExperiment`
+https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html
 
 ```R
 ```
