@@ -1500,12 +1500,17 @@ log(q_{gi}) = \sum_r x_{ri} \beta_{rg}
 
 Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene _g_ na amostra _i_, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
 
-O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas.
+O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas. Na matriz apresentada, as linhas representam as unidades experimentais, enquanto cada coluna corresponde a um nível do fator em estudo. Os valores nas células são 0 ou 1, indicando se uma unidade experimental foi (1) ou não (0) atribuída a um dos níveis do fator.
 
 ```math
-\begin{bmatrix} 1 & 0 \\\ 1 & 0 \\\ 0 & 1 \\\ 0 & 1 \end{bmatrix}
+x_{ri} = \begin{bmatrix} 1 & 0 \\\ 1 & 0 \\\ 0 & 1 \\\ 0 & 1 \end{bmatrix}
 ```
 
+Os parametros $` \beta `$ estão no vector:
+
+```math
+\beta_g = \begin{bmatrix} \beta_{g0} \\\ \beta_{g1} \end{bmatrix}
+```
 
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
