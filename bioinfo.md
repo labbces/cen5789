@@ -1402,11 +1402,21 @@ E verificamos se os arquivos de fato existem no disco. O resultado dessa operaç
 ```R
 all(file.exists(myFiles))
 ```
+
 Agora, vamos importar os dados de quantificação do Salmon para o R, utilizando o pacote tximport. É importante observar que, neste caso, o tximport irá resumir os dados de expressão no nível dos genes.
 
 ```R
 txi.salmon<-tximport(files = myFiles, type = 'salmon', tx2gene = tx2gene, txIn = TRUE, txOut = FALSE)
 ```
+
+Vamos conferir o objeto `txi.salmon`; ele contém várias informações diferentes, como as abundâncias dos genes em _TPM_ (_Transcripts Per Million_), seus comprimentos e as contagens (número de leituras/fragmentos por gene por amostra). Vamos dar uma olhada nas primeiras linhas do objeto.
+
+```R
+head(txi.salmon$counts)
+```
+
+Esta matriz é o ponto de entrada no DESeq2, onde cada linha representa um gene (_g_), e cada coluna uma amostra (_i_). As células $` K_{ij} `$ indicam o número de fragmentos sequenciados que foram observados para o gene na amostra.
+
 Apenas para fins de comparação entre a quantificação no nível de gene e no nível de transcrito, carregaremos os dados no nível de transcritos.
 
 ```R
@@ -1420,6 +1430,7 @@ head(txi.salmon$counts['AT1G51370',])
 head(txi.salmon.tx$counts[c('AT1G51370.1','AT1G51370.2','AT1G51370.3'),])
 rm(txi.salmon.tx)
 ```
+
 Observe que o valor de expressão do gene é a soma dos valores de expressão de seus transcritos. Isso ocorre porque o Salmon, ao realizar a quantificação, fornece estimativas de abundância para cada transcrito individualmente. Ao importar esses dados no R usando o pacote tximport, com os argumentos `txIn = TRUE, txOut = FALSE`, a função automaticamente realiza a agregação dos valores de expressão dos transcritos para calcular a expressão a nível de gene.
 
 Essa abordagem é útil porque muitos experimentos de RNA-Seq fornecem dados de expressão em nível de transcrito, mas, muitas vezes, estamos mais interessados na expressão a nível de gene para análises mais globais. A soma dos valores de expressão dos transcritos para um gene específico oferece uma medida geral da expressão desse gene no contexto do experimento.
@@ -1469,7 +1480,7 @@ txi.salmon$counts['AT1G51370',]
 
 ### DESeq2
 
-Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
+Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)[Love et al., 2014](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)[Robinson et al., 2010](https://pubmed.ncbi.nlm.nih.gov/19910308/) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
 
 Nesta seção, iremos utilizar o pacote DESeq2, e primeiramente, vamos apresentar o modelo estatístico empregado por este pacote. O DESeq2 utiliza um modelo linear generalizado baseado na distribuição  binomial negativa das contagens de cada gene en cada condicao ([Negative Binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) [Generalized Linear Model](https://en.wikipedia.org/wiki/Generalized_linear_model)). Esse modelo considera a variabilidade intrínseca aos dados de RNA-Seq.
 
@@ -1512,6 +1523,11 @@ Os parametros $` \beta `$ estão no vector:
 \beta_g = \begin{bmatrix} \beta_{g0} \\\ \beta_{g1} \end{bmatrix}
 ```
 
+Depois de ajustar o modelo com os dados disponiveis, o seja calculados os coeficientes $` \beta_{gi} `$, a mudancã na expressãzo do gene pode ser expressada em escalado de $` log_2`$ como 
+
+```math
+Log2FC(g) = (\beta_{g1} - \beta_{g0})
+```
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
 
