@@ -1506,6 +1506,8 @@ O que representa essa matriz de planejamento experimental? Vamos explorar um exp
 \begin{bmatrix} 1 0 \\\ 1 0 \\\ 0 1 0 1 \end{bmatrix}
 ```
 
+\\[ J(\theta) = \frac{1}{2m}[\sum_{i=1}^m(h_\theta (x^{(i)}) - y^{(i)})^2 + \lambda\sum_{j=1}^n\theta^2_j] \\]
+
 
 Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferencialmente expressos com maior precisão, controlando eficazmente a taxa de erro e fornecendo resultados estatisticamente significativos. Isso faz dele uma ferramenta poderosa na análise de expressão gênica diferencial, especialmente quando lidamos com dados complexos e experimentos de RNA-Seq.
 
