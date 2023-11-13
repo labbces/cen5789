@@ -1493,6 +1493,9 @@ No modelo de DESEq2, as contagens _y_ do gene _g_ na amostra _i_, são amostrada
 y_{gi} ~ NB(μ_{gi}, α_g)
 ```
 
+Uma estimativa precisa do parâmetro de dispersão $\alpha_{g}$ é crucial para uma correta inferência estatística. No entanto, não é simples devido ao baixo número de replicatas normalmente utilizadas em experimentos de RNA-Seq, o que resulta em estimativas de dispersão muito variáveis. Uma maneira de lidar com isso é compartilhar informações entre vários genes.
+
+A abordagem de compartilhamento de informação é particularmente útil em experimentos com um pequeno número de replicatas, pois permite que genes semelhantes forneçam informações uns aos outros, melhorando assim a estabilidade das estimativas de dispersão. Essa estratégia é implementada em métodos como o DESeq2 para aprimorar a precisão das inferências em experimentos de RNA-Seq.
 O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) importantes e só deveria ser usado se você tiver certeza de que seus dados satisfazem essas suposições. Essas suposições são:
 
 - As observações (contagens) são assumidas como independentes entre si.
@@ -1503,13 +1506,13 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 μ_{gi} =: q_{gi} * s_i
 ```
 
-Esse parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que tenham que ser normalizados. O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$.
+O parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que precisem ser normalizados. O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$.
 
 ```math
-log(q_{gi}) = \sum_r x_{ri} \beta_{rg}
+log_2(q_{gi}) = \sum_r x_{ri} \beta_{rg}
 ```
 
-Onde, $` x_{ri}` $  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene _g_ na amostra _i_, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
+Onde, $` x_{ri} `$  é uma matriz com o planejamento experimental e $` \beta_{rg} `$ é o coeficiente de regressão para o gene _g_ na amostra _i_, é está relacionao a mudança de abundânçia (fold change) do gene _g_ na amostra _i_ em relação a uma amostra de referência. 
 
 O que representa essa matriz de planejamento experimental? Vamos explorar um experimento simples com um único fator e dois níveis desse fator, ou seja, controle e tratamento, cada nível com duas replicatas biológicas. Na matriz apresentada, as linhas representam as unidades experimentais, enquanto cada coluna corresponde a um nível do fator em estudo. Os valores nas células são 0 ou 1, indicando se uma unidade experimental foi (1) ou não (0) atribuída a um dos níveis do fator.
 
@@ -1523,7 +1526,7 @@ Os parametros $` \beta `$ estão no vector:
 \beta_g = \begin{bmatrix} \beta_{g0} \\\ \beta_{g1} \end{bmatrix}
 ```
 
-Depois de ajustar o modelo com os dados disponiveis, o seja calculados os coeficientes $` \beta_{gi} `$, a mudancã na expressãzo do gene pode ser expressada em escalado de $` log_2`$ como 
+Depois de ajustar o modelo com os dados disponiveis, o seja calculados os coeficientes $` \beta_{gi} `$, udança na expressão do gene pode ser expressa em escala de $` log_2`$ como 
 
 ```math
 Log2FC(g) = (\beta_{g1} - \beta_{g0})
