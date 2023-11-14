@@ -195,7 +195,7 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
 plotCounts(dds, gene=which.min(res_ABA_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
 plotCounts(dds, gene=which.min(res_Drought_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
 plotCounts(dds, gene=which.min(res_SALT_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
-?plotCounts                             
+
 write.table(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% c('UP','DOWN')),],
             file = "SALT_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
 
