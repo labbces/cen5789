@@ -2,7 +2,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("tximport",update = FALSE,ask = FALSE)
 BiocManager::install("DESeq2",update = FALSE,ask = FALSE)
-BiocManager::install("vidger",update = FALSE,ask = FALSE)
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
 
@@ -12,7 +11,7 @@ library(tximport)
 library(ggplot2)
 library(pheatmap)
 library(reshape2)
-library(vidger)
+
 #Delete everithing in your R environment
 rm(list=ls())
 
