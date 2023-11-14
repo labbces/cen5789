@@ -1509,7 +1509,11 @@ O modelo implementado no DESeq tem algumas suposições (todos os modelos têm) 
 μ_{gi} =: q_{gi} * s_i
 ```
 
-O parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que precisem ser normalizados. O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$.
+O parametro $` s_i `$, pode incorporar a profundidade da amostra, a composicao da amostra, etc., i.e., todos os fatores que precisem ser normalizados.  O DESeq2 estima esse parametro para cada amostra, e o utiliza para normalizar as contagens de cada gene. O DESeq2 utiliza o modelo de regressão log-linear para estimar os parametros $` s_i `$ e $` q_{gi} `$. 
+
+Geralmente, os _size factors_ incluem principalmente a profundidade do sequenciamento e assumem que uma minoria de genes está sendo afetada pelas condições experimentais. Se essa suposição não for correta, os _size factors_ podem ser estimados de outras maneiras. Por exemplo, quando há informações prévias, pode-se utilizar um conjunto de genes que não deveriam mudar em sua expressão em relação às condições experimentais. O DESeq2 possui uma função específica para isso chamada controlGenes.
+
+Essa abordagem, utilizando genes de controle, proporciona uma maneira mais personalizada de estimar os _size factors_, levando em consideração genes específicos que se espera que não sejam influenciados pelas condições experimentais. Isso pode ser particularmente útil em experimentos nos quais a maioria dos genes não atende à suposição padrão de não serem afetados pelas condições experimentais
 
 ```math
 log_2(q_{gi}) = \sum_r x_{ri} \beta_{rg}
@@ -1529,7 +1533,7 @@ Os parametros $` \beta `$ estão no vector:
 \beta_g = \begin{bmatrix} \beta_{g0} \\\ \beta_{g1} \end{bmatrix}
 ```
 
-Depois de ajustar o modelo com os dados disponiveis, o seja calculados os coeficientes $` \beta_{gi} `$, udança na expressão do gene pode ser expressa em escala de $` log_2`$ como 
+Depois de ajustar o modelo com os dados disponiveis, o seja calculados os coeficientes $` \beta_{gi} `$, a mudança na expressão do gene pode ser expressa em escala de $` \log_2 `$ como 
 
 ```math
 Log2FC(g) = (\beta_{g1} - \beta_{g0})
@@ -1590,10 +1594,10 @@ ggplot(counts_melt,aes(x=Sample,y=Count)) +
   ylab("Número de fragmentos sequenciados")
 ```
 
-Agora, vamos remover os genes com soma de contagens menor que 1. O resultado da funcão `table` nos mostra quantos genes serão removidos.
+Agora, vamos remover os genes com soma de contagens menor que 10. O resultado da funcão `table` nos mostra quantos genes serão removidos.
 
 ```R
-keep <- rowSums(counts(dds) >= 1) >= 1
+keep <- rowSums(counts(dds) >= 1) >= 10
 table(keep)
 dim(dds)
 dds <- dds[keep,]
@@ -1621,7 +1625,7 @@ Ao aplicar a transformação vst, busca-se tornar a distribuição das variaçõ
 Portanto, a transformação vst desempenha um papel fundamental na preparação dos dados, melhorando a capacidade de detecção de padrões biologicamente relevantes e contribuindo para resultados mais robustos em análises exploratórias e inferenciais.
 
 ```R
-vsd <- vst(dds, blind=TRUE, )
+vsd <- vst(dds, blind=FALSE)
 ```
 
 Vamos conduzir uma análise de componentes principais com o objetivo de compreender o comportamento dos dados. Para isso, utilizaremos a função plotPCA do pacote DESeq2, que seleciona automaticamente os 500 genes mais variáveis e os utiliza como base para a análise.
@@ -1640,8 +1644,7 @@ Desta análise, torna-se evidente que o principal fator que influencia os nívei
 
 ![PCA](images/transcriptomicsPCA_DESeq2.png)
 
-Outra análise exploratorio importante é a análise de correlação entre as amostras. 
-
+Outra análise exploratória importante é a análise de correlação entre as amostras. Novamente, aqui esperamos que amostras sob as mesmas condições apresentem valores de correlação mais elevados. Note que, nesta análise, ao contrário do `plotPCA`, não estamos utilizando os 500 genes mais variáveis, mas sim todos os genes.
 
 ```R
 sampleDists <- dist(t(assay(vsd)))
@@ -1653,14 +1656,103 @@ pheatmap(sampleDistMatrix,
          clustering_distance_cols=sampleDists)
 ```
 
-```R
-```
+Agora, vamos realizar os testes estatísticos para selecionar os genes que apresentam mudanças significativas em expressão em resposta à condição ambiental. Para isso, utilizaremos a função results do DESeq2. Essa função calcula os valores de _p-valor_ e _fold change_ para cada gene, utilizando o modelo estatístico que descrevemos anteriormente. O resultado é um objeto do tipo `data.frame` com os valores de _p-valor_ e _fold change_ para cada gene.
+
+No DESeq2, é possível conduzir explicitamente o teste de hipótese para avaliar se o $` \log_2FC `$ é significativamente diferente, maior ou menor que um limiar escolhido pelo pesquisador. Neste caso, usaremos 2 como limiar, indicando que a expressão do gene muda em pelo menos 4 vezes nas condições comparadas.
 
 ```R
+res_SALT_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','NaCl','None'), alpha=0.05)
+res_ABA_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','ABA','None'), alpha=0.05)
+res_Drought_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','Drought','None'), alpha=0.05)
 ```
 
-```R
-```
+Vamos agora explorar esses resultados por meio de dois tipos comuns de gráficos: o MA plot e o Volcano plot.
+
+O _MA plot_ é uma representação gráfica que exibe a relação entre a média de abundância (M) e a diferença (A) entre as condições experimentais. É uma ferramenta útil para visualizar a variabilidade dos dados e identificar genes diferencialmente expressos.
+
+O _Volcano plot_, por outro lado, destaca os genes que são estatisticamente significativos em termos de p-valor e fold change. Ele oferece uma visão mais abrangente das diferenças de expressão, permitindo a identificação rápida dos genes mais relevantes.
+
+Vamos explorar essas representações gráficas para obter insights adicionais sobre os genes que respondem significativamente às condições ambientais. Primeiro os _MA plots_
 
 ```R
+drawLines <- function() abline(h=c(-2,2),col="dodgerblue",lwd=2)
+plotMA(res_SALT_vs_Control, main = "SALT_vs_Control"); drawLines()
+plotMA(res_ABA_vs_Control, main = "ABA_vs_Control"); drawLines()
+plotMA(res_Drought_vs_Control, main = "Drought_vs_Control"); drawLines()
+```
+
+Agora, os _Volcano plots_. O DESeq2 não possui uma função pronta para criar esse tipo de gráfico, mas podemos facilmente criá-lo utilizando as tabelas de resultados e o ggplot. Em seguida, faremos a comparação _NaCl vs Control_. Deixo para você realizar as outras duas comparações.
+
+```R
+df_res_SALT_vs_Control<-as.data.frame(res_SALT_vs_Control)
+df_res_SALT_vs_Control$diffExpressed <- "NO"
+df_res_SALT_vs_Control$diffExpressed[df_res_SALT_vs_Control$padj < 0.05 & df_res_SALT_vs_Control$log2FoldChange >0] <- "UP"
+df_res_SALT_vs_Control$diffExpressed[df_res_SALT_vs_Control$padj < 0.05 & df_res_SALT_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_SALT_vs_Control$diffExpressed)
+ggplot(df_res_SALT_vs_Control, aes(x=log2FoldChange, y=-log10(padj), col=diffExpressed)) + 
+  theme_bw() +
+  geom_point() +
+  geom_vline(xintercept = c(-2, 2), col = "gray", linetype = 'dashed')+
+  geom_hline(yintercept = -log10(0.05), col = "gray", linetype = 'dashed')+
+  scale_color_manual(values = c("#00AFBB", "grey", "#FFDB6D"), 
+                     labels = c("Downregulated", "Not significant", "Upregulated"))+
+  ggtitle('SALT_vs_Control DEGs')
+
+df_res_ABA_vs_Control<-as.data.frame(res_ABA_vs_Control)
+df_res_ABA_vs_Control$diffExpressed <- "NO"
+df_res_ABA_vs_Control$diffExpressed[df_res_ABA_vs_Control$padj < 0.05 & df_res_ABA_vs_Control$log2FoldChange >0] <- "UP"
+df_res_ABA_vs_Control$diffExpressed[df_res_ABA_vs_Control$padj < 0.05 & df_res_ABA_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_ABA_vs_Control$diffExpressed)
+
+df_res_Drought_vs_Control<-as.data.frame(res_Drought_vs_Control)
+df_res_Drought_vs_Control$diffExpressed <- "NO"
+df_res_Drought_vs_Control$diffExpressed[df_res_Drought_vs_Control$padj < 0.05 & df_res_Drought_vs_Control$log2FoldChange >0] <- "UP"
+df_res_Drought_vs_Control$diffExpressed[df_res_Drought_vs_Control$padj < 0.05 & df_res_Drought_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_Drought_vs_Control$diffExpressed)
+```
+
+Agora, vamos criar um mapa de calor exclusivamente com os genes diferencialmente expressos e os valores de expressão, gerados pela função vst.
+
+Esta visualização nos permitirá explorar padrões de expressão gênica em amostras específicas, concentrando-se nos genes que mostraram alterações significativas em resposta às condições ambientais. A transformação VST (variance stabilizing transformation) aplicada aos dados de expressão ajuda a estabilizar a variação e fornece uma representação mais precisa das diferenças de expressão entre as condições experimentais.
+
+Ao observar o mapa de calor, será possível identificar claramente como a expressão desses genes específicos varia em diferentes contextos ambientais, contribuindo para uma compreensão mais profunda dos padrões de regulação gênica no experimento.
+
+```R
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "SALT_vs_Control DEGs")
+
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("ABA","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "ABA_vs_Control DEGs")
+
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "Drought_vs_Control DEGs")
+```
+
+Vamos salvar os dados com os identificadores dos genes diferencialmente expressos para cada comparação.
+
+```R
+write.table(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "SALT_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
+write.table(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "ABA_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
+write.table(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "Drought_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
 ```

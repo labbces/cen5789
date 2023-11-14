@@ -95,6 +95,8 @@ dimnames(dds)
 metadata(dds)
 
 counts_melt<-melt(assay(dds))
+
+
 colnames(counts_melt)<-c("Gene","Sample","Count")
 ggplot(counts_melt,aes(x=Sample,y=Count)) + 
   geom_boxplot()+
@@ -104,7 +106,8 @@ ggplot(counts_melt,aes(x=Sample,y=Count)) +
   xlab("Amostras") +
   ylab("Número de fragmentos sequenciados")
 
-keep <- rowSums(counts(dds) >= 1) >= 1
+keep <- rowSums(counts(dds, normalized=TRUE) >= 1) >= 1
+
 table(keep)
 dim(dds)
 dds <- dds[keep,]
@@ -114,8 +117,9 @@ dds <- DESeq(dds)
 
 vsd <- vst(dds, blind=TRUE)
 targets
-plotPCA(vsd, intgroup=c("Genotype"),ntop=500)
-plotPCA(vsd, intgroup=c("EnvironmentalStress"),ntop=500)
+plotPCA(vsd, intgroup=c("Genotype"),ntop=500)  + theme_bw()
+plotPCA(vsd, intgroup=c("EnvironmentalStress"),ntop=500) + theme_bw()
+plotPCA(vsd, intgroup=c("EnvironmentalStress", "Genotype"),ntop=500)  + theme_bw()
 
 sampleDists <- dist(t(assay(vsd)))
 sampleDistMatrix <- as.matrix(sampleDists)
@@ -124,3 +128,76 @@ colnames(sampleDistMatrix) <- paste(vsd$EnvironmentalStress, vsd$Genotype, sep="
 pheatmap(sampleDistMatrix,
          clustering_distance_rows=sampleDists,
          clustering_distance_cols=sampleDists)
+
+
+res_SALT_vs_Control <- results(dds, lfcThreshold=2, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','NaCl','None'), alpha=0.05)
+res_ABA_vs_Control <- results(dds, lfcThreshold=2, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','ABA','None'), alpha=0.05)
+res_Drought_vs_Control <- results(dds, lfcThreshold=2, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','Drought','None'), alpha=0.05)
+
+
+drawLines <- function() abline(h=c(-2,2),col="dodgerblue",lwd=2)
+plotMA(res_SALT_vs_Control, main = "SALT_vs_Control"); drawLines()
+plotMA(res_ABA_vs_Control, main = "ABA_vs_Control"); drawLines()
+plotMA(res_Drought_vs_Control, main = "Drought_vs_Control"); drawLines()
+
+df_res_SALT_vs_Control<-as.data.frame(res_SALT_vs_Control)
+df_res_SALT_vs_Control$diffExpressed <- "NO"
+df_res_SALT_vs_Control$diffExpressed[df_res_SALT_vs_Control$padj < 0.05 & df_res_SALT_vs_Control$log2FoldChange >0] <- "UP"
+df_res_SALT_vs_Control$diffExpressed[df_res_SALT_vs_Control$padj < 0.05 & df_res_SALT_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_SALT_vs_Control$diffExpressed)
+
+df_res_ABA_vs_Control<-as.data.frame(res_ABA_vs_Control)
+df_res_ABA_vs_Control$diffExpressed <- "NO"
+df_res_ABA_vs_Control$diffExpressed[df_res_ABA_vs_Control$padj < 0.05 & df_res_ABA_vs_Control$log2FoldChange >0] <- "UP"
+df_res_ABA_vs_Control$diffExpressed[df_res_ABA_vs_Control$padj < 0.05 & df_res_ABA_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_ABA_vs_Control$diffExpressed)
+
+df_res_Drought_vs_Control<-as.data.frame(res_Drought_vs_Control)
+df_res_Drought_vs_Control$diffExpressed <- "NO"
+df_res_Drought_vs_Control$diffExpressed[df_res_Drought_vs_Control$padj < 0.05 & df_res_Drought_vs_Control$log2FoldChange >0] <- "UP"
+df_res_Drought_vs_Control$diffExpressed[df_res_Drought_vs_Control$padj < 0.05 & df_res_Drought_vs_Control$log2FoldChange <0] <- "DOWN"
+table(df_res_Drought_vs_Control$diffExpressed)
+
+ggplot(df_res_SALT_vs_Control, aes(x=log2FoldChange, y=-log10(padj), col=diffExpressed)) + 
+  theme_bw() +
+  geom_point() +
+  geom_vline(xintercept = c(-2, 2), col = "gray", linetype = 'dashed')+
+  geom_hline(yintercept = -log10(0.05), col = "gray", linetype = 'dashed')+
+  scale_color_manual(values = c("#00AFBB", "grey", "#FFDB6D"), 
+                     labels = c("Downregulated", "Not significant", "Upregulated"))+
+  ggtitle('SALT_vs_Control DEGs')+
+  ylim(0,3)
+
+
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "SALT_vs_Control DEGs")
+
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("ABA","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "ABA_vs_Control DEGs")
+
+pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
+                      row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
+                                                               c('UP','DOWN')),]),
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+         scale='row', 
+         annotation_col = targets,
+         main = "Drought_vs_Control DEGs")
+                             
+write.table(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "SALT_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
+write.table(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "ABA_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
+write.table(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% c('UP','DOWN')),],
+            file = "Drought_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
