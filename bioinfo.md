@@ -1248,6 +1248,7 @@ sed -i.bak -e 's/>//g' decoys.txt
 Em seguida, podemos construir o índice para que o Salmon possa realizar a quantificação dos transcritos:
 
 ```
+cat TAIR10_cdna_20101214_updated.gz TAIR10_genome.fasta.gz > gentrome.fa.gz
 salmon index -t gentrome.fa.gz -d decoys.txt -p 10 -i salmon_index --gencode
 cd ../
 ```
