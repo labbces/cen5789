@@ -1327,7 +1327,6 @@ library(tximport)
 library(ggplot2)
 library(pheatmap)
 library(reshape2)
-library(vidger)
 ```
 Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
 
@@ -1337,7 +1336,7 @@ rm(list=ls())
 Agora, vamos definir o seu diretório de trabalho. Ele deve ser o diretório que contém todos os resultados do Salmon. Lembre-se de que você deve ter 16 pastas com os resultados do Salmon.
 
 ```R
-wd<-"/data/diriano/cen5789_salmon/"
+wd<-"/home/cen5789/dia7/quantification/"
 setwd(wd)
 ```
 
@@ -1419,7 +1418,7 @@ Vamos conferir o objeto `txi.salmon`; ele contém várias informações diferent
 head(txi.salmon$counts)
 ```
 
-Esta matriz é o ponto de entrada no DESeq2, onde cada linha representa um gene (_g_), e cada coluna uma amostra (_i_). As células $` K_{ij} `$ indicam o número de fragmentos sequenciados que foram observados para o gene na amostra.
+Esta matriz é o ponto de entrada no DESeq2, onde cada linha representa um gene (_g_), e cada coluna uma amostra (_i_). As células $` K_{gi} `$ indicam o número de fragmentos sequenciados que foram observados para o gene na amostra.
 
 Apenas para fins de comparação entre a quantificação no nível de gene e no nível de transcrito, carregaremos os dados no nível de transcritos.
 
