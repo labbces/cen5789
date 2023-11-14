@@ -68,12 +68,24 @@ sudo mv gffread-0.12.7.Linux_x86_64/gffread /usr/local/bin
 conda create -y -n transcriptomics -c conda-forge -c bioconda ffq python r-base r-ggplot2 bioconductor-tximport bioconductor-deseq2 fastqc bbmap multiqc
 
 #R - From https://cran.r-project.org/bin/linux/ubuntu/#install-r
-sudo apt update -qq
-sudo apt install --no-install-recommends software-properties-common dirmngr
+sudo apt -y update -qq
+sudo apt -y install --no-install-recommends software-properties-common dirmngr
 wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
 sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-sudo apt install --no-install-recommends r-base
+sudo apt -y install libblas-dev liblapack-dev libatlas-base-dev gfortran zlib1g-dev libcurl4-openssl-dev libxml2-dev
+sudo apt -y install --no-install-recommends r-base
+
 
 #cd ~/Downloads; wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-2023.09.1-494-amd64-debian.tar.gz
 #tar xvzf rstudio-2023.09.1-494-amd64-debian.tar.gz
 #sudo mv rstudio-2023.09.1+494/ /usr/local
+#echo "PATH=$PATH:/usr/local/rstudio-2023.09.1+494/bin/" >> ~/.bashrc
+#. ~/.bashrc
+
+#In R running as sudo install sudo R
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("tximport",update = FALSE, ask = FALSE)
+BiocManager::install("DESeq2",update = FALSE, ask = FALSE)
+
+install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
