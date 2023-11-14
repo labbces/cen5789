@@ -1483,7 +1483,7 @@ txi.salmon$counts['AT1G51370',]
 
 ### DESeq2
 
-Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) ([Love et al., 2014](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) ([Robinson et al., 2010](https://pubmed.ncbi.nlm.nih.gov/19910308/)) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
+Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas siglas em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) ([Love et al., 2014](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) ([Robinson et al., 2010](https://pubmed.ncbi.nlm.nih.gov/19910308/)) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
 
 Nesta seção, vamos utilizar o pacote DESeq2 e, inicialmente, apresentar o modelo estatístico empregado por este pacote. O DESeq2 utiliza um modelo linear generalizado baseado na distribuição binomial negativa das contagens de cada gene em cada condição ([Negative Binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) [Generalized Linear Model](https://en.wikipedia.org/wiki/Generalized_linear_model)). Esse modelo considera a variabilidade intrínseca aos dados de RNA-Seq.
 
@@ -1737,10 +1737,17 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
 pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
                       row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
                                                                c('UP','DOWN')),]),
-                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("Drought","None")),])],
          scale='row', 
          annotation_col = targets,
          main = "Drought_vs_Control DEGs")
+```
+Vamos apresentar o número normalizado de leituras para o gene que apresentou as maiores mudanças em cada contraste:
+
+```R
+plotCounts(dds, gene=which.min(res_ABA_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
+plotCounts(dds, gene=which.min(res_Drought_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
+plotCounts(dds, gene=which.min(res_SALT_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
 ```
 
 Vamos salvar os dados com os identificadores dos genes diferencialmente expressos para cada comparação.

@@ -16,7 +16,7 @@ library(reshape2)
 rm(list=ls())
 
 #Set your working directory. This should be the directory containing all the Salmon results, remember you should have 16 folders with salmon results
-wd<-"D:/cen5789/salmon_quantification/"
+wd<-"/data/diriano/cen5789_salmon/"
 setwd(wd)
 
 #Loading the experimental design
@@ -105,7 +105,7 @@ ggplot(counts_melt,aes(x=Sample,y=Count)) +
   xlab("Amostras") +
   ylab("Número de fragmentos sequenciados")
 
-keep <- rowSums(counts(dds, normalized=TRUE) >= 1) >= 1
+keep <- rowSums(assay(dds) >= 1) >= 1
 
 table(keep)
 dim(dds)
@@ -187,11 +187,15 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
 pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
                       row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
                                                                c('UP','DOWN')),]),
-                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("Drought","None")),])],
          scale='row', 
          annotation_col = targets,
          main = "Drought_vs_Control DEGs")
-                             
+
+plotCounts(dds, gene=which.min(res_ABA_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
+plotCounts(dds, gene=which.min(res_Drought_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
+plotCounts(dds, gene=which.min(res_SALT_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
+?plotCounts                             
 write.table(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed %in% c('UP','DOWN')),],
             file = "SALT_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
 
