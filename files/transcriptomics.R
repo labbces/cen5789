@@ -4,6 +4,7 @@ BiocManager::install("tximport",update = FALSE,ask = FALSE)
 BiocManager::install("DESeq2",update = FALSE,ask = FALSE)
 BiocManager::install("topGO",update = FALSE,ask = FALSE)
 BiocManager::install("Rgraphviz",update = FALSE,ask = FALSE)
+BiocManager::install(c("gage","gageData"),update = FALSE,ask = FALSE)
 
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
@@ -309,3 +310,13 @@ ggplot(ClusterSelExpMelt, aes(y=value,x=variable,group=Gene))+
   ylab('Relative expression value')+
   xlab('Condition')
 
+pheatmap(allDEGsExpMeans[which(rownames(allDEGsExpMeans) %in% ClusterSelExp$Gene),], 
+         scale = 'row',
+         cluster_cols = FALSE)
+
+
+##Pathways
+
+library(gage)
+kegg.gsets(species= 'ath')
+?kegg.gsets
