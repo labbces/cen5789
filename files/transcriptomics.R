@@ -2,9 +2,13 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("tximport",update = FALSE,ask = FALSE)
 BiocManager::install("DESeq2",update = FALSE,ask = FALSE)
+BiocManager::install("topGO",update = FALSE,ask = FALSE)
+BiocManager::install("Rgraphviz",update = FALSE,ask = FALSE)
+
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
-
+install.packages("ggVennDiagram")
+install.packages("mclust")
 
 library(DESeq2)
 library(tximport)
@@ -16,7 +20,7 @@ library(reshape2)
 rm(list=ls())
 
 #Set your working directory. This should be the directory containing all the Salmon results, remember you should have 16 folders with salmon results
-wd<-"/data/diriano/cen5789_salmon/"
+wd<-"D:/cen5789/salmon_quantification/"
 setwd(wd)
 
 #Loading the experimental design
@@ -204,3 +208,104 @@ write.table(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in%
 
 write.table(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% c('UP','DOWN')),],
             file = "Drought_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+
+#Venn diagram of differentially expressed genes
+
+diffExpGenes<-list(Drought_vs_Control=rownames(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed != 'NO'),]),
+              ABA_vs_Control    =rownames(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed != 'NO'),]),
+              SALT_vs_Control   =rownames(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed != 'NO'),]))
+
+library(ggVennDiagram)
+library(topGO)
+ggVennDiagram(diffExpGenes) + scale_fill_gradient(low="blue",high = "red")
+
+process_region_data(Venn(diffExpGenes))
+
+#Simple overrepresentation analysis with topGO
+
+GTOGO<-read.delim2("gene_association.tair.simplified", header = FALSE)
+geneID2GO<- by(GTOGO$V2,
+               GTOGO$V1,
+               function(x) as.character(x))
+
+allGenes<-as.factor(rownames(assay(dds)))
+geneListDrought_vs_Control<-factor(as.integer(allGenes %in% diffExpGenes$Drought_vs_Control))
+names(geneListDrought_vs_Control)<-allGenes
+
+Drought_vs_Control_topGO<-new("topGOdata",
+                              description = "Drought_vs_Control_ALL", ontology = "BP",
+                              allGenes = geneListDrought_vs_Control,
+                              nodeSize = 4,
+                              annot =  annFUN.gene2GO, gene2GO = geneID2GO)
+
+Drought_vs_Control_topGO
+
+resultFisherDrought_vs_Control_topGO <- runTest(Drought_vs_Control_topGO, algorithm = "classic", statistic = "fisher")
+
+#creatign the results table
+resultFisherDrought_vs_Control_table<-cbind(termStat(Drought_vs_Control_topGO),
+                                            score(resultFisherDrought_vs_Control_topGO))
+
+colnames(resultFisherDrought_vs_Control_table)<-c('Annotated','Significant','Expected','pvalue')
+resultFisherDrought_vs_Control_table$padj<-p.adjust(resultFisherDrought_vs_Control_table$pvalue, method = 'fdr')
+
+dim(resultFisherDrought_vs_Control_table[which(resultFisherDrought_vs_Control_table$padj < 0.05),])
+
+showSigOfNodes(Drought_vs_Control_topGO, score(resultFisherDrought_vs_Control_topGO), firstSigNodes = 10, useInfo = 'all')
+
+
+#clustering
+
+library(mclust)
+
+allDEGs<-unique(c(rownames(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed != 'NO'),]),
+                  rownames(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed != 'NO'),]),
+                  rownames(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed != 'NO'),])))	
+dim(assay(vsd)[allDEGs,])
+
+allDEGsExp<-assay(vsd)[allDEGs,]
+
+
+allDEGsExpMeans<-as.data.frame(matrix(data=NA,ncol=4,nrow=nrow(allDEGsExp)))
+rownames(allDEGsExpMeans)<-rownames(allDEGsExp)
+colnames(allDEGsExpMeans)<-c('ControlMean','ABAMean','SaltMean','DroughtMean')
+head(allDEGsExpMeans)
+allDEGsExpMeans$ControlMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'None'),])])
+allDEGsExpMeans$ABAMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'ABA'),])])
+allDEGsExpMeans$SaltMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'NaCl'),])])
+allDEGsExpMeans$DroughtMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'Drought'),])])
+
+head(allDEGsExpMeans)
+dim(allDEGsExpMeans)         
+
+Zval<-function(x){
+  xmean<-mean(x)
+  xsd<-sd(x)
+  z<-(x-xmean)/xsd
+  return(z)
+}
+
+allDEGsExpMeansZscore<-t(apply(allDEGsExpMeans, 1, Zval))
+clusters<-Mclust(allDEGsExpMeansZscore,G=2:90)
+max(clusters$classification)
+table(clusters$classification)
+
+ClusterSel<-4
+ClusterSelExp<-allDEGsExpMeansZscore[which(rownames(allDEGsExpMeansZscore)
+                                           %in% 
+                                             names(clusters$classification[clusters$classification == ClusterSel])),]
+
+
+head(ClusterSelExp)
+conditionMeans<-colMeans(ClusterSelExp)
+ClusterSelExp<-as.data.frame(ClusterSelExp)
+ClusterSelExp$Gene<-rownames(ClusterSelExp)
+head(ClusterSelExp)
+ClusterSelExpMelt<-melt(ClusterSelExp,id.vars = 'Gene')
+head(ClusterSelExpMelt)
+ggplot(ClusterSelExpMelt, aes(y=value,x=variable,group=Gene))+
+  geom_line(colour='gray')+
+  theme_bw()+
+  ylab('Relative expression value')+
+  xlab('Condition')
+

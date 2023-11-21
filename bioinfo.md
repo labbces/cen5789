@@ -1248,7 +1248,6 @@ sed -i.bak -e 's/>//g' decoys.txt
 Em seguida, podemos construir o índice para que o Salmon possa realizar a quantificação dos transcritos:
 
 ```
-cat TAIR10_cdna_20101214_updated.gz TAIR10_genome.fasta.gz > gentrome.fa.gz
 salmon index -t gentrome.fa.gz -d decoys.txt -p 10 -i salmon_index --gencode
 cd ../
 ```
@@ -1327,6 +1326,7 @@ library(tximport)
 library(ggplot2)
 library(pheatmap)
 library(reshape2)
+library(vidger)
 ```
 Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
 
@@ -1336,7 +1336,7 @@ rm(list=ls())
 Agora, vamos definir o seu diretório de trabalho. Ele deve ser o diretório que contém todos os resultados do Salmon. Lembre-se de que você deve ter 16 pastas com os resultados do Salmon.
 
 ```R
-wd<-"/home/cen5789/dia7/quantification/"
+wd<-"/data/diriano/cen5789_salmon/"
 setwd(wd)
 ```
 
@@ -1418,7 +1418,7 @@ Vamos conferir o objeto `txi.salmon`; ele contém várias informações diferent
 head(txi.salmon$counts)
 ```
 
-Esta matriz é o ponto de entrada no DESeq2, onde cada linha representa um gene (_g_), e cada coluna uma amostra (_i_). As células $` K_{gi} `$ indicam o número de fragmentos sequenciados que foram observados para o gene na amostra.
+Esta matriz é o ponto de entrada no DESeq2, onde cada linha representa um gene (_g_), e cada coluna uma amostra (_i_). As células $` K_{ij} `$ indicam o número de fragmentos sequenciados que foram observados para o gene na amostra.
 
 Apenas para fins de comparação entre a quantificação no nível de gene e no nível de transcrito, carregaremos os dados no nível de transcritos.
 
@@ -1483,7 +1483,7 @@ txi.salmon$counts['AT1G51370',]
 
 ### DESeq2
 
-Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas siglas em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) ([Love et al., 2014](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) ([Robinson et al., 2010](https://pubmed.ncbi.nlm.nih.gov/19910308/)) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
+Existem diversos pacotes disponíveis para a identificação de Genes Diferencialmente Expressos (DEGs, por suas sigla em inglês) em R, sendo que [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) ([Love et al., 2014](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)) e [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) ([Robinson et al., 2010](https://pubmed.ncbi.nlm.nih.gov/19910308/)) são dois dos mais amplamente utilizados e reconhecidos na comunidade científica. No entanto, é importante mencionar que há uma variedade de outras ferramentas e pacotes que também desempenham um papel significativo na análise de expressão gênica diferencial no ambiente R. A escolha do pacote pode depender de diversos fatores, como a natureza dos dados, as premissas do experimento e as preferências metodológicas do pesquisador.
 
 Nesta seção, vamos utilizar o pacote DESeq2 e, inicialmente, apresentar o modelo estatístico empregado por este pacote. O DESeq2 utiliza um modelo linear generalizado baseado na distribuição binomial negativa das contagens de cada gene em cada condição ([Negative Binomial](https://en.wikipedia.org/wiki/Negative_binomial_distribution) [Generalized Linear Model](https://en.wikipedia.org/wiki/Generalized_linear_model)). Esse modelo considera a variabilidade intrínseca aos dados de RNA-Seq.
 
@@ -1737,17 +1737,10 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
 pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
                       row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
                                                                c('UP','DOWN')),]),
-                    row.names(targets[which(targets$EnvironmentalStress %in% c("Drought","None")),])],
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
          scale='row', 
          annotation_col = targets,
          main = "Drought_vs_Control DEGs")
-```
-Vamos apresentar o número normalizado de leituras para o gene que apresentou as maiores mudanças em cada contraste:
-
-```R
-plotCounts(dds, gene=which.min(res_ABA_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
-plotCounts(dds, gene=which.min(res_Drought_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
-plotCounts(dds, gene=which.min(res_SALT_vs_Control$padj), intgroup="EnvironmentalStress", normalized = TRUE)
 ```
 
 Vamos salvar os dados com os identificadores dos genes diferencialmente expressos para cada comparação.
@@ -1762,4 +1755,173 @@ write.table(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed %in%
 write.table(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% c('UP','DOWN')),],
             file = "Drought_vs_Control_DEGs.txt", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
 
+```
+
+#### Diagramas de Venn dos genes differencialmente expressos
+
+Quando temos vários contrastes, é comum querer saber quais genes são comuns entre as diferentes comparações. Para isso, podemos utilizar os diagramas de Venn. Vamos empregar o pacote [ggVennDiagram](https://cran.r-project.org/web/packages/ggVennDiagram/index.html) para criar esses diagramas utilizando o ggplot2.
+
+Primeiramente, vamos comparar todos os genes diferencialmente expressos entre os diversos contrastes.
+
+```R
+library(ggVennDiagram)
+diffExpGenes<-list(Drought_vs_Control=rownames(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed != 'NO'),]),
+              ABA_vs_Control    =rownames(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed != 'NO'),]),
+              SALT_vs_Control   =rownames(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed != 'NO'),]))
+
+ggVennDiagram(diffExpGenes) + scale_fill_gradient(low="blue",high = "red")
+
+process_region_data(Venn(diffExpGenes))
+```
+
+Agora, faça as comparações apenas para os genes UP e DOWN por separado.
+
+#### Identificando funções sobre-representadas nos grupos de genes diferencialmente expressos.
+
+Outra pergunta comum é se existe alguma função ou funções que aparecem mais do que esperado por acaso nos conjuntos de genes diferencialmente expressos.
+
+Existem várias estratégias para avaliar esse aspecto, e um pacote que implementa diversas abordagens é o topGO. Neste contexto, utilizaremos o [topGO](https://bioconductor.org/packages/release/bioc/html/topGO.html) para identificar termos GO que surgem como sobre-representados. Especificamente, aplicaremos a prova exata de Fisher. No entanto, é importante observar que o pacote topGO oferece outras provas que podem ser de interesse para abordar diversas questões biológicas. Essa diversidade de métodos estatísticos proporciona uma análise abrangente e adaptável às diferentes nuances biológicas que podem surgir durante a avaliação dos termos GO sobre-representados nos conjuntos de genes diferencialmente expressos.
+
+[A prova exata de Fisher](https://en.wikipedia.org/wiki/Fisher%27s_exact_test) é um teste estatístico que avalia a associação entre duas variáveis categóricas, neste caso, a associação entre a presença de um gene em um conjunto diferencialmente expresso e sua associação com termos GO. Essa abordagem estatística nos permite determinar se a ocorrência desses termos nos conjuntos de genes diferencialmente expressos é significativamente maior do que o esperado ao acaso.
+
+Primeiro, é necessário baixar as associações entre os identificadores dos genes de _A. thaliana_ e os termos GO. Você pode realizar o download dessas associações a partir [daqui](https://arabidopsis.org/download_files/GO_and_PO_Annotations/Gene_Ontology_Annotations/gene_association.tair.gz). No seu terminal, descomprima o arquivo utilizando o comando `gunzip` e inspecione o conteúdo do arquivo com o comando `less`. Desse arquivo, precisamos apenas da coluna 2 (GeneID) e da coluna 5 (GOID). No seu terminal, utilizando bash, vamos filtrar o conteúdo para manter apenas os campos que nos interessam:
+
+```bash
+grep AGI_LocusCode gene_association.tair |cut -f 2,5|sort -u > gene_association.tair.simplified
+```
+
+Agora, vamos importar esses dados no R e e reformatar essa tabela numa lista de R, formato que o topGO reconhece.
+
+```R
+library(topGO)
+GTOGO<-read.delim2("gene_association.tair.simplified", header = FALSE)
+geneID2GO<- by(GTOGO$V2,
+               GTOGO$V1,
+               function(x) as.character(x))
+```
+
+Para cada análise de sobre-representação, é necessário criar um vetor com 2 valores: o código do gene para todos os genes e o segundo valor, indicando se o gene está ou não no conjunto de genes diferencialmente expressos. Vamos gerar esses vetores para cada contraste.
+
+```R
+allGenes<-as.factor(rownames(assay(dds)))
+geneListDrought_vs_Control<-factor(as.integer(allGenes %in% diffExpGenes$Drought_vs_Control))
+names(geneListDrought_vs_Control)<-allGenes
+```
+
+Agora, temos os dados necessários para realizar a primeira análise de sobre-representação de termos GO. Vamos criar um objeto topGO com essas informações. E vamos visualizar um resumo desse objeto.
+
+```R
+Drought_vs_Control_topGO<-new("topGOdata",
+                              description = "Drought_vs_Control_ALL", ontology = "BP",
+                              allGenes = geneListDrought_vs_Control,
+                              nodeSize = 4,
+                              annot =  annFUN.gene2GO, gene2GO = geneID2GO)
+
+Drought_vs_Control_topGO
+```
+
+Agora, finalmente, podemos realizar o teste estatístico para detectar os termos GO que aparecem mais do que esperado por acaso. Nesse contexto, o topGO nos auxiliará na identificação dos termos GO que estão sobre-representados nos conjuntos de genes diferencialmente expressos.
+
+```R
+resultFisherDrought_vs_Control_topGO <- runTest(Drought_vs_Control_topGO, algorithm = "classic", statistic = "fisher")
+```
+
+O topGO não calcula ou corrige automaticamente os p-values para testes múltiplos. Para realizar essa correção, vamos primeiro criar um dataframe com os resultados e, em seguida, utilizando o método `p.adjust`, corrigiremos os p-values usando a abordagem de _false discovery rate_.
+
+```R
+resultFisherDrought_vs_Control_table<-cbind(termStat(Drought_vs_Control_topGO),
+                                            score(resultFisherDrought_vs_Control_topGO))
+
+colnames(resultFisherDrought_vs_Control_table)<-c('Annotated','Significant','Expected','pvalue')
+resultFisherDrought_vs_Control_table$padj<-p.adjust(resultFisherDrought_vs_Control_table$pvalue, method = 'fdr')
+```
+
+Para verificar quantos termos GO foram detectados como sobre-representados, com um FDR < 0.05, você pode realizar a seguinte análise no R:
+
+```R
+dim(resultFisherDrought_vs_Control_table[which(resultFisherDrought_vs_Control_table$padj < 0.05),])
+```
+
+Podemos visualizar os termos GO sobre-representados na topologia da ontologia GO. Para isso, vamos utilizar a função `showSigOfNodes` do topGO.
+
+```R
+showSigOfNodes(Drought_vs_Control_topGO, score(resultFisherDrought_vs_Control_topGO), firstSigNodes = 10, useInfo = 'all')
+```
+
+Realize a análise para os outros dois contrastes.
+
+####  Identificando grupos de genes com perfis de expressão semelhantes.
+
+Primeiro, vamos selecionar todos os identificadores dos genes diferencialmente expressos nos três contrastes. Em seguida, iremos recuperar os valores de expressão desses genes em todas as amostras. Para representar a expressão, utilizaremos o método VST. Repare que é preciso reduzir as replicatas a uma única coluna, já que as replicatas da mesma amostra não contribuem com informação independente do perfil de expressão do gene nessa condição.
+
+```R
+allDEGs<-unique(c(rownames(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed != 'NO'),]),
+                  rownames(df_res_ABA_vs_Control[which(df_res_ABA_vs_Control$diffExpressed != 'NO'),]),
+                  rownames(df_res_SALT_vs_Control[which(df_res_SALT_vs_Control$diffExpressed != 'NO'),])))	
+
+allDEGsExp<-assay(vsd)[allDEGs,]
+
+allDEGsExpMeans<-as.data.frame(matrix(data=NA,ncol=4,nrow=nrow(allDEGsExp)))
+rownames(allDEGsExpMeans)<-rownames(allDEGsExp)
+colnames(allDEGsExpMeans)<-c('ControlMean','ABAMean','SaltMean','DroughtMean')
+head(allDEGsExpMeans)
+allDEGsExpMeans$ControlMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'None'),])])
+allDEGsExpMeans$ABAMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'ABA'),])])
+allDEGsExpMeans$SaltMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'NaCl'),])])
+allDEGsExpMeans$DroughtMean<-rowMeans(allDEGsExp[,rownames(targets[which(targets$EnvironmentalStress == 'Drought'),])])
+
+head(allDEGsExpMeans)
+dim(allDEGsExpMeans)         
+
+```
+
+Vamos a transformar os valores de expressao usando o método Z-score, para focar mais na forma do perfil de expressão do que nos valores absolutos de expressão. Para isso vamos criar uma funcao nova em R.
+
+```R
+Para identificar os grupos de genes com padrões (perfil) de expressão semelhante, utilizaremos o pacote Mclust. O Mclust é uma ferramenta de análise de misturas que implementa a modelagem de mistura gaussiana para agrupar dados em subpopulações ou clusters com base na distribuição normal multivariada, e geralmente identifica clusters robustos e coesos. Essa análise pode levar alguns minutos.
+
+```R
+library(mclust)
+clusters<-Mclust(allDEGsExpMeans,G=2:90)
+max(clusters$classification)
+table(clusters$classification)
+```
+
+Agora vamos a visualizar os perfis de expressão dos genes em cada grupo. Para isso, vamos criar um objeto do tipo `data.frame` com os valores de expressão e os grupos de cada gene.
+
+```R
+ClusterSel<-4
+ClusterSelExp<-allDEGsExpMeansZscore[which(rownames(allDEGsExpMeansZscore)
+                                           %in% 
+                                             names(clusters$classification[clusters$classification == ClusterSel])),]
+
+
+head(ClusterSelExp)
+conditionMeans<-colMeans(ClusterSelExp)
+ClusterSelExp<-as.data.frame(ClusterSelExp)
+ClusterSelExp$Gene<-rownames(ClusterSelExp)
+head(ClusterSelExp)
+ClusterSelExpMelt<-melt(ClusterSelExp,id.vars = 'Gene')
+head(ClusterSelExpMelt)
+ggplot(ClusterSelExpMelt, aes(y=value,x=variable,group=Gene))+
+  geom_line(colour='gray')+
+  theme_bw()+
+  ylab('Relative expression value')+
+  xlab('Condition')
+```
+
+Agora, vamos criar um mapa de calor com os valores de expressão dos genes em cada grupo. Para isso, vamos utilizar a função `pheatmap` do pacote pheatmap.
+
+```R
+pheatmap(assay(vsd)[which(rownames(assay(vsd)) %in% ClusterSelExp$Gen),], 
+         scale = 'row', 
+         annotation_col = targets)
+```
+
+Ou só as médias:
+
+```R
+pheatmap(allDEGsExpMeans[which(rownames(allDEGsExpMeans) %in% ClusterSelExp$Gene),], 
+         scale = 'row',
+         cluster_cols = FALSE)
 ```
