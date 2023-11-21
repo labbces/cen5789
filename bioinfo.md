@@ -1875,10 +1875,9 @@ dim(allDEGsExpMeans)
 
 ```
 
-Vamos a transformar os valores de expressao usando o método Z-score, para focar mais na forma do perfil de expressão do que nos valores absolutos de expressão. Para isso vamos criar uma funcao nova em R.
+Vamos a transformar os valores de expressao usando o método [Z-score](https://en.wikipedia.org/wiki/Standard_score), para focar mais na forma do perfil de expressão do que nos valores absolutos de expressão. Para isso vamos criar uma funcao nova em R.
 
-```R
-Para identificar os grupos de genes com padrões (perfil) de expressão semelhante, utilizaremos o pacote Mclust. O Mclust é uma ferramenta de análise de misturas que implementa a modelagem de mistura gaussiana para agrupar dados em subpopulações ou clusters com base na distribuição normal multivariada, e geralmente identifica clusters robustos e coesos. Essa análise pode levar alguns minutos.
+Para identificar os grupos de genes com padrões (perfil) de expressão semelhante, utilizaremos o pacote [Mclust](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html). O Mclust é uma ferramenta de análise de misturas que implementa a modelagem de mistura gaussiana para agrupar dados em subpopulações ou clusters com base na distribuição normal multivariada, e geralmente identifica clusters robustos e coesos. Essa análise pode levar alguns minutos.
 
 ```R
 library(mclust)
