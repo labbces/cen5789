@@ -21,7 +21,7 @@ library(reshape2)
 rm(list=ls())
 
 #Set your working directory. This should be the directory containing all the Salmon results, remember you should have 16 folders with salmon results
-wd<-"D:/cen5789/salmon_quantification/"
+wd<-"/data/diriano/cen5789_salmon/"
 setwd(wd)
 
 #Loading the experimental design
@@ -304,15 +304,18 @@ ClusterSelExp$Gene<-rownames(ClusterSelExp)
 head(ClusterSelExp)
 ClusterSelExpMelt<-melt(ClusterSelExp,id.vars = 'Gene')
 head(ClusterSelExpMelt)
+tittle=paste("Group ",ClusterSel, sep='')
 ggplot(ClusterSelExpMelt, aes(y=value,x=variable,group=Gene))+
   geom_line(colour='gray')+
   theme_bw()+
   ylab('Relative expression value')+
-  xlab('Condition')
+  xlab('Condition')+
+  ggtitle(tittle)
 
 pheatmap(allDEGsExpMeans[which(rownames(allDEGsExpMeans) %in% ClusterSelExp$Gene),], 
          scale = 'row',
-         cluster_cols = FALSE)
+         cluster_cols = FALSE,
+         main= tittle)
 
 
 ##Pathways

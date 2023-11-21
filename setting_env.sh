@@ -6,7 +6,7 @@ gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgr
 
 sudo apt update
 sudo apt upgrade
-sudo apt-get install -y libcurl4-openssl-dev zlib1g-dev libbz2-dev build-essential
+sudo apt-get install -y libcurl4-openssl-dev zlib1g-dev libbz2-dev build-essential libudunits2-dev libgdal-dev gdal-bin
 
 #miniconda3
 mkdir -p ~/miniconda3
@@ -87,5 +87,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("tximport",update = FALSE, ask = FALSE)
 BiocManager::install("DESeq2",update = FALSE, ask = FALSE)
+BiocManager::install("topGO",update = FALSE,ask = FALSE)
+BiocManager::install("Rgraphviz",update = FALSE,ask = FALSE)
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
+install.packages(c("ggVennDiagram","mclust"))

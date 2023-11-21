@@ -1902,11 +1902,13 @@ ClusterSelExp$Gene<-rownames(ClusterSelExp)
 head(ClusterSelExp)
 ClusterSelExpMelt<-melt(ClusterSelExp,id.vars = 'Gene')
 head(ClusterSelExpMelt)
+tittle=paste("Group ",ClusterSel, sep='')
 ggplot(ClusterSelExpMelt, aes(y=value,x=variable,group=Gene))+
   geom_line(colour='gray')+
   theme_bw()+
   ylab('Relative expression value')+
-  xlab('Condition')
+  xlab('Condition')+
+  ggtitle(tittle)
 ```
 
 Agora, vamos criar um mapa de calor com os valores de expressão dos genes em cada grupo. Para isso, vamos utilizar a função `pheatmap` do pacote pheatmap.
@@ -1914,7 +1916,8 @@ Agora, vamos criar um mapa de calor com os valores de expressão dos genes em ca
 ```R
 pheatmap(assay(vsd)[which(rownames(assay(vsd)) %in% ClusterSelExp$Gen),], 
          scale = 'row', 
-         annotation_col = targets)
+         annotation_col = targets,
+         main= tittle)
 ```
 
 Ou só as médias:
@@ -1922,5 +1925,6 @@ Ou só as médias:
 ```R
 pheatmap(allDEGsExpMeans[which(rownames(allDEGsExpMeans) %in% ClusterSelExp$Gene),], 
          scale = 'row',
-         cluster_cols = FALSE)
+         cluster_cols = FALSE,
+         main= tittle)
 ```
