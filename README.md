@@ -1,10 +1,10 @@
 # Genômica e Bioinformática - CEN5789
 Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
-__Criador e Instrutor da versão em Português__
+__Criador e Instrutor do material de Bioinformática__
 Diego M. Riaño-Pachón
 
-__Criadores do material na versão em Inglês__  
+__Criadores do material de LINUX na versão em Inglês__  
 Simon Prochnik  
 Sofia Robb     
 
@@ -122,3 +122,6 @@ Sofia Robb
          * [DESeq2](bioinfo.md/#deseq2)
             * [Modelo estatístico no DESeq2](bioinfo.md/#modelo-estatístico-no-deseq2)
             * [Identificacão de genes diferencialmente expressos com DESseq2](bioinfo.md/#identificacão-de-genes-diferencialmente-expressos-com-desseq2)
+            * [Diagramas de Venn dos genes differencialmente expressos](bioinfo.md/#diagramas-de-venn-dos-genes-differencialmente-expressos)
+            * [Identificando funções sobre-representadas nos grupos de genes diferencialmente expressos.](bioinfo.md/#identificando-funções-sobre-representadas-nos-grupos-de-genes-diferencialmente-expressos)
+            * [Identificando grupos de genes com perfis de expressão semelhantes.](bioinfo.md/#identificando-grupos-de-genes-com-perfis-de-expressão-semelhantes)
