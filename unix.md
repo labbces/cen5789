@@ -1,10 +1,10 @@
 # Genômica e Bioinformática - CEN5789
 Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
-__Criador e Instrutor da versão em Português__
+__Criador e Instrutor do material de Bioinformática__
 Diego M. Riaño-Pachón
 
-__Criadores do material na versão em Inglês__  
+__Criadores do material de LINUX na versão em Inglês__  
 Simon Prochnik  
 Sofia Robb     
 
