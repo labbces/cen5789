@@ -29,6 +29,7 @@ conda create -y -n bandage -c bioconda bandage
 conda create -y -n quast -c bioconda quast
 conda create -y -n genomescope2 -c bioconda genomescope2
 conda activate genomescope2
+conda install conda-forge::r-devtools
 R -e 'install.packages("viridis", repos="https://brieger.esalq.usp.br/CRAN/")'
 conda deactivate
 
