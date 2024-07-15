@@ -90,6 +90,7 @@ sudo apt -y install --no-install-recommends r-base
 #In R running as sudo install sudo R
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
+BiocManager::install(version = "3.19")
 BiocManager::install("tximport",update = FALSE, ask = FALSE)
 BiocManager::install("DESeq2",update = FALSE, ask = FALSE)
 BiocManager::install("topGO",update = FALSE,ask = FALSE)
