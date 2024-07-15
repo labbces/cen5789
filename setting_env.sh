@@ -32,6 +32,8 @@ conda create -y -n quast -c bioconda quast
 conda create -y -n genomescope2 -c bioconda genomescope2
 conda activate genomescope2
 conda install -y conda-forge::r-devtools
+R -e 'require(remotes);install_version("Matrix", version = "1.6-1",repos="https://cloud.r-project.org/")'
+R -e 'require(remotes);install_version("MASS", version = "7.3-60",repos="https://cloud.r-project.org/")'
 R -e 'install.packages("viridis", repos="https://brieger.esalq.usp.br/CRAN/")'
 conda deactivate
 
