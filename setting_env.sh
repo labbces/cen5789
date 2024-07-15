@@ -84,14 +84,14 @@ sudo apt -y install libblas-dev liblapack-dev libatlas-base-dev gfortran zlib1g-
 sudo apt -y install --no-install-recommends r-base
 
 
-#cd ~/Downloads; wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.04.2-764-amd64-debian.tar.gz
-#tar xvzf rstudio-2024.04.2-764-amd64-debian.tar.gz
-#sudo apt remove rstudio
-#rm -rf /usr/local/rstudio
-#sudo mv rstudio-2024.04.2+764/ /usr/local/rstudio
-#echo "PATH=$PATH:/usr/local/rstudio/" >> ~/.bashrc
-#. ~/.bashrc
-#rm rstudio-2024.04.2-764-amd64-debian.tar.gz
+cd ~/Downloads; wget https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.04.2-764-amd64-debian.tar.gz
+tar xvzf rstudio-2024.04.2-764-amd64-debian.tar.gz
+sudo apt remove rstudio
+rm -rf /usr/local/rstudio
+sudo mv rstudio-2024.04.2+764/ /usr/local/rstudio
+echo "PATH=$PATH:/usr/local/rstudio/" >> ~/.bashrc
+. ~/.bashrc
+rm rstudio-2024.04.2-764-amd64-debian.tar.gz
 
 sudo apt install -y libfreetype6-dev libfontconfig1-dev
 #In R running as sudo install sudo R
