@@ -45,6 +45,7 @@ unzip redotable_v1.2.zip
 cd redotable
 mv redotable ~/miniconda3/envs/redotable/bin/
 mv uk/ ~/miniconda3/envs/redotable/bin/
+chmod a+x ~/miniconda3/envs/redotable/bin/redotable
 cd ..
 rm redotable_v1.2.zip
 rm -rf redotable
