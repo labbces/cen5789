@@ -3,6 +3,8 @@ sudo usermod -a -G sudo cen5789
 
 #logout and login as new user
 gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/FondoCENA.png
+gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed s/.$//), 'google-chrome.desktop']"
+gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed s/.$//), 'org.gnome.Terminal.desktop']"
 
 sudo apt update
 sudo apt upgrade
@@ -29,7 +31,7 @@ conda create -y -n bandage -c bioconda bandage
 conda create -y -n quast -c bioconda quast
 conda create -y -n genomescope2 -c bioconda genomescope2
 conda activate genomescope2
-conda install conda-forge::r-devtools
+conda install -y conda-forge::r-devtools
 R -e 'install.packages("viridis", repos="https://brieger.esalq.usp.br/CRAN/")'
 conda deactivate
 
