@@ -91,6 +91,7 @@ sudo apt -y install --no-install-recommends r-base
 #sudo mv rstudio-2024.04.2+764/ /usr/local/rstudio
 #echo "PATH=$PATH:/usr/local/rstudio/" >> ~/.bashrc
 #. ~/.bashrc
+#rm rstudio-2024.04.2-764-amd64-debian.tar.gz
 
 sudo apt install -y libfreetype6-dev libfontconfig1-dev
 #In R running as sudo install sudo R
