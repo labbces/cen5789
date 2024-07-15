@@ -71,6 +71,7 @@ conda create -y -n eggnogmapper -c bioconda -c conda-forge eggnog-mapper
 wget https://github.com/gpertea/gffread/releases/download/v0.12.7/gffread-0.12.7.Linux_x86_64.tar.gz
 tar xzf gffread-0.12.7.Linux_x86_64.tar.gz
 sudo mv gffread-0.12.7.Linux_x86_64/gffread /usr/local/bin
+rm -rf gffread-0.12.7.Linux_x86_64*
 
 conda create -y -n transcriptomics -c conda-forge -c bioconda ffq python r-base r-ggplot2 bioconductor-tximport bioconductor-deseq2 fastqc bbmap multiqc
 
