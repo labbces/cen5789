@@ -90,6 +90,7 @@ sudo apt -y install --no-install-recommends r-base
 #echo "PATH=$PATH:/usr/local/rstudio-2023.09.1+494/bin/" >> ~/.bashrc
 #. ~/.bashrc
 
+sudo apt install libfreetype6-dev libfontconfig1-dev
 #In R running as sudo install sudo R
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
