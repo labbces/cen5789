@@ -58,7 +58,7 @@ Pode usar o comando _grep_ para localizar todas as linhas que tem um padrão de 
 grep ">" TAIR10_pep_20101214_updated.fasta
 ```
 
-São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas com o padrão de texto:
+São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas que tem o padrão de texto procurado, assim:
 
 ```
 grep ">" TAIR10_pep_20101214_updated.fasta | head -n 4
