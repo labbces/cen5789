@@ -8,7 +8,7 @@ Diego M. Riaño-Pachón
 
 Os exercícios serão realizados nos computadores da sala de computadores da central de aulas do CENA/USP. Por favor, entre no computador usando o sistema operacional Ubuntu e o usuário cen5789.
 
-## Bioinfo 1 - Operacoes básicas em Bioinformática
+## Bioinfo 1 - Operações básicas em Bioinformática
 
 ### Ferramentas do Unix úteis na bioinformática.
 
