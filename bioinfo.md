@@ -40,9 +40,9 @@ Pode conhecer o tamnho do arquivo com o comando _ls_:
 ls -l -h TAIR10_pep_20101214_updated.fasta
 ```
 
-O que faz a opção -h no comando 'ls'? Consulte a página de manual do _ls_ para saber."
+O que faz a opção -h no comando 'ls'? Consulte a página de manual do _ls_ para saber.
 
-Na maioria das vezes, é importante visualizar o conteúdo do arquivo, seja no início ou no final.  No entanto, devido ao grande tamanho dos arquivos com os quais normalmente se trabalha, não é conveniente abrir o arquivo com nenhum editor de texto, pois isso pode reduzir o tempo de resposta do computador. Podemos visualizar as primeiras ou ultimas linahs de um arquivo de texto com os comandos  _head_ e _tail_ respetivamente
+Na maioria das vezes, é importante visualizar o conteúdo do arquivo, seja no início ou no final.  No entanto, devido ao grande tamanho dos arquivos com os quais normalmente se trabalha, não é conveniente abrir o arquivo com nenhum editor de texto, pois isso pode reduzir o tempo de resposta do computador. Podemos visualizar as primeiras ou ultimas linhas de um arquivo de texto com os comandos  _head_ e _tail_ respetivamente
 
 ```
 head TAIR10_pep_20101214_updated.fasta
