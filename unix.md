@@ -1,7 +1,7 @@
 # Genômica e Bioinformática - CEN5789
 Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
-__Criador e Instrutor do material de Bioinformática__
+__Criador e Instrutor do material de Bioinformática e tradução do material de UNIX__
 Diego M. Riaño-Pachón
 
 __Criadores do material de LINUX na versão em Inglês__  
@@ -62,7 +62,7 @@ A maior parte da bioinformática é feita executando software numa shell da linh
 Este é um exemplo de prompt na linha de comandos:
 
 ```
-cen0336>
+cen05789:~$
 ```
 
 
