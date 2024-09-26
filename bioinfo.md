@@ -8,7 +8,7 @@ Diego M. Riaño-Pachón
 
 Os exercícios serão realizados nos computadores da sala de computadores da central de aulas do CENA/USP. Por favor, entre no computador usando o sistema operacional Ubuntu e o usuário cen5789.
 
-## Bioinfo 1 - Operacoes básicas em Bioinformática
+## Bioinfo 1 - Operações básicas em Bioinformática
 
 ### Ferramentas do Unix úteis na bioinformática.
 
@@ -40,9 +40,9 @@ Pode conhecer o tamnho do arquivo com o comando _ls_:
 ls -l -h TAIR10_pep_20101214_updated.fasta
 ```
 
-O que faz a opção -h no comando 'ls'? Consulte a página de manual do _ls_ para saber."
+O que faz a opção -h no comando 'ls'? Consulte a página de manual do _ls_ para saber.
 
-Na maioria das vezes, é importante visualizar o conteúdo do arquivo, seja no início ou no final.  No entanto, devido ao grande tamanho dos arquivos com os quais normalmente se trabalha, não é conveniente abrir o arquivo com nenhum editor de texto, pois isso pode reduzir o tempo de resposta do computador. Podemos visualizar as primeiras ou ultimas linahs de um arquivo de texto com os comandos  _head_ e _tail_ respetivamente
+Na maioria das vezes, é importante visualizar o conteúdo do arquivo, seja no início ou no final.  No entanto, devido ao grande tamanho dos arquivos com os quais normalmente se trabalha, não é conveniente abrir o arquivo com nenhum editor de texto, pois isso pode reduzir o tempo de resposta do computador. Podemos visualizar as primeiras ou ultimas linhas de um arquivo de texto com os comandos  _head_ e _tail_ respetivamente
 
 ```
 head TAIR10_pep_20101214_updated.fasta
@@ -58,7 +58,7 @@ Pode usar o comando _grep_ para localizar todas as linhas que tem um padrão de 
 grep ">" TAIR10_pep_20101214_updated.fasta
 ```
 
-São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas com o padrão de texto:
+São muitas linhas, vamos usar o _pipe_ para examinar só as primeiras 4 linas que tem o padrão de texto procurado, assim:
 
 ```
 grep ">" TAIR10_pep_20101214_updated.fasta | head -n 4
@@ -608,7 +608,7 @@ conda deactivate
 
 Em seguida, verifique a qualidade das sequências limpas usando o `fastqc`. Execute este procedimento para todos os arquivos neste exercício.
 
-### Analise de espectros de k-mers
+### Análise de espectros de k-mers
 
 Os [k-mer](https://en.wikipedia.org/wiki/K-mer) são sequências de DNA de tamanho _k_ encontradas em uma sequência maior. É importante observar que para obter todos os k-mer de uma sequência, você começa no primeiro nucleotídeo da sequência e pega os próximos k nucleotídeos. Em seguida, você desloca-se um nucleotídeo à frente e pega os k nucleotídeos, repete o processo até chegar no fim da sequencia, i.e., até não conseguir pegar k nucleotídeos. Vamos a listar todos os k-mer, com k=3, isto é vamos gerar o catálogo de k-mers da sequência abaixo:
 
