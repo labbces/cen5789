@@ -690,6 +690,7 @@ git clone -b sploidyplot https://github.com/KamilSJaron/smudgeplot
 git clone https://github.com/thegenemyers/FastK
 
 cd smudgeplot
+conda install numpy pandas
 make -s INSTALL_PREFIX=/home/cen5789/miniconda3/envs/genomescope2/
 R -e 'install.packages(".", repos = NULL, type="source")'
 cd ..
