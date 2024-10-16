@@ -785,6 +785,8 @@ conda deactivate
 gzip SRR25033384.fq
 ```
 
+Alternativamente, você pode tentar baixar o arquivo de leituras através deste [link](https://labbces.cena.usp.br/shared/CEN5789/dia4/SRR25033384.fq.gz).
+
 No primeiro passo, vamos remover os resíduos dos adaptadores da biblioteca utilizando o software HiFiAdapterFilt. Para fazer isso, primeiro precisamos instalar o software.
 
 ```
