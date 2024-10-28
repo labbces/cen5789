@@ -962,6 +962,32 @@ Antes de prosseguirmos com a anotação estrutural, é crucial aprimorar nossa a
 
 Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/contigs da montagem por meio de uma biblioteca de repetições adaptada ao genoma em questão. Entre as estratégias frequentemente empregadas, destacam-se o uso do [RepeatModeler](https://github.com/Dfam-consortium/RepeatModeler)/[RepeatMasker](https://www.repeatmasker.org/), [EDTA](https://github.com/oushujun/EDTA) e [Earl Grey](https://github.com/TobyBaril/EarlGrey). No entanto, é importante observar que esse processo costuma demandar considerável capacidade computacional. Por isso, hoje optaremos por omiti-lo.
 
+Se você já possui uma boa biblioteca das repetições presentes em seu genoma, pode utilizar o [NGSEP](https://github.com/NGSEP/NGSEPcore) como um mascarador rápido, nos modos TransposonsFinder e GenomeAssemblyMask. Para isso, usaremos a biblioteca do [Dfam](https://www.dfam.org/) que temos disponível em formato [FASTA](https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta). Observe que, primeiro, é necessário acessar o repositório do NGSEP e fazer o download do aplicativo através do link de Releases. Baixe tanto o software quanto a biblioteca do Dfam na pasta "dia6". Caso a pasta não exista, crie-a.
+
+```
+conda activate redotable
+mkdir -p ~/dia6
+cd ~/dia6
+wget https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta
+wget https://github.com/NGSEP/NGSEPcore/releases/download/v5.0.0/NGSEPcore_5.0.0.jar
+java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 4
+#Gerando uma versão soft-masked do genoma, com as repetições em letras minúsculas
+java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeat
+#Gerando uma versão hard-masked do genoma, substituindo as bases das repetições pela letra "N"
+java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -h 
+conda deactivate
+```
+
+Quantas bases foram mascaradas? Podemos usar o programa compseq do EMBOSS para verificar isso:
+
+```
+conda activate emboss
+compseq -word 1 -outfile stdout NRRLY27205.asm.bp.hap1.p_ctg.hardmasked.fa 
+conda deactivate
+```
+
+Você acha que essa forma de mascaramento foi apropriada? Dica: Não, não foi suficiente.
+
 ### Obter evidência extrínseca - Proteínas de espécies próximas.
 
 Vamos anotar apenas a montagem que apresentar as melhores métricas de completude e continuidade.
@@ -986,16 +1012,16 @@ Vamos usar um container do singularity para rodar mais facilmente o GALBA, para 
 
 ```
 conda activate singularitycew
-#singularity build galba.sif docker://katharinahoff/galba-notebook:latest
+singularity build galba.sif docker://katharinahoff/galba-notebook:latest
 singularity shell -B $PWD:$PWD galba.sif
 cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
 export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
-galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta --prot_seq=sequence.fasta
+galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa --prot_seq=sequence.fasta
 exit
 conda deactivate
 ```
 
-Você pode encontrar o rfesultado da previsão de genes na pasta GALBA. A saída do programa GALBA é gerada principalmente em três arquivos distintos:
+Você pode encontrar o resultado da previsão de genes na pasta GALBA. A saída do programa GALBA é gerada principalmente em três arquivos distintos:
 
 - galba.gtf
 - galba.codingseq
