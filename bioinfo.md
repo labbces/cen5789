@@ -690,6 +690,7 @@ git clone -b sploidyplot https://github.com/KamilSJaron/smudgeplot
 git clone https://github.com/thegenemyers/FastK
 
 cd smudgeplot
+conda install numpy pandas
 make -s INSTALL_PREFIX=/home/cen5789/miniconda3/envs/genomescope2/
 R -e 'install.packages(".", repos = NULL, type="source")'
 cd ..
@@ -747,21 +748,20 @@ Neste exemplo, um limite de erro significativo seria 70x. Como regra geral, nenh
 O limite de erro é especificado pelo parâmetro '-L'. Temos 4 núcleos na nossa máquina, então você também pode executar a busca de pares de k-mers em paralelo (parâmetro -t). Ao executar, não se esqueça de usar os nomes de SUA amostra, e não o exemplo fornecido.
 
 ```
-smudgeplot.py hetmers -L 70 -t 4 --verbose -o SRR926312_k17_pairs SRR926312_k17.ktab
+smudgeplot.py hetmers -L 70 -t 4 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
 
 ```
 
 E, por fim, uma vez que os pares de k-mers estejam prontos, um arquivo *_text.smu deve ser gerado. Trata-se de um histograma 2D, no qual para cada combinação de covA e covB, você encontrará a frequência com que essas duas coberturas ocorrem entre os het-mers (os pares de k-mers adjacentes um do outro).
 
 ```
-head SRR926312_k17_pairs_text.smu
+head SRR926312_kmerpairs_k17_text.smu
 ```
 
 Se você ver três colunas, é um bom sinal. Você pode prosseguir para finalmente plotar o SmudgePlot. Eu encorajaria você a executar `smudgeplot plot -h` para ver todas as opções e entender o que elas significam, mas um comando minimalista como este deve funcionar:
 
 ```
-smudgeplot.py plot -t SRR926312_k17 -o SRR926312_k17_smudgeplot SRR926312_k17_pairs_text.smu
-
+smudgeplot.py all -o SRR926312_k17_smudgeplot SRR926312_kmerpairs_k17_text.smu
 ```
 
 ![SRR926312_k17_smudgeplot_smudgeplot_log10](images/SRR926312_k17_smudgeplot_smudgeplot_log10.png)
@@ -785,6 +785,8 @@ conda deactivate
 gzip SRR25033384.fq
 ```
 
+Alternativamente, você pode tentar baixar o arquivo de leituras através deste [link](https://labbces.cena.usp.br/shared/CEN5789/dia4/SRR25033384.fq.gz).
+
 No primeiro passo, vamos remover os resíduos dos adaptadores da biblioteca utilizando o software HiFiAdapterFilt. Para fazer isso, primeiro precisamos instalar o software.
 
 ```
@@ -805,7 +807,7 @@ FastK -v -t16 -k31 -M16 -T4 SRR25033384.filt.fastq.gz -NSRR25033384_k31
 Histex -G SRR25033384_k31 > SRR25033384_k31.histo
 genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
 smudgeplot.py hetmers -L 18 -t 4 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
-smudgeplot.py plot -t SRR25033384_k31 -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs_text.smu
+smudgeplot.py all -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs_text.smu
 conda deactivate
 ```
 
