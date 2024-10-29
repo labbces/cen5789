@@ -6,7 +6,7 @@ Diego M. Riaño-Pachón
 
 __Criadores do material de LINUX na versão em Inglês__  
 Simon Prochnik  
-Sofia Robb     
+Sofia Robb 
 
 # Unix
 * [Unix](unix.md/#unix)
