@@ -1051,6 +1051,7 @@ Com a conclusão da anotação estrutural, estamos prontos para iniciar a anota�
 ```
 conda activate eggnogmapper
 export EGGNOG_DATA_DIR=/home/cen5789/dia6
+gffread --keep-genes -o GALBA/galba.gff3 GALBA/galba.gtf
 download_eggnog_data.py -P  -y
 emapper.py  -m diamond --cpu 10 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --target_orthologs all --tax_scope 4751
 conda deactivate
@@ -1088,7 +1089,7 @@ Vamos agora explorar com mais profundidade o uso de genes ortólogos. Para isso,
 
 O algoritmo de inferência do OMA envolve três etapas principais. Primeiro, ele calcula alinhamentos Smith-Waterman entre todas as sequências para identificar correspondências significativas, inferindo sequências homólogas. Em seguida, ele determina pares ortólogos, que são homólogos relacionados por eventos de especiação, levando em conta distâncias evolutivas e a incerteza na inferência de distâncias. Por fim, os ortólogos são agrupados de duas maneiras: em "grupos OMA" que servem como genes marcadores para reconstrução filogenética e em "HOGs" que representam grupos de genes comuns em niveis taxonômicos específicos.
 
-Nesta sessão, vamos resolver os exercícios do [Módulo 1 do treinamento do OMA](https://oma-stage.vital-it.ch/oma/academy/module/OMA_browser_2023). 
+Nesta sessão, vamos resolver os exercícios do [Módulo 1 do treinamento do OMA](https://omabrowser.org/oma/academy/module/BGA_session). 
 
 Para resolver esses exercícios, é altamente recomendado consultar regularmente as páginas de ajuda do OMA: "[Orthology Basics](https://omabrowser.org/oma/type/)," "[Types of homologs](https://omabrowser.org/oma/homologs/)," "[Access the OMA Data](https://omabrowser.org/oma/uses/)," "[Catalog of Tools](https://omabrowser.org/oma/tools/)," e "[Glossary](https://omabrowser.org/oma/glossary/)." Elas fornecerão informações valiosas para concluir com êxito os exercícios do Módulo 1.
 
