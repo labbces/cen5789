@@ -1076,7 +1076,7 @@ conda activate igv
 igv
 ```
 
-Por exemplo, localize o contig h1tg000003l nas posições que vão de 988,344 até 1,001,558. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" O que representa a região marcada com o número 8.024? É possível que haja um gene anotado nesta região?
+Por exemplo, localize o contig h1tg000003l nas posições que vão de 551,742 até 578,200. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" O que representa a região marcada com o número 495? É possível que haja um gene anotado nesta região?
 
 ![IGV screenshot](images/igv_snapshot.png)
 
