@@ -1,7 +1,7 @@
 # Genômica e Bioinformática - CEN5789
 Aulas práticas da disciplina ["CEN5789 - Genômica e Bioinformática"](https://uspdigital.usp.br/janus/componente/disciplinasOferecidasInicial.jsf?action=3&sgldis=CEN5789)
 
-__Criador e Instrutor do material de Bioinformática__
+__Criador e Instrutor do material de Bioinformática e tradução do material de UNIX__
 Diego M. Riaño-Pachón
 
 __Criadores do material de LINUX na versão em Inglês__  
@@ -66,7 +66,7 @@ Sofia Robb
          * [Links para tópicos <em>levemente</em> menos básicos](unix.md/#links-para-tópicos-levemente-menos-básicos)
       * [<a href="problemsets/Unix_02_problemset.md">Link para o conjunto de problemas Unix 2</a>](problemsets/Unix_02_problemset.md)
 * [Bioinformática](bioinfo.md/#bioinformática)
-   * [Bioinfo 1 - Operacoes básicas em Bioinformática](bioinfo.md/#bioinfo-1---operacoes-básicas-em-bioinformática)
+   * [Bioinfo 1 - Operações básicas em Bioinformática](bioinfo.md/#bioinfo-1---operações-básicas-em-bioinformática)
       * [Ferramentas do Unix úteis na bioinformática.](bioinfo.md/#ferramentas-do-unix-úteis-na-bioinformática)
          * [Algumas operações básicas com arquivos.](bioinfo.md/#algumas-operações-básicas-com-arquivos)
          * [Formatos de sequências](bioinfo.md/#formatos-de-sequências)
@@ -92,7 +92,7 @@ Sofia Robb
          * [qc1.fq.gz](bioinfo.md/#qc1fqgz)
          * [qc2.fq.gz](bioinfo.md/#qc2fqgz)
          * [qc3.fq.gz](bioinfo.md/#qc3fqgz)
-      * [Analise de espectros de k-mers](bioinfo.md/#analise-de-espectros-de-k-mers)
+      * [Análise de espectros de k-mers](bioinfo.md/#análise-de-espectros-de-k-mers)
          * [Contando k-mers](bioinfo.md/#contando-k-mers)
          * [GenomeScope2](bioinfo.md/#genomescope2)
          * [SmudgePlot](bioinfo.md/#smudgeplot)
