@@ -65,6 +65,7 @@ Sofia Robb
          * [Trazendo mudanças do repositório remoto para o local](unix.md/#trazendo-mudanças-do-repositório-remoto-para-o-local)
          * [Links para tópicos <em>levemente</em> menos básicos](unix.md/#links-para-tópicos-levemente-menos-básicos)
       * [<a href="problemsets/Unix_02_problemset.md">Link para o conjunto de problemas Unix 2</a>](problemsets/Unix_02_problemset.md)
+# Bioinformática
 * [Bioinformática](bioinfo.md/#bioinformática)
    * [Bioinfo 1 - Operações básicas em Bioinformática](bioinfo.md/#bioinfo-1---operações-básicas-em-bioinformática)
       * [Ferramentas do Unix úteis na bioinformática.](bioinfo.md/#ferramentas-do-unix-úteis-na-bioinformática)
