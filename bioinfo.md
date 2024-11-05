@@ -1096,7 +1096,7 @@ Para resolver esses exercícios, é altamente recomendado consultar regularmente
 
 ## Bioinfo 7 - Transcriptômica
 
-Vamos analisar a resposta dos genes de Arabidopsis thaliana considerando dois fatores: 1) o genótipo e 2) o estresse ambiental. O fator genótipo é composto por três níveis: 1.a) selvagem, 1.b) mutante no gene ros1-3, 1.c) duplo mutante nos genes dml2 e dml3, e 1.d) triplo mutante nos genes ros1, dml2 e dml3. Enquanto o fator estresse ambiental possui também quatro níveis: 2.a) sem tratamento, 2.b) tratamento com ácido abscísico, 2.c) tratamento com cloreto de sódio e 2.d) tratamento com seca. [Mais detalhes](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-4477/). Os transcritos em cada condição foram sequenciados usando a tecnologia Illumina, resultando na geração de leituras em pares (paired-end), e os dados estão disponiveis no [SRA](https://www.ncbi.nlm.nih.gov/sra?linkname=bioproject_sra_all&from_uid=282863).
+Vamos analisar a resposta dos genes de _Arabidopsis thaliana_ considerando dois fatores: 1) o genótipo e 2) o estresse ambiental. O fator genótipo é composto por três níveis: 1.a) selvagem, 1.b) mutante no gene ros1-3, 1.c) duplo mutante nos genes dml2 e dml3, e 1.d) triplo mutante nos genes ros1, dml2 e dml3. Enquanto o fator estresse ambiental possui também quatro níveis: 2.a) sem tratamento, 2.b) tratamento com ácido abscísico, 2.c) tratamento com cloreto de sódio e 2.d) tratamento com seca. [Mais detalhes](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-4477/). Os transcritos em cada condição foram sequenciados usando a tecnologia Illumina, resultando na geração de leituras em pares (paired-end), e os dados estão disponiveis no [SRA](https://www.ncbi.nlm.nih.gov/sra?linkname=bioproject_sra_all&from_uid=282863).
 
 Crie uma pasta com o nome `dia7` dentro do diretório $HOME. Todos os exercícios de hoje devem ser realizados dentro dessa pasta.
 
@@ -1197,7 +1197,7 @@ mkdir FastQC_pre
 fastqc --threads 2 --nogroup  --outdir FastQC_pre RAWREADS/${ID}_[1-2].fastq.gz
 ```
 
-Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca MRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
+Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca mRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
 
 Agora, vamos proceder com a limpeza usando o programa `bbduk` da suíte "bbmap". A qualidade das leituras, em termos da distribuição do escore Phred, está muito boa, e acredito que não seja necessário realizar o processo de _quality trimming_. No entanto, foi detectada a presença residual de adaptadores no extremo 3' em algumas amostras, os quais precisam ser removidos. Além disso, é aconselhável quantificar a quantidade de leituras que têm origem no rRNA, pois isso pode fornecer uma indicação da qualidade das amostras ainda nesta etapa de limpeza.
 
@@ -1256,7 +1256,7 @@ Commands:
 
 ```
 
-A referência que usaremos é composta por todos os transcritos (cDNAs) anotados no genoma de _Arabidopsis thaliana_, os quais podem ser baixados do [TAIR](https://www.arabidopsis.org), também pode encontrar o arquivo [aqui](http://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz), descarreguelo dentro da sua pasta `~/dia7/` e dentro de uma subpasta chamada `References`. Esta referência precisa ser complementada com sequências decoy, ou seja, sequências que não deveriam estar presentes para a quantificação. Neste caso, usaremos o genoma completo como decoy. Recomendo a leitura [deste articulo](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02151-8) aqui para entender a importância do uso de decoy em análises de RNASeq.
+A referência que usaremos é composta por todos os transcritos (cDNAs) anotados no genoma de _Arabidopsis thaliana_, os quais podem ser baixados do [TAIR](https://www.arabidopsis.org), também pode encontrar o arquivo [aqui](http://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz), descarreguelo dentro da sua pasta `~/dia7/` e dentro de uma subpasta chamada `References`. Esta referência precisa ser complementada com sequências decoy, ou seja, sequências que não deveriam estar presentes para a quantificação. Neste caso, usaremos o genoma completo como decoy. Recomendo a leitura [deste articulo](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02151-8) para entender a importância do uso de decoy em análises de RNASeq.
 
 ```
 mkdir -p ~/dia7/References
@@ -1290,7 +1290,7 @@ cd ~/dia7/
 salmon quant -i References/salmon_index -l A -1 CLEANREADS/${ID}_cleanf_1.fastq.gz -2 CLEANREADS/${ID}_cleanf_2.fastq.gz --validateMappings -o ~/dia7/quantification/${ID} --threads 10 --seqBias --gcBias
 ```
 
-Isso criará a pasta `quantification/${ID}`. Dentro dela, por favor, verifique o arquivo `logs/salmon_quant.log` e identifique o tipo de biblioteca detectado pelo Salmon e a taxa de mapeamento. Vamos tabular os resultados [neste arquivo](https://docs.google.com/spreadsheets/d/1-fUxJtmPMlMUwqPslSh2tBKUKKr-uDXZS8YVf8W2wqc/edit?usp=sharing).
+Isso criará a pasta `quantification/${ID}`. Dentro dela, por favor, verifique o arquivo `logs/salmon_quant.log` e identifique o tipo de biblioteca detectado pelo Salmon e a taxa de mapeamento. Vamos tabular os resultados [neste arquivo](https://docs.google.com/spreadsheets/d/1EcOg9kpVz2dfL6DBEYUMTtU_jfslNgPpBeegi6N_kWc/edit?usp=sharing).
 
 A quantificacao está disponivel no arquivo `~/dia7/quantification/${ID}/quant.sf`. Identifique as informações contidas no arquivo.
 
@@ -1301,7 +1301,7 @@ cd ~/dia7/quantification
 tar cvzf ${ID}.tar.gz ${ID}
 ```
 
-Copie o seu arquivo `${ID}.tar.gz` para a [pasta compartilhada no Google Drive](https://drive.google.com/drive/folders/134yKyPHqroURe4kxHm6HkCoaZTd8NjXR?usp=sharing). Lembre-se de substituir o identificador da SUA amostra (ID). Quando todos tiverem copiado seus arquivos, faremos o download e descompactaremos todos os arquivos na pasta `~/dia7/quantification/` para que possamos acessar a quantificação de todas as amostras.
+Copie o seu arquivo `${ID}.tar.gz` para a [pasta compartilhada no Google Drive](https://drive.google.com/drive/folders/19lkTLLLodNdELxbTn54VNJARIUNHvWca?usp=drive_link). Lembre-se de substituir o identificador da SUA amostra (ID). Quando todos tiverem copiado seus arquivos, faremos o download e descompactaremos todos os arquivos na pasta `~/dia7/quantification/` para que possamos acessar a quantificação de todas as amostras.
 
 ### Vamos nos preparar para a detecção de GENES diferencialmente expressos.
 
