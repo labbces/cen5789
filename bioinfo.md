@@ -1356,7 +1356,7 @@ library(tximport)
 library(ggplot2)
 library(pheatmap)
 library(reshape2)
-library(vidger)
+#library(vidger)
 ```
 Recomendo que se acostume a limpar todos os objetos que estão presentes em seu ambiente. Possivelmente, neste momento, você tem apenas os objetos greeting e meuVector, mas se decidir reexecutar o script, é conveniente começar do zero.
 
@@ -1366,7 +1366,7 @@ rm(list=ls())
 Agora, vamos definir o seu diretório de trabalho. Ele deve ser o diretório que contém todos os resultados do Salmon. Lembre-se de que você deve ter 16 pastas com os resultados do Salmon.
 
 ```R
-wd<-"/data/diriano/cen5789_salmon/"
+wd<-"~/quantification/"
 setwd(wd)
 ```
 
@@ -1374,7 +1374,9 @@ Agora, antes de importar os dados de quantificação para o R, é crucial possui
 
 ```R
 targets<-read.delim("targets.txt",header=T)
+targets
 rownames(targets)<-targets$SampleName
+targets
 targets$Genotype<-as.factor(targets$Genotype)
 targets$EnvironmentalStress<-as.factor(targets$EnvironmentalStress)
 ```
@@ -1488,6 +1490,7 @@ Aqui, utilizamos a função `ggplot` com o data.frame `seqEffort`, definindo os 
 ```R
 p<- ggplot(seqEffort, aes(x=Samples,y=NumberFragments))+ 
   geom_col()
+p
 ```
 
 Esse gráfico inicial não é esteticamente muito agradável. Vamos aprimorá-lo removendo o fundo cinza e posicionando os nomes das amostras em um ângulo.
@@ -1576,7 +1579,7 @@ Ao utilizar esse modelo, o DESeq2 possibilita a identificação de genes diferen
 Agora sim, vamos fornecer os dados ao DESeq2. Este pacote possui rotinas que podem importar os dados diretamente do objeto criado pelo ``tximport``. Durante este processo, vamos especificar quais são os níveis de referência para os dois fatores controlados no planejamento experimental: Genotype e EnvironmentalStress.
 
 ```R
-dds <- DESeqDataSetFromTximport(txi.salmon, colData = targets, design = ~Condition)
+dds <- DESeqDataSetFromTximport(txi.salmon, colData = targets, design = ~EnvironmentalStress)
 dds$Genotype <-relevel(dds$Genotype, ref='WT')
 dds$EnvironmentalStress <-relevel(dds$EnvironmentalStress, ref='None')
 ```
@@ -1604,7 +1607,7 @@ colData(dds)
 rowData(dds)
 ```
 
-Geralmente, é conveniente excluir genes com níveis muito baixos de expressão. Neste caso, vamos remover os genes nos quais a soma das contagens seja menor que 1.
+Geralmente, é conveniente excluir genes com níveis muito baixos de expressão. Neste caso, vamos remover os genes nos quais a soma das contagens seja menor que 10.
 
 Essa prática é comumente adotada para filtrar genes com expressão extremamente baixa, os quais podem contribuir pouco para a análise global e introduzir ruído desnecessário nos resultados. Eliminar genes com somas de contagens muito baixas pode melhorar a sensibilidade da análise, focando nos genes mais relevantes e robustos para o experimento em questão.
 
@@ -1615,6 +1618,7 @@ Vamos a estudar primeiro a distribucao do número de fragmentos por gene por amo
 ```R
 counts_melt<-melt(assay(dds))
 colnames(counts_melt)<-c("Gene","Sample","Count")
+counts_melt
 ggplot(counts_melt,aes(x=Sample,y=Count)) + 
   geom_boxplot()+
   scale_y_log10()+
@@ -1627,7 +1631,7 @@ ggplot(counts_melt,aes(x=Sample,y=Count)) +
 Agora, vamos remover os genes com soma de contagens menor que 10. O resultado da funcão `table` nos mostra quantos genes serão removidos.
 
 ```R
-keep <- rowSums(counts(dds) >= 1) >= 10
+keep <- rowSums(counts(dds)) >= 10
 table(keep)
 dim(dds)
 dds <- dds[keep,]
@@ -1679,8 +1683,8 @@ Outra análise exploratória importante é a análise de correlação entre as a
 ```R
 sampleDists <- dist(t(assay(vsd)))
 sampleDistMatrix <- as.matrix(sampleDists)
-rownames(sampleDistMatrix) <- paste(vsd$Condition, vsd$Genotype, sep="-")
-colnames(sampleDistMatrix) <- paste(vsd$Condition, vsd$Genotype, sep="-")
+rownames(sampleDistMatrix) <- paste(vsd$EnvironmentalStress, vsd$Genotype, sep="-")
+colnames(sampleDistMatrix) <- paste(vsd$EnvironmentalStress, vsd$Genotype, sep="-")
 pheatmap(sampleDistMatrix,
          clustering_distance_rows=sampleDists,
          clustering_distance_cols=sampleDists)
@@ -1692,8 +1696,11 @@ No DESeq2, é possível conduzir explicitamente o teste de hipótese para avalia
 
 ```R
 res_SALT_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','NaCl','None'), alpha=0.05)
+res_SALT_vs_Control
 res_ABA_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','ABA','None'), alpha=0.05)
+res_ABA_vs_Control
 res_Drought_vs_Control <- results(dds, lfcThreshold=1, altHypothesis="greaterAbs", contrast = c('EnvironmentalStress','Drought','None'), alpha=0.05)
+res_Drought_vs_Control
 ```
 
 Vamos agora explorar esses resultados por meio de dois tipos comuns de gráficos: o MA plot e o Volcano plot.
@@ -1767,7 +1774,7 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
 pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
                       row.names(df_res_Drought_vs_Control[which(df_res_Drought_vs_Control$diffExpressed %in% 
                                                                c('UP','DOWN')),]),
-                    row.names(targets[which(targets$EnvironmentalStress %in% c("NaCl","None")),])],
+                    row.names(targets[which(targets$EnvironmentalStress %in% c("Drought","None")),])],
          scale='row', 
          annotation_col = targets,
          main = "Drought_vs_Control DEGs")
