@@ -1330,6 +1330,9 @@ Você deverá colocar seus dados de quantificação de transcritos no servidor r
 ```bash
 cd ~/Downloads/
 tar xvzf quantificaiton.tar.gz
+rm -rf ~/dia7
+mv quantification ~/
+cd
 #troque USER pelo nome indicado pelo professor
 rsync -avz -e 'ssh -p 1000' quantification USER@rstudio.cena.usp.br:~/
 ```
