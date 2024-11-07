@@ -1323,7 +1323,18 @@ zcat TAIR10_cdna_20101214_updated.gz |grep  ">" | cut -f 1 -d' '|sed 's/>//'| se
 
 Agora temos tudo pronto para iniciar a análise em [R](https://cran.r-project.org/).
 
-No seu terminal, execute o comando:
+Iremos usar um servidor remoto do RStudio no endereço [rstudio.cena.usp.br](http://rstudio.cena.usp.br). O professor informará o nome de usuário e a senha que deve utilizar para iniciar a sessão no servidor remoto.
+
+Você deverá colocar seus dados de quantificação de transcritos no servidor remoto. Para isso, baixe o arquivo quantification.tar.gz da [pasta compartilhada](https://drive.google.com/drive/folders/1anOQJsZpc7uZbDrAYn-KqAasdNMzq19X?usp=drive_link) e execute os seguintes comandos:
+
+```bash
+cd ~/Downloads/
+tar xvzf quantificaiton.tar.gz
+#troque USER pelo nome indicado pelo professor
+rsync -avz -e 'ssh -p 1000' quantification USER@rstudio.cena.usp.br:~/
+```
+
+Caso o servidor remoto não esteja funcionando, podemos usar a versão instalada em seus desktops. Para isso, no seu terminal, execute o comando:
 
 ```
 rstudio
