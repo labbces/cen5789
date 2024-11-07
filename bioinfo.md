@@ -1393,6 +1393,8 @@ rownames(targets)<-targets$SampleName
 targets
 targets$Genotype<-as.factor(targets$Genotype)
 targets$EnvironmentalStress<-as.factor(targets$EnvironmentalStress)
+targets$Number<-NULL
+targets
 ```
 Você pode inspecionar o objeto `targets` agora, basta digitar o nome do objeto em seu Console. Como alternativa, você pode clicar no nome do objeto na aba "Environment" localizada na área superior direita.
 
@@ -1726,7 +1728,7 @@ O _Volcano plot_, por outro lado, destaca os genes que são estatisticamente sig
 Vamos explorar essas representações gráficas para obter insights adicionais sobre os genes que respondem significativamente às condições ambientais. Primeiro os _MA plots_
 
 ```R
-drawLines <- function() abline(h=c(-2,2),col="dodgerblue",lwd=2)
+drawLines <- function() abline(h=c(-1,1),col="dodgerblue",lwd=2)
 plotMA(res_SALT_vs_Control, main = "SALT_vs_Control"); drawLines()
 plotMA(res_ABA_vs_Control, main = "ABA_vs_Control"); drawLines()
 plotMA(res_Drought_vs_Control, main = "Drought_vs_Control"); drawLines()
@@ -1748,7 +1750,24 @@ ggplot(df_res_SALT_vs_Control, aes(x=log2FoldChange, y=-log10(padj), col=diffExp
   scale_color_manual(values = c("#00AFBB", "grey", "#FFDB6D"), 
                      labels = c("Downregulated", "Not significant", "Upregulated"))+
   ggtitle('SALT_vs_Control DEGs')
+```
+Nesse último gráfico, o eixo y está muito condensado. Vamos aplicar uma transformação em log10 para obter uma melhor visualização:
 
+```R
+ggplot(df_res_SALT_vs_Control, aes(x=log2FoldChange, y=-log10(padj), col=diffExpressed)) + 
+  theme_bw() +
+  geom_point() +
+  geom_vline(xintercept = c(-2, 2), col = "gray", linetype = 'dashed')+
+  geom_hline(yintercept = -log10(0.05), col = "gray", linetype = 'dashed')+
+  scale_color_manual(values = c("#00AFBB", "grey", "#FFDB6D"), 
+                     labels = c("Downregulated", "Not significant", "Upregulated"))+
+  scale_y_log10()+
+  ggtitle('SALT_vs_Control DEGs')
+```
+
+Agora, para os outros contrastes, gere o grafico usando como template o codigo anterior:
+
+```R
 df_res_ABA_vs_Control<-as.data.frame(res_ABA_vs_Control)
 df_res_ABA_vs_Control$diffExpressed <- "NO"
 df_res_ABA_vs_Control$diffExpressed[df_res_ABA_vs_Control$padj < 0.05 & df_res_ABA_vs_Control$log2FoldChange >0] <- "UP"
@@ -1793,6 +1812,8 @@ pheatmap(assay(vsd)[row.names(assay(vsd)) %in%
          annotation_col = targets,
          main = "Drought_vs_Control DEGs")
 ```
+
+Consulte a ajuda do pacote pheatmap para não mostrar os nomes dos genes no gráfico. Você pode usar o comando ?pheatmap.
 
 Vamos salvar os dados com os identificadores dos genes diferencialmente expressos para cada comparação.
 
