@@ -1922,6 +1922,9 @@ showSigOfNodes(Drought_vs_Control_topGO, score(resultFisherDrought_vs_Control_to
 
 Realize a análise para os outros dois contrastes.
 
+```R
+sesionInfo()
+```
 ####  Identificando grupos de genes com perfis de expressão semelhantes.
 
 Primeiro, vamos selecionar todos os identificadores dos genes diferencialmente expressos nos três contrastes. Em seguida, iremos recuperar os valores de expressão desses genes em todas as amostras. Para representar a expressão, utilizaremos o método VST. Repare que é preciso reduzir as replicatas a uma única coluna, já que as replicatas da mesma amostra não contribuem com informação independente do perfil de expressão do gene nessa condição.
