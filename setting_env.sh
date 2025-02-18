@@ -105,3 +105,7 @@ BiocManager::install("Rgraphviz",update = FALSE,ask = FALSE)
 
 install.packages(c('pheatmap','mclust','reshape2','ggplot2','readr'))
 install.packages(c("ggVennDiagram","mclust"))
+
+#Clean caches should be done at the beggning and end of the script.
+conda clean -y --all
+singularity cache clean -f
