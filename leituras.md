@@ -40,7 +40,7 @@
 - [What's in a genome](http://www.earlham.ac.uk/articles/whats-genome)
 - [Microbial species delineation using whole genome sequences](https://academic.oup.com/nar/article/43/14/6761/2903001)
 - [Genome sequences as the type material for taxonomic descriptions of prokaryotes](https://www.sciencedirect.com/science/article/pii/S0723202015000247?via=ihub#bbib0355)
-- [From squiggle to basepair: computational approaches for improving nanopore sequencing read accuracy](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1462-9
+- [From squiggle to basepair: computational approaches for improving nanopore sequencing read accuracy](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1462-9)
 - [New technologies for DNA analysis – a review of the READNA Project](https://www.sciencedirect.com/science/article/pii/S1871678415001636)
 - [A world of opportunities with nanopore sequencing](https://academic.oup.com/jxb/article/68/20/5419/4093050)
 - [Meeting report: GenBank microbial genomic taxonomy workshop (12–13 May, 2015)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4748488/)
