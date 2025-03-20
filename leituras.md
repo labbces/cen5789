@@ -24,7 +24,28 @@
 
 ### Obrigatorias
 
+- [The Complexity of Eukaryotic Genomes](https://www.ncbi.nlm.nih.gov/books/NBK9846/)
+- [Not all exons are protein coding: Addressing a common misconception](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10112331/)
+- [Coevolution of the Organization and Structure of Prokaryotic Genomes](https://cshperspectives.cshlp.org/content/8/1/a018168.long)
+- [Capturing prokaryotic dark matter genomes](https://www.sciencedirect.com/science/article/pii/S0923250815000984)
+- [High throughput ANI analysis of 90K prokaryotic genomes reveals clear species boundaries](https://www.nature.com/articles/s41467-018-07641-9)
+- [Earth BioGenome Project: Sequencing life for the future of life](https://www.pnas.org/content/115/17/4325)
+- [It's more than stamp collecting: how genome sequencing can unify biological research](https://www.sciencedirect.com/science/article/pii/S0168952515000888)
+- [Third-Generation Sequencing: The Spearhead towards the Radical Transformation of Modern Genomics](https://www.mdpi.com/2075-1729/12/1/30/htm)
+- [Nanopore adaptive sampling: a tool for enrichment of low abundance species in metagenomic samples](https://pubmed.ncbi.nlm.nih.gov/35067223/)
+- [The chemistry of next-generation sequencing](https://www.nature.com/articles/s41587-023-01986-3)
+
 ### Opcionais
+
+- [What's in a genome](http://www.earlham.ac.uk/articles/whats-genome)
+- [Microbial species delineation using whole genome sequences](https://academic.oup.com/nar/article/43/14/6761/2903001)
+- [Genome sequences as the type material for taxonomic descriptions of prokaryotes](https://www.sciencedirect.com/science/article/pii/S0723202015000247?via=ihub#bbib0355)
+- [From squiggle to basepair: computational approaches for improving nanopore sequencing read accuracy](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1462-9
+- [New technologies for DNA analysis – a review of the READNA Project](https://www.sciencedirect.com/science/article/pii/S1871678415001636)
+- [A world of opportunities with nanopore sequencing](https://academic.oup.com/jxb/article/68/20/5419/4093050)
+- [Meeting report: GenBank microbial genomic taxonomy workshop (12–13 May, 2015)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4748488/)
+- [High Throughput Sequencing: An Overview of Sequencing Chemistry](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5061697/)
+- [Non-equivalent genomes in polyploid prokaryotes](https://www.nature.com/articles/s41564-021-01034-3)
 
 ## Aula teórica 3
 
