@@ -52,7 +52,7 @@
 ### Obrigatorias
 
 - [What is a hidden Markov model?](https://www.nature.com/articles/nbt1004-1315)
-- [Where did the BLOSUM62 alignment score matrix come from?](https://www.nature.com/articles/nbt0804-1035)
+- [Where did the BLOSUM62 alignment score matrix come from?](https://pubmed.ncbi.nlm.nih.gov/15286655/)
 - [What is dynamic programming?](https://www.nature.com/articles/nbt0704-909)
 - [Pairwise sequence alignment—it's all about us! ](https://academic.oup.com/bib/article/7/1/113/1745401)
 - [Identification of common molecular subsequences](https://www.sciencedirect.com/science/article/pii/0022283681900875)
