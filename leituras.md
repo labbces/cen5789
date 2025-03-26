@@ -51,13 +51,42 @@
 
 ### Obrigatorias
 
+- [What is a hidden Markov model?](https://www.nature.com/articles/nbt1004-1315)
+- [Where did the BLOSUM62 alignment score matrix come from?](https://www.nature.com/articles/nbt0804-1035)
+- [What is dynamic programming?](https://www.nature.com/articles/nbt0704-909)
+- [Pairwise sequence alignment—it's all about us! ](https://academic.oup.com/bib/article/7/1/113/1745401)
+- [Identification of common molecular subsequences](https://www.sciencedirect.com/science/article/pii/0022283681900875)
+- [A general method applicable to the search for similarities in the amino acid sequence of two proteins](https://www.sciencedirect.com/science/article/pii/0022283670900574)
+- [Gapped BLAST and PSI-BLAST: a new generation of protein database search programs](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC146917/)
+- [The Phylogenetic Handbook: Chapter 3 Multiple Sequence Alignment](http://aracnologia.macn.gov.ar/st/biblio/Lemey%20et%20al%20eds%202009%20BOOK%20The%20Phylogenetic%20Handbook.pdf)
+
 ### Opcionais
+
+- [Homology searches for structural RNAs: from proof of principle to practical use](https://rnajournal.cshlp.org/content/21/4/605.long)
 
 ## Aula teórica 4
 
 ### Obrigatorias
 
+- [De novo genome assembly: what every biologist should know](https://www.nature.com/articles/nmeth.1935)
+- [Recent advances in sequence assembly: principles and applications](https://academic.oup.com/bfg/article/16/6/361/3769483)
+- [A field guide to whole‐genome sequencing, assembly and annotation](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12178)
+- [Sequencing depth and coverage: key considerations in genomic analyses](https://www.nature.com/articles/nrg3642)
+- [Assembly algorithms for next-generation sequencing data](https://www.sciencedirect.com/science/article/pii/S0888754310000492)
+- [Next-Generation Sequence Assembly: Four Stages of Data Processing and Computational Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003345)
+- [BUSCO Applications from Quality Assessments to Gene Prediction and Phylogenomics ](https://academic.oup.com/mbe/article/35/3/543/4705839)
+- [Reference-guided de novo assembly approach improves genome reconstruction for related species](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1911-6)
+- [De novo yeast genome assemblies from MinION, PacBio and MiSeq platforms](https://www.nature.com/articles/s41598-017-03996-z)
+- [The present and future of de novo whole-genome assembly](https://academic.oup.com/bib/article/19/1/23/2339783)
+- [Towards complete and error-free genome assemblies of all vertebrate species](https://www.nature.com/articles/s41586-021-03451-0)
+
 ### Opcionais
+
+- [Estimating Sequencing Coverage](https://www.illumina.com/documents/products/technotes/technote_coverage_calculation.pdf)
+- [Genomic mapping by fingerprinting random clones: a mathematical analysis](https://www.ncbi.nlm.nih.gov/pubmed/3294162)
+- [How to apply de Bruijn graphs to genome assembly](https://www.nature.com/articles/nbt.2023)
+- [The long reads ahead: de novo genome assembly using the MinION](https://f1000research.com/articles/6-1083/v2)
+- [Realizing the promise of biodiversity genomics with highly accurate long reads](https://www.biorxiv.org/content/10.1101/2022.07.10.499467v1)
 
 ## Aula teórica 5
 
