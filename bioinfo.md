@@ -737,7 +737,7 @@ Também é essencial prestar atenção ao arquivo "_summary.txt".
 
 Observe que, para executar o GenomeScope2, precisamos especificar a ploidia do organismo. No entanto, nem sempre conhecemos essa característica com antecedência. Nesse caso, podemos usar o SmudgePlot para estimar o nível de ploidia e, em seguida, rodar o GenomeScope2 novamente. O resultado preliminar do GenomeScope2 pode nos auxiliar na identificação do limiar de k-mers incorretos, que é a cobertura/multiplicidade no primeiro vale do espectro de k-mers. O primeiro pico corresponde a uma grande quantidade de k-mers distintos, mas com baixa cobertura. Identifique o valor desse vale e continue com o SmudgePlot.
 
-Por favor, adicione seus resultados do GenomeScope2 e do SmudgePlot ao [arquivo](https://docs.google.com/document/d/1Q4d3ZIBwFZmeN08x_8IXzcJhKjhbrwvyFXACuXcE2IM/edit?usp=sharing).
+Por favor, adicione seus resultados do GenomeScope2 e do SmudgePlot ao [arquivo](https://docs.google.com/document/d/11GRTbJ_RGSHFyHAtunRygc5XKaAFKOrNcC_j8J66uhg/edit?usp=sharing).
 
 #### SmudgePlot
 
