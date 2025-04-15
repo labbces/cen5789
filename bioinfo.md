@@ -984,7 +984,7 @@ Quantas bases foram mascaradas? Podemos usar o programa compseq do EMBOSS para v
 
 ```
 conda activate emboss
-compseq -word 1 -outfile stdout NRRLY27205.asm.bp.hap1.p_ctg.hardmasked.fa 
+compseq -word 1 -outfile stdout NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa 
 conda deactivate
 ```
 
