@@ -60,7 +60,7 @@ conda create -y -n tidk -c bioconda tidk
 conda create -y -n compleasm -c conda-forge -c bioconda compleasm
 conda create -y -n merqury -c bioconda merqury
 
-conda create -y -n jupiterplot -c bioconda circos samtools minimap2
+conda create -y -n jupiterplot -c bioconda circos samtools minimap2 circos-tools
 
 conda create -y -n singularitycew -c wallaulab singularityce conda-forge::cni-plugins
 ln -s /usr/bin/mksquashfs /usr/local/bin/
