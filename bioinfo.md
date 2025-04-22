@@ -1184,9 +1184,12 @@ mkdir -p ~/dia7/RAWREADS
 cd ~/dia7/RAWREADS
 ID=DRR016125
 curl -O https://labbces.cena.usp.br//CEN5789/transcriptomics/RAWREADS/${ID}_[1-2].fastq.gz
+```
+Se o comando `curl` não existe, pode tentar instalar assim:
 
 ```
-
+sudo apt install curl
+```
 ### Pre-processando os dados de RNASeq
 
 Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
