@@ -1070,14 +1070,14 @@ samtools index NRRLY27205.asm.reads.sorted.bam
 conda deactivate
 ```
 
-Agora podemos inicializar o IGV, que tem ambiente gráfico. Primeiramente, carregaremos a montagem no menu __"File"__ -> __"Load From File"__, utilizando o arquivo `NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa`. Em seguida, utilizando o mesmo menu, procederemos ao carregamento do arquivo com as leituras mapeadas, denominado `NRRLY27205.asm.reads.sorted.bam`. Por fim, carregaremos o arquivo contendo a anotação do genoma a partir de `GALBA/galba.gtf`.
+Agora podemos inicializar o IGV, que tem ambiente gráfico. Primeiramente, carregaremos a montagem no menu __"File"__ -> __"Load From File"__, utilizando o arquivo `NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa`. Em seguida, utilizando o mesmo menu, procederemos ao carregamento do arquivo com as leituras mapeadas, denominado `NRRLY27205.asm.reads.sorted.bam`. Por fim, carregaremos o arquivo contendo a anotação do genoma a partir de `GALBA/galba.gtf`. Alternativamente pode usasr a versão online do [IGV](https://igv.org/app/), junto com os dados disponiveis [aqui](https://labbces.cena.usp.br/shared/CEN5789/dia7.tar.gz).
 
 ```
 conda activate igv
 igv
 ```
 
-Por exemplo, localize o contig h1tg000003l nas posições que vão de 551,742 até 578,200. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" O que representa a região marcada com o número 495? É possível que haja um gene anotado nesta região? Aqui pode consultar a documentação do [IGV](https://igv.org/doc/desktop/#UserGuide/tracks/alignments/viewing_alignments_basics/). Tente colorir os alinhamentos com base na fita de origem da leitura.
+Por exemplo, localize o contig h1tg000003l nas posições que vão de 595,987 até 616,978. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" Que significam as linhas pretas conectando partes de uma leitura? É possível que haja um gene anotado nesta região? Aqui pode consultar a documentação do [IGV](https://igv.org/doc/desktop/#UserGuide/tracks/alignments/viewing_alignments_basics/). Tente colorir os alinhamentos com base na fita de origem da leitura.
 
 ![IGV screenshot](images/igv_snapshot.png)
 
