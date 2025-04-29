@@ -1180,6 +1180,7 @@ Como esses arquivos são pesados, o professor já os baixou em um servidor do [C
 Faça o download dos seus dados na pasta "RAWREADS" dentro da pasta "dia7". Se essa pasta ainda não existir, crie-a. Lembre que estamos usando o ambiente conda chamado `transcriptomics`. Lembre-se também de substituir o identificador da SUA amostra.
 
 ```
+rm -rf ~/dia7
 mkdir -p ~/dia7/RAWREADS
 cd ~/dia7/RAWREADS
 ID=DRR016125
