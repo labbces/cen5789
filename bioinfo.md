@@ -1102,6 +1102,7 @@ Crie uma pasta com o nome `dia7` dentro do diretório $HOME. Todos os exercício
 
 ```
 cd
+rm -rf ~/dia7
 mkdir dia7
 cd  dia7
 ```
@@ -1138,7 +1139,7 @@ A tabela a seguir apresenta uma lista dos números de acesso do SRA para cada am
 | 15 | DRR016139 | ros1, dml2, dml3 triple mutant | sodium chloride |
 | 16 | DRR016140 | ros1, dml2, dml3 triple mutant | drought |
 
-Vamos descarregar os links de acceso dos aruivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário ativar o ambiente Conda denominado "transcriptomics," no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
+Vamos descarregar os links de acceso dos arquivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário ativar o ambiente Conda denominado "transcriptomics," no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
 
 ```
 conda activate transcriptomics
@@ -1184,9 +1185,12 @@ mkdir -p ~/dia7/RAWREADS
 cd ~/dia7/RAWREADS
 ID=DRR016125
 curl -O https://labbces.cena.usp.br//CEN5789/transcriptomics/RAWREADS/${ID}_[1-2].fastq.gz
+```
+Se o comando `curl` não existe, pode tentar instalar assim:
 
 ```
-
+sudo apt install curl
+```
 ### Pre-processando os dados de RNASeq
 
 Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
