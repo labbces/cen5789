@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%post
+    micromamba create -y -n core -c conda-forge -c bioconda \
+        emboss=6.6.0 \
+        blast=2.15.0 \
+	fastqc=0.12.1 \
+	bbmap=39.06 \
+        && micromamba clean --all --yes
+
+%environment
+    export PATH=/opt/conda/envs/core/bin:$PATH
+
+%runscript
+    exec "$@"
