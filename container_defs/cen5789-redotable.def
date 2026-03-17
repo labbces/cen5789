@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%post
+    apt-get update && apt-get install -y \
+        wget \
+        unzip \
+        perl \
+        openjdk-17-jre \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Instalar redotable
+    mkdir -p /opt/redotable
+    cd /opt/redotable
+
+    wget https://www.bioinformatics.babraham.ac.uk/projects/redotable/redotable_v1.2.zip
+    unzip redotable_v1.2.zip
+    rm -rf redotable_v1.2.zip
+
+    chmod +x redotable/redotable
+
+%environment
+    export PATH=/opt/redotable/redotable:$PATH
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+%runscript
+    exec "$@"
