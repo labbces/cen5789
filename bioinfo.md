@@ -296,22 +296,19 @@ Esta sequência adquire a estrutura secundária que aparece abaixo. Nesta estrut
 
 ![secondary structure](images/secondarystructure.png)
 
-Para gerar o dotplot com o software __Re-Dot-Table__, é necessário ativar um ambiente Conda no qual o software foi previamente instalado e, em seguida, executar o aplicativo:
+Para gerar o dotplot com o software __Re-Dot-Table__, vamos usar um novo container no qual o software foi previamente instalado e, em seguida, executar o comando:
 
 ```
-conda activate redotable
-redotable
+apptainer exec /data/cen5789_containers/cen5789-redotable.sif redotable
 ```
+
+Carregue duas vezes a sequência [secondarystructure.fasta](files/secondarystructure.fasta) e realize o alinhamento.  
+
+Você obteve a mesma figura mostrada abaixo? Por que não?
+ 
 A seguinte figura mostra o resultado dessa comparação. Explore o efeito do tamanho da janela para gerar o dotplot.
 
 ![redotable screenshot 1](images/redotable_1.png)
-
-Lembre-se de desativar seu ambiente.
-
-```
-conda deactivate
-```
-
 
 ### Alinhamentos exatos de pares de sequências
 
