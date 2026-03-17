@@ -242,18 +242,38 @@ O European Molecular Biology Open Software Suite [EMBOSS](http://emboss.open-bio
 
 Nesta seção, vamos refazer os dotplots anteriores usando um aplicativo do EMBOSS. Qual aplicativo usar? Na linha de comandos, você pode usar o programa `wossname` para procurar aplicativos que tenham na sua descrição uma palavra-chave específica. Por exemplo, você pode procurar a palavra _dotplot_. Para obter mais informações sobre um aplicativo específico, você pode utilizar a página de manual `man` ou o comando `tfm`, seguido do nome do aplicativo.
 
-Antes de utilizar os aplicativos do EMBOSS, é necessário ativar o ambiente onde o software foi instalado. Execute o seguinte comando no seu terminal. Os pacotes do EMBOSS estarão disponíveis nesse terminal. Se trocar de terminal, será necessário ativar o ambiente novamente.
+[!NOTE]
+Nesta disciplina utilizamos containers para garantir reprodutibilidade e facilitar o uso de software.
+
+Veja: [Uso de containers](containers.md)
+
+[!IMPORTANT]
+Lembre-se de que você tem uma cópia dos containers na pasta `/data/cen5789_containers`.
+
+Por exemplo, para procurar os programas do EMBOSS que têm a palavra *dotplot* na descrição, você pode executar:
 
 ```
-conda activate emboss
+apptainer exec /data/cen5789_containers/cen5789-core.sif wossname dotplot
 ```
 
-Quando terminar de usar os aplicativos do EMBOSS, é importante desativar o ambiente para evitar conflitos com outros aplicativos que possam ser utilizados.
-
+Como alternativa, você pode iniciar uma sessão interativa no container:
 
 ```
-conda deactivate
+apptainer shell /data/cen5789_containers/cen5789-core.sif
 ```
+
+Observe como o prompt muda, passando a aparecer algo como:
+
+```
+Apptainer> 
+```
+Nesse ambiente, você pode executar diretamente os programas que deseja usar.
+￼
+Para sair da sessão interativa, execute:
+
+```
+exit
+```￼
 
 Tanto o Dotlet JS quanto os programas de dotplot em EMBOSS têm algumas limitações, talvez a mais importante seja que não conseguem detectar facilmente repetições invertidas, como as que aparecem em estruturas secundárias de RNA.
 
