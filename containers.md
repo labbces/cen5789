@@ -53,6 +53,8 @@ sudo apptainer build cen5789-core.sif cen5789-core.def
 - .def: descreve o ambiente
 - .sif: imagem final
 
+Os arquivos `.def` dos containers usados na disciplina estão na pasta: [container_defs](container_defs/).
+
 > [!IMPORTANT]
 > A construção requer sudo pois envolve criação de sistema de arquivos.
 
