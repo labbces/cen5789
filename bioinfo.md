@@ -242,15 +242,16 @@ O European Molecular Biology Open Software Suite [EMBOSS](http://emboss.open-bio
 
 Nesta seção, vamos refazer os dotplots anteriores usando um aplicativo do EMBOSS. Qual aplicativo usar? Na linha de comandos, você pode usar o programa `wossname` para procurar aplicativos que tenham na sua descrição uma palavra-chave específica. Por exemplo, você pode procurar a palavra _dotplot_. Para obter mais informações sobre um aplicativo específico, você pode utilizar a página de manual `man` ou o comando `tfm`, seguido do nome do aplicativo.
 
-[!NOTE]
+> [!NOTE]
 
-Nesta disciplina utilizamos containers para garantir reprodutibilidade e facilitar o uso de software.
+> Nesta disciplina utilizamos containers para garantir reprodutibilidade e facilitar o uso de software.
 
-Veja: [Uso de containers](containers.md)
+> Veja: [Uso de containers](containers.md)
 
-[!IMPORTANT]
 
-Lembre-se de que você tem uma cópia dos containers na pasta `/data/cen5789_containers`.
+> [!IMPORTANT]
+
+> Lembre-se de que você tem uma cópia dos containers na pasta `/data/cen5789_containers`.
 
 Por exemplo, para procurar os programas do EMBOSS que têm a palavra *dotplot* na descrição, você pode executar:
 
