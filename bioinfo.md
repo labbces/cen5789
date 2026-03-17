@@ -196,7 +196,7 @@ Nesta seção, utilizaremos a implementação de matrizes de pontos do Instituto
 
 ![Dotlet screenshot 1](images/dotlet_1.png)
 
-Em seguida, estudaremos alguns exemplos provenientes da documentação do [DotLet](https://myhits.sib.swiss/util/dotlet/doc/dotlet_help.html).
+Em seguida, estudaremos alguns exemplos provenientes da documentação do [DotLet](https://dotlet.vital-it.ch/doc/dotlet_help.html).
 
 #### Sequências repetidas
 
@@ -214,7 +214,7 @@ Este dotplot é da proteína [__SLIT__ de _Drosophila melanogaster_](https://www
 
 A figura abaixo mostra a disposição dos domínios ao longo da sequência da proteína, conforme descrito na entrada do [Swiss-Prot](https://www.uniprot.org/uniprotkb/P24014/entry).
 
-![Dotlet screenshot 1](https://myhits.sib.swiss/util/dotlet/doc/slit_drome.gif)
+![Dotlet screenshot 1](https://dotlet.vital-it.ch/doc/slit_drome.gif)
 
 #### Domínios proteicos conservados
 
