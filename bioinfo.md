@@ -272,7 +272,21 @@ Para sair da sessão interativa, execute:
 
 ```
 exit
-```￼
+```
+
+Agora vamos realizar um dotplot com o programa do EMBOSS `dottup`. Para isso, utilizaremos a sequência genômica de [ANAC092](files/ANAC092_genomic.fasta) e a sequência de [cDNA](files/ANAC092_cDNA.fasta).  
+
+Por favor, verifique se essas sequências estão em uma pasta chamada `files` no seu diretório HOME.
+
+```
+apptainer exec /data/cen5789_containers/cen5789-core.sif dottup files/ANAC092_genomic.fasta files/ANAC092_cDNA.fasta
+```
+
+Isso deve gerar o arquivo `dottup.1.png`, que você pode visualizar com o comando `eog`.
+
+```
+eog dottup.1.png
+```
 
 Tanto o Dotlet JS quanto os programas de dotplot em EMBOSS têm algumas limitações, talvez a mais importante seja que não conseguem detectar facilmente repetições invertidas, como as que aparecem em estruturas secundárias de RNA.
 
