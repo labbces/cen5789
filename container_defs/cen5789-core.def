@@ -2,6 +2,13 @@ Bootstrap: docker
 From: mambaorg/micromamba:1.5.10
 
 %post
+    apt-get update && apt-get install -y \
+        less \
+        nano \
+        man-db \
+        manpages \
+        && rm -rf /var/lib/apt/lists/*
+
     micromamba create -y -n core -c conda-forge -c bioconda \
         emboss=6.6.0 \
         blast=2.15.0 \
