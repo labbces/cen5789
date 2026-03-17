@@ -328,12 +328,14 @@ Nesta aula prática vamos usar o programa `est2genome` da suite _EMBOSS_ para al
 
 Por que você considera importante começar com uma varredura usando o algoritmo de Smith-Waterman?
 
-Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a sequência de [cDNA](files/ANAC092_cDNA.fasta) para identificar o alinhamento que mostre as posições dos éxons e dos íntrons no genoma. Consulte a página de manual do `est2genome` e visualize o resultado do alinhamento com seu editor de texto favorito. Lembre-se de ativar o ambiente de emboss.
+Vamos usar a sequência genômica do [ANAC092](files/ANAC092_genomic.fasta) e a sequência de [cDNA](files/ANAC092_cDNA.fasta) para identificar o alinhamento que mostre as posições dos éxons e dos íntrons no genoma. Consulte a página de manual do `est2genome` e visualize o resultado do alinhamento com seu editor de texto favorito. Vamos usar o container `cen5789-core.sif`, lembrese de descarregar as sequencias na sua pasta files. 
 
-```
-conda activate emboss
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif est2genome -align files/ANAC092_genomic.fasta files/ANAC092_cDNA.fasta anac092_genomic.est2genome
 ```
 
+Inspecione o arquivo `anac092_genomic.est2genome`. Tente novamente utilizando uma sessão interativa do container.
+￼
 #### Proteínas
 
 ##### Matrices de substituição
@@ -341,16 +343,23 @@ conda activate emboss
 Vamos inspecionar a matriz _BLOSUM62_ que está incluída no _EMBOSS_. Para isso, precisamos encontrar a pasta onde o _EMBOSS_ armazena as matrizes. Execute o seguinte comando:
 
 ```
-embossdata EBLOSUM62
+apptainer exec /data/cen5789_containers/cen5789-core.sif embossdata EBLOSUM62
 ```
 
-Alguma saída conterá a palavra '_exists_'. No meu caso, o caminho para a matriz BLOSUM62 é `/usr/share/EMBOSS/data/EBLOSUM62`, e é nesse arquivo que a matriz BLOSUM62 está armazenada. Pode visualizar o conteúdo do arquivo com o comando `less`. Basta executar o seguinte comando:
+Alguma saída conterá a palavra '_exists_'. Deve aparecer o caminho para a matriz BLOSUM62 `/opt/conda/envs/core/bin/../share/EMBOSS/data/EBLOSUM62`, e é nesse arquivo que a matriz BLOSUM62 está armazenada. Repare que o caminho que aparece ali existe apenas dentro do container. Por exemplo, se você executar um `ls` a partir do seu diretório HOME, provavelmente verá que esse arquivo não existe no seu sistema. No entanto, dentro do container ele está disponível, pois faz parte do ambiente isolado que contém todas as dependências necessárias para a execução do EMBOSS. Pode visualizar o conteúdo do arquivo com o comando `less`, dentro do container. Basta executar o seguinte comando:
 
-```
-less /usr/share/EMBOSS/data/EBLOSUM62
+```bash
+apptainer shell /data/cen5789_containers/cen5789-core.sif
 ```
 
-Isso abrirá o arquivo EBLOSUM62 no visualizador de texto "less", permitindo que você role e visualize seu conteúdo.
+E dentro do container o comando:
+
+
+```bash
+less /opt/conda/envs/core/bin/../share/EMBOSS/data/EBLOSUM62
+```
+
+Isso abrirá o arquivo EBLOSUM62 no visualizador de texto "less", permitindo que você role e visualize seu conteúdo. Quando concluir sair do container com o comando `exit`.
 
 Responda as seguintes perguntas:
 - Onde estão as maiores pontuações? Explique.
@@ -366,7 +375,7 @@ Vamos realizar um alinhamento global entre as duas proteínas. Lembre-se de que 
 Quais programas do EMBOSS podem realizar alinhamentos globais?
 
 ```
-wossname global
+apptainer exec /data/cen5789_containers/cen5789-core.sif wossname global
 ```
 
 Usaremos o programa `needle` para realizar uma comparação global entre essas duas sequências. Verifique em [timetree.org](https://timetree.org/) oo tempo de divergência entre as duas espécies.
@@ -376,13 +385,13 @@ Qual matriz BLOSUM considera mais adequada para comparar as duas sequências?
 Execute a comparação das duas sequências, especificando a matriz selecionada, e compare os resultados usando a matriz BLOSUM90. Você pode consultar a página de manual do `needle` para aprender como especificar as opções:
 
 ```
-man needle
+apptainer exec /data/cen5789_containers/cen5789-core.sif tfm needle
 ```
 
 Agora realizaremos um alinhamento local. O objetivo do alinhamento local é encontrar regiões de similaridade local, e não é necessário incluir as sequências completas. Esse tipo de alinhamento é muito útil para pesquisar bancos de dados ou quando você não tem uma ideia clara sobre a semelhança da sequência de interesse com sequências no banco de dados. Usaremos o programa `water` para realizar uma comparação local entre essas duas sequências. Você pode consultar a página de manual do `water` para ajudar na selecao de opções:
 
 ```
-man water
+apptainer exec /data/cen5789_containers/cen5789-core.sif tfm water
 ```
 
 Quão significativos são esses alinhamentos? Tente gerar uma sequência aleatória a partir de [ANAC092](files/ANAC092_pep.fasta) e refaça os alinhamentos exatos. Como a pontuação do alinhamento muda?
@@ -401,8 +410,6 @@ Utilize a sequência encontrada no arquivo [files/unknown_nuc.fasta](files/unkno
 
 Os resultados dessa pesquisa nos permitem concluir que o locus do transcrito está no cromossomo número 5 de A. thaliana. Quais são as coordenadas aproximadas no cromossomo? Existem exons? Explique sua resposta. Vamos usar esse resultado como entrada para o `est2genome`. Primeiro, extraia da sequência do cromossomo 5 a região detectada pelo BLAST, adicionando 5000 pb a montante e a jusante. Como você pode fazer isso? Use o `est2genome` para refinar a predição do locus. Quais vantagens o est2genome oferece em comparação com um simples BLAST?
 
-
-
 #### BLAST na linha de comandos
 
 No entanto, executar o BLAST através da linha de comando tem muitos benefícios:
@@ -419,6 +426,7 @@ Ao utilizar o __BLAST__, é comum termos uma sequência de interesse, conhecida 
 Vamos baixar os arquivos com as sequências das proteínas no formato FASTA:
 
 ```
+cd files
 curl -o mouse.1.protein.faa.gz -L https://osf.io/v6j9x/download
 curl -o zebrafish.1.protein.faa.gz -L https://osf.io/68mgf/download
 ```
@@ -426,7 +434,8 @@ curl -o zebrafish.1.protein.faa.gz -L https://osf.io/68mgf/download
 Descompacte-os:
 
 ```
-gunzip *.faa.gz
+gunzip mouse.1.protein.faa.gz
+gunzip zebrafish.1.protein.faa.gz
 ```
 
 E vamos dar uma olhada nas primeiras sequências no arquivo:
@@ -455,27 +464,28 @@ Agora, por exemplo, você pode usar cat mm-first.faa para ver o conteúdo desse 
 
 Agora vamos fazer um BLAST com essas duas sequências em relação a todo o conjunto de dados de proteínas do zebrafish. Primeiro, precisamos informar ao BLAST que as sequências do zebrafish são (a) um banco de dados e (b) um banco de dados de proteínas. Isso é feito chamando o 'makeblastdb'. Observe que você precisará primeiro ativar seu ambiente Conda que possui o BLAST instalado.
 
-```
-conda activate blast
-makeblastdb -in zebrafish.1.protein.faa -dbtype prot
+```bash
+cd
+apptainer exec /data/cen5789_containers/cen5789-core.sif makeblastdb -in files/zebrafish.1.protein.faa -dbtype prot
 ```
 
 Em seguida, chamamos o BLAST para fazer a pesquisa:
 
-```
-blastp -query mm-first.faa -db zebrafish.1.protein.faa
+```bash
+cd
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -query files/mm-first.faa -db files/zebrafish.1.protein.faa
 ```
 
 Isso não deve tardar muito, mas você receberá muita saída na tela do computador!! Para salvá-lo em um arquivo em vez de vê-lo na tela, peça ao BLAST para salvar a saída em um arquivo que chamaremos de mm-first.x.zebrafish.txt:
 
 ```
-blastp -num_threads 5 -query mm-first.faa -db zebrafish.1.protein.faa -out mm-first.x.zebrafish.txt
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -num_threads 5 -query files/mm-first.faa -db files/zebrafish.1.protein.faa -out files/mm-first.x.zebrafish.txt
 ```
 
 Agora, você pode 'navegar' por este arquivo à vontade digitando:
 
 ```
-less mm-first.x.zebrafish.txt
+less files/mm-first.x.zebrafish.txt
 ```
 
 (Tecle espaço para mudar de página e 'q' para sair do modo de navegação.)
