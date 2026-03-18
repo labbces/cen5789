@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%post
+    apt-get update && apt-get install -y git build-essential wget unzip \
+        git \
+        build-essential \
+        wget \
+        unzip \
+        libgomp1 \
+        zlib1g-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+    micromamba create -y -n kmers -c conda-forge -c bioconda \
+        r-base r-devtools genomescope2 pip \
+        && micromamba clean --all --yes
+
+    # Smudgeplot
+    micromamba run -n kmers pip install smudgeplot
+
+    # FastK
+    git clone --recursive https://github.com/thegenemyers/FASTK.git /opt/fastk
+    cd /opt/fastk
+    git submodule update --init --recursive
+    make
+
+%environment
+    export PATH=/opt/conda/envs/kmers/bin:/opt/fastk:$PATH
+
+%runscript
+    exec "$@"
