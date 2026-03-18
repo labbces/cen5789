@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%post
+    apt-get update && apt-get install -y git build-essential wget \
+        libgomp1 && rm -rf /var/lib/apt/lists/*
+
+    micromamba create -y -n assembly -c conda-forge -c bioconda \
+        flye \
+        hifiasm \
+        bandage \
+        quast \
+        compleasm \
+        tidk \
+        minimap2 \
+        samtools \
+        && micromamba clean --all --yes
+
+    # HiFiAdapterFilt
+    git clone https://github.com/sheinasim/HiFiAdapterFilt.git /opt/HiFiAdapterFilt/
+    chmod +x /opt/HiFiAdapterFilt/pbadapterfilt.sh
+
+    # JupiterPlot
+    git clone https://github.com/JustinChu/JupiterPlot.git /opt/jupiterplot
+
+%environment
+    export PATH=/opt/conda/envs/assembly/bin::/opt/HiFiAdapterFilt/:/opt/HiFiAdapterFilt/DB:/opt/jupiterplot:$PATH
+
+%runscript
+    exec "$@"
