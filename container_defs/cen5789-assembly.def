@@ -14,6 +14,8 @@ From: mambaorg/micromamba:1.5.10
         tidk \
         minimap2 \
         samtools \
+        circos \
+        circos-tools \
         && micromamba clean --all --yes
 
     # HiFiAdapterFilt
