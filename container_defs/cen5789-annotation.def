@@ -1,0 +1,143 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%environment
+    export PATH=:$PATH:/opt/seqstats:/opt/cdbfasta:/opt/hisat2:/opt/diamond:/opt/TSEBRA/bin:/opt/MakeHub:/opt/miniprot:/opt/GALBA/scripts:/opt/miniprot-boundary-scorer:/opt/miniprothint:/opt/conda:/opt/Augustus/scripts/:/opt/Augustus/bin/
+    export AUGUSTUS_CONFIG_PATH=/opt/Augustus/config/
+    export AUGUSTUS_BIN_PATH=/opt/Augustus/bin/
+    export AUGUSTUS_SCRIPTS_PATH=/opt/Augustus/scripts/
+    export MAMBA_ROOT_PREFIX=/opt/conda
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+
+%files
+    tmp/diamond /opt/diamond/diamond
+
+%post
+    set -e
+
+    apt-get update && apt-get install -y \
+        wget \
+        unzip \
+        perl \
+        openjdk-17-jre \
+        build-essential \
+        g++ \
+        less \
+        zlib1g-dev \
+        git \
+        autoconf \
+        bamtools \
+        libgsl-dev \
+        libboost-all-dev \
+        libsuitesparse-dev liblpsolve55-dev \
+        libsqlite3-dev libmysql++-dev \
+        libboost-iostreams-dev zlib1g-dev \
+        libbamtools-dev \
+        samtools libhts-dev \
+        libboost-all-dev \
+        augustus augustus-data augustus-doc \
+        cm-super \
+        dvipng \
+        ffmpeg \
+        time \
+        libyaml-libyaml-perl \
+        libhash-merge-perl \
+        libparallel-forkmanager-perl \
+        libscalar-util-numeric-perl \
+        libclass-data-inheritable-perl \
+        libexception-class-perl \
+        libtest-pod-perl \
+        libfile-which-perl \
+        libmce-perl \
+        libthread-queue-perl \
+        libmath-utils-perl \
+        libscalar-list-utils-perl \
+        curl
+        apt clean all && \
+        rm -rf /var/lib/apt/lists/*
+
+    # --- install micromamba ---
+    curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
+        | tar -xvj bin/micromamba
+
+    mkdir -p /opt/conda
+    mv bin/micromamba /usr/local/bin/
+    chmod +x /usr/local/bin/micromamba
+    export MAMBA_ROOT_PREFIX=/opt/conda
+
+    #Install seqstat
+    cd /opt
+    git clone --recursive https://github.com/clwgg/seqstats
+    cd seqstats
+    make
+
+    #install cdbfasta
+    cd /opt
+    git clone --depth=1 https://github.com/gpertea/cdbfasta.git
+    cd cdbfasta
+    make 
+
+    # diamond - was having problems downloading, so instead copied from the local filesystem, see %files
+    #cd /opt
+    #mkdir diamond
+    #cd diamond
+    #wget http://github.com/bbuchfink/diamond/releases/download/v2.0.15/diamond-linux64.tar.gz
+    #tar -xf diamond-linux64.tar.gz
+    #rm diamond-linux64.tar.gz
+    chmod a+x /opt/diamond/diamond
+    
+    # tsebra
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/TSEBRA
+    cd TSEBRA
+    git checkout v1.0.3
+
+    # makehub
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/MakeHub.git
+    cd MakeHub
+    git checkout braker3
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/bedToBigBed
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/genePredCheck
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/faToTwoBit
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/gtfToGenePred
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/hgGcPercent
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/ixIxx
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/twoBitInfo
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/wigToBigWig
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/genePredToBed
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.v369/genePredToBigGenePred
+    chmod u+x bedToBigBed genePredCheck faToTwoBit gtfToGenePred hgGcPercent ixIxx  twoBitInfo wigToBigWig genePredToBed genePredToBigGenePred make_hub.py
+
+   #miniprot
+    cd /opt
+    git clone --depth=1 https://github.com/lh3/miniprot
+    cd miniprot
+    make
+
+    #miniprot-boundary-scorer
+    cd /opt
+    git clone  --depth=1 https://github.com/tomasbruna/miniprot-boundary-scorer.git
+    cd miniprot-boundary-scorer
+    make
+
+    #miniprothint
+    cd /opt
+    git clone   --depth=1 https://github.com/tomasbruna/miniprothint.git
+
+    #augustus
+    cd /opt 
+    git clone https://github.com/Gaius-Augustus/Augustus.git  
+    cd Augustus 
+    make 
+    cd scripts 
+    chmod a+x *.pl 
+    chmod a+x *.py
+    
+    micromamba install --quiet -c bioconda -c anaconda --yes \
+    biopython pandas && \
+    micromamba clean  --all -f -y
+
+%runscript
+    exec "$@"
