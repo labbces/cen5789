@@ -478,13 +478,13 @@ apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -query files/mm-
 
 Isso não deve tardar muito, mas você receberá muita saída na tela do computador!! Para salvá-lo em um arquivo em vez de vê-lo na tela, peça ao BLAST para salvar a saída em um arquivo que chamaremos de mm-first.x.zebrafish.txt:
 
-```
+```bash
 apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -num_threads 5 -query files/mm-first.faa -db files/zebrafish.1.protein.faa -out files/mm-first.x.zebrafish.txt
 ```
 
 Agora, você pode 'navegar' por este arquivo à vontade digitando:
 
-```
+```bash
 less files/mm-first.x.zebrafish.txt
 ```
 
@@ -492,21 +492,21 @@ less files/mm-first.x.zebrafish.txt
 
 Vamos trabalhar com algumas sequências adicionais (este levará um pouco mais de tempo para ser executado):
 
-```
-head -n 519 mouse.1.protein.faa > mm-second.faa
-grep -c ">" mm-second.faa
+```bash
+head -n 519 files/mouse.1.protein.faa > files/mm-second.faa
+grep -c ">" files/mm-second.faa
 ```
 
 Em seguida, faremos a comparação das primeiras 100 sequências:
 
-```
-blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.txt
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -num_threads 5 -query files/mm-second.faa -db files/zebrafish.1.protein.faa -out files/mm-second.x.zebrafish.txt
 ```
 
 Você pode visualizar o arquivo de saída com:
 
-```
-less mm-second.x.zebrafish.txt
+```bash
+less files/mm-second.x.zebrafish.txt
 ```
 
 (E novamente, digite 'q' para sair do modo de visualização.)
@@ -527,39 +527,39 @@ Automação é maravilhosa!
 
 Por último, mas não menos importante, vamos gerar uma versão mais legível para máquinas daquele último arquivo:
 
-```
-blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -out mm-second.x.zebrafish.tsv -outfmt 6
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -num_threads 5 -query files/mm-second.faa -db files/zebrafish.1.protein.faa -out files/mm-second.x.zebrafish.tsv -outfmt 6
 ```
 
 Você pode abrir o arquivo com less mm-second.x.zebrafish.tsv para ver como ele é formatado.
 
 Em alguns casos mais do que uma proteina do zebrafish aparece no resultado. Vamos modificar os argumentos do `blastp` para retornar máximo uma proteina _subject_ para cada _query_. Para evitar _hits_ de fracoes das proteínas, vamos a pedir para o `blastp` so relatar hits onde a cobertura do query seja pelo menos 80% do seu comprimento.
 
-```
-blastp -num_threads 5 -query mm-second.faa -db zebrafish.1.protein.faa -subject_besthit -qcov_hsp_perc 80 -max_target_seqs 1 -out mm-second.x.zebrafish_best.tsv -outfmt 6
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -num_threads 5 -query files/mm-second.faa -db files/zebrafish.1.protein.faa -subject_besthit -qcov_hsp_perc 80 -max_target_seqs 1 -out files/mm-second.x.zebrafish_best.tsv -outfmt 6
 ```
 
 Por favor, revise a documentação do BLAST. Quais campos ou colunas são exibidos quando o formato de saída é configurado como `outfmt 6`?
 
-```
-blastp -help
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif blastp -help
 ```
 
 Lembre-se de que inicialmente tínhamos 100 sequências do camundongo para realizar o BLAST. Será que todas elas resultaram em correspondências (hits) contra o peixe-zebra (zebrafish)? Como poderíamos verificar isso?
 
 Vamos alterar o formato de saída para incluir duas colunas adicionais que mostrarão os comprimentos das sequências _query_ e do _subject_. Posteriormente, utilizaremos essas informações para filtrar os resultados utilizando o comando [`awk`](https://www.howtogeek.com/562941/how-to-use-the-awk-command-on-linux/), para só manter os _hits_ onde pelo menos 80% do _subject_ participou do alinhamento com o _query_.
 
-```
-awk '$14*0.8 <= ($10-$9+1) {print $0}' mm-second.x.zebrafish_best.tsv > mm-second.x.zebrafish_best_subject80percent.tsv
+```bash
+awk '$14*0.8 <= ($10-$9+1) {print $0}' files/mm-second.x.zebrafish_best.tsv > files/mm-second.x.zebrafish_best_subject80percent.tsv
 ```
 
 Você pode identificar quantas proteínas _query_ se mantem nesse arquivo final? É quantas subject?
 
 ## Bioinfo 3 - Análise de dados de sequenciamento em larga escala
 
-Crie uma nova pasta no seu HOME chamda `dia3`:
+Crie uma nova pasta no seu HOME chamada `dia3`:
 
-```
+```bash
 mkdir ~/dia3
 cd ~/dia3
 ```
@@ -581,7 +581,7 @@ Baixe os arquivos e certifique-se de movê-los para a pasta `~/dia3`.
 
 O comando `less` é capaz de visualizar até mesmo arquivos compactados. Vamos inspecionar o arquivo qc1.fq.gz, que deve estar na sua pasta `~/dia3`.
 
-```
+```bash
 cd ~/dia3
 less qc1.fq.gz
 ```
@@ -599,11 +599,10 @@ O formato FastQ pode de fato usar diferentes encodings para representar os valor
 
 Para obter informações detalhadas sobre os diversos encodings do formato FastQ, recomendo que você acesse a página do [FastQ](https://en.wikipedia.org/wiki/FASTQ_format) na Wikipedia ou em outras fontes confiáveis de informações científicas ou bioinformáticas. Lá você encontrará uma descrição dos encodings e como eles são utilizados. É importante indicar o encoding correto para realizar operacoes nos arquivos de sequenciamento.
 
-Agora, utilizaremos o comando `fastqc` para avaliar a qualidade dos arquivos de sequenciamento. Este software pode ser executado com ou sem uma interface gráfica. Primeiro, devemos ativar o ambiente Conda onde o `fastqc` está instalado e, em seguida, executar o programa no modo de linha de comando. Isso resultará na geração de dois arquivos: um em formato _.zip_ e outro em formato _.html_. O arquivo _.html_ pode ser visualizado em nosso navegador.
+Agora, utilizaremos o comando `fastqc` para avaliar a qualidade dos arquivos de sequenciamento. Este software pode ser executado com ou sem uma interface gráfica. Primeiro, vamos usar o container `cen5789-core.sif` onde o `fastqc` está instalado e, em seguida, executar o programa no modo de linha de comando. Isso resultará na geração de dois arquivos: um em formato _.zip_ e outro em formato _.html_. O arquivo _.html_ pode ser visualizado em nosso navegador.
 
-```
-conda activate fastqc
-fastqc qc1.fq.gz
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif fastqc qc1.fq.gz
 ```
 você vai ter que executar o programa para cada um dos arquivos de sequenciamento (qc1.fq.gz, qc2.fq.gz, qc3.fq.gz e qc4.fq.gz).
 
@@ -637,13 +636,10 @@ Para obter uma compreensão mais detalhada da discrepância observada na extremi
 
 Nesse contexto, no processo de limpeza, é igualmente crucial eliminar as sequências de adaptadores.
 
-Para realizar a limpeza, podemos utilizar o programa `bbduk.sh` da suíte `bbmap`. Para utilizá-lo, é necessário desativar qualquer ambiente Conda previamente ativado e ativar o ambiente `bbmap` da seguinte maneira:
+Para realizar a limpeza, podemos utilizar o programa `bbduk.sh` da suíte `bbmap`. Para utilizá-lo, vamos usar o container `cen5789-core.sif`:
 
-```
-conda deactivate
-conda activate bbmap
-bbduk.sh in=qc3.fq.gz ref=adapters.fa out=qc3.clean.fq.gz ktrim=r qtrim=w trimq=20 minlength=70 k=15
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif bbduk.sh in=qc3.fq.gz ref=/opt/conda/envs/core/opt/bbmap-39.06-1/resources/adapters.fa out=qc3.clean.fq.gz ktrim=r qtrim=w trimq=20 minlength=70 k=15
 ```
 
 Em seguida, verifique a qualidade das sequências limpas usando o `fastqc`. Execute este procedimento para todos os arquivos neste exercício.
@@ -709,38 +705,12 @@ command to dl the dataset
 
 Por favor, realize o download desses conjuntos de dados para a sua pasta `~/dia3`, criando uma subpasta chamada `espectro`.
 
-```
+```bash
 cd ~/dia3
 mkdir espectro
 cd espectro
-```
-
-Para preparar o software que usaremos nesta sessão, precisamos garantir que o ambiente Conda do GenomeScope2 esteja ativado. Antes de fazer isso, lembre-se de desativar qualquer outro ambiente atualmente ativo.
-
-```
-conda deactivate
-conda activate genomescope2
-```
-
-Vamos proceder com a instalação de uma ferramenta muito rápida para catalogar e contar k-mers, o FastK, bem como a versão de desenvolvimento do SmudgePlot:.
-
-```
-mkdir src bin && cd src # Crie diretórios para o código-fonte e os binários. 
-git clone -b sploidyplot https://github.com/KamilSJaron/smudgeplot
-git clone https://github.com/thegenemyers/FastK
-
-cd smudgeplot
-conda install numpy pandas
-make -s INSTALL_PREFIX=/home/cen5789/miniconda3/envs/genomescope2/
-R -e 'install.packages(".", repos = NULL, type="source")'
-cd ..
-smudgeplot.py -h # Teste se a instalação foi bem-sucedida.
-cd FastK && make
-install -c FastK Fastrm Fastmv Fastcp Fastmerge Histex Tabex Profex Logex Vennex Symmex Haplex Homex Fastcat /home/cen5789/miniconda3/envs/genomescope2/bin/
-FastK # Teste se a instalação foi bem-sucedida.
-cd ../.. 
-pwd # Você tem que estar na pasta ~/dia3/espectro
-
+export TMPDIR=~/dia3/espectro/tmp
+mkdir -p $TMPDIR
 ```
 
 #### Contando k-mers
@@ -749,14 +719,14 @@ Este processo opera com leituras de sequenciamento cruas ou limpas. A partir del
 
 Então, por favor, construa o banco de dados utilizando o `FastK`. Este processo levará alguns minutos (15-20). Certifique-se de utilizar o arquivo de leituras correto, e eu recomendaria nomear o banco de dados com o número de acesso do SRA correspondente. Vamos realizar estas analises com varios valores de k:{17,21,31,41,51,71}, e vamos comparar os resultados. No `FastK` você pode modificar o tamanho do k-mer com o argumento `-k`.
 
-```
-FastK -v -t4 -k17 -M16 -T4 SRR926312_[12].fastq.gz -NSRR926312_k17
+```bash
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t4 -k17 -M16 -T6 SRR926312_[12].fastq.gz -NSRR926312_k17
 ```
 
 Agora, Você pode obter o espectro de k-mers a partir do banco de dados usando o Histex, uma ferramenta diferente da mesma suíte.
 
-```
-Histex -G SRR926312_k17 > SRR926312_k17.histo
+```bash
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif Histex -G SRR926312_k17 > SRR926312_k17.histo
 ```
 
 Você pode visualizar o histograma criado com qualquer visualizador de arquivos de texto plano, e.g., `less`.
@@ -765,8 +735,8 @@ Você pode visualizar o histograma criado com qualquer visualizador de arquivos 
 
 Agora com o arquivo `.histo`, podemos executar o GenomeScope2 para estimar algumas caracteristicas do genoma.
 
-```
-genomescope2 --input SRR926312_k17.histo --output SRR926312_k17.genomescope2 --ploidy 2 --kmer_length 17 --name_prefix SRR926312_k17
+```bash
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif genomescope2 --input SRR926312_k17.histo --output SRR926312_k17.genomescope2 --ploidy 2 --kmer_length 17 --name_prefix SRR926312_k17
 ```
 
 Visualize os arquivos de figuras. Uma delas é `SRR926312_k17.genomescope2/SRR926312_k17_linear_plot.png`:
@@ -787,21 +757,20 @@ Neste exemplo, um limite de erro significativo seria 70x. Como regra geral, nenh
 
 O limite de erro é especificado pelo parâmetro '-L'. Temos 4 núcleos na nossa máquina, então você também pode executar a busca de pares de k-mers em paralelo (parâmetro -t). Ao executar, não se esqueça de usar os nomes de SUA amostra, e não o exemplo fornecido.
 
-```
-smudgeplot.py hetmers -L 70 -t 4 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
-
+```bash
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 70 -t 4 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
 ```
 
 E, por fim, uma vez que os pares de k-mers estejam prontos, um arquivo *_text.smu deve ser gerado. Trata-se de um histograma 2D, no qual para cada combinação de covA e covB, você encontrará a frequência com que essas duas coberturas ocorrem entre os het-mers (os pares de k-mers adjacentes um do outro).
 
-```
+```bash
 head SRR926312_kmerpairs_k17_text.smu
 ```
 
 Se você ver três colunas, é um bom sinal. Você pode prosseguir para finalmente plotar o SmudgePlot. Eu encorajaria você a executar `smudgeplot plot -h` para ver todas as opções e entender o que elas significam, mas um comando minimalista como este deve funcionar:
 
-```
-smudgeplot.py all -o SRR926312_k17_smudgeplot SRR926312_kmerpairs_k17_text.smu
+```bash
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot all -o SRR926312_k17_smudgeplot SRR926312_kmerpairs_k17.smu
 ```
 
 ![SRR926312_k17_smudgeplot_smudgeplot_log10](images/SRR926312_k17_smudgeplot_smudgeplot_log10.png)
@@ -814,41 +783,40 @@ Neste exemplo, o SmudgePlot sugere um organismo tetraploide, mas observe que a p
 
 Vamos trabalhar na pasta ~/dia4. Caso ela não exista, por favor, crie-a em sua pasta HOME.
 
+```bash
+cd
+mkdir -p ~/dia4
+```
+
 ### Obtendo os dados e calculando métricas do genoma
 
-Vamos montar o genoma de uma levedura, a _Kazachstania bulderi_ da cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0). Para começar, precisaremos baixar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/), um banco de dados do NCBI que armazena informações brutas de sequenciamento em larga escala.
+Vamos montar o genoma de uma levedura, a _Kazachstania bulderi_ da cepa NRRL Y-27205 ([Balarezo-Cisneros et al., 2023])(https://www.nature.com/articles/s42003-023-05285-0). Para começar, precisaremos baixar os dados do [_Short Read Archive_ (SRA)](https://www.ncbi.nlm.nih.gov/sra/), um banco de dados do NCBI que armazena informações brutas de sequenciamento em larga escala. Tendo o SRA-ToolKit instalado poderia executar:
 
-```
-conda activate sratoolkit
+```bash
 fasterq-dump --threads 3 --progress --outfile SRR25033384.fq SRR25033384
-conda deactivate
 gzip SRR25033384.fq
 ```
 
-Alternativamente, você pode tentar baixar o arquivo de leituras através deste [link](https://labbces.cena.usp.br/shared/CEN5789/dia4/SRR25033384.fq.gz).
+Na disciplina vamos baixar o arquivo de leituras através deste [link](https://labbces.cena.usp.br/shared/CEN5789/dia4/SRR25033384.fq.gz).
 
 No primeiro passo, vamos remover os resíduos dos adaptadores da biblioteca utilizando o software HiFiAdapterFilt. Para fazer isso, primeiro precisamos instalar o software.
 
-```
-conda activate blast
-git clone https://github.com/sheinasim/HiFiAdapterFilt.git
-export PATH=$PATH:$HOME/dia4/HiFiAdapterFilt/:$HOME/dia4/HiFiAdapterFilt/DB
-bash HiFiAdapterFilt/pbadapterfilt.sh -t 4 -p SRR25033384
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif bash /opt/HiFiAdapterFilt/pbadapterfilt.sh -t 6 -p SRR25033384
 ```
 
 Você pode conferir o arquivo `SRR25033384.stats` para obter um resumo do processo de limpeza. Agora, vamos continuar com o arquivo `SRR25033384.filt.fastq.gz`.
 
-Vamos processá-lo com o GenomeScope2 para obter uma ideia das principais métricas do genoma e usar o SmudgePlot para verificar a ploidia. Lembre-se de que instalamos o SmudgePlot na semana passada. Se isso não funcionou, tente novamente. Lembre-se de escolher corretamente o parámetro `-L` para o `smudgeplot.py`.
+Vamos processá-lo com o GenomeScope2 para obter uma ideia das principais métricas do genoma e usar o SmudgePlot para verificar a ploidia. Lembre-se de que usamos o SmudgePlot na semana passada. Se isso não funcionou, tente novamente. Lembre-se de escolher corretamente o parámetro `-L` para o `smudgeplot.py`.
 
-```
-conda activate genomescope2
-FastK -v -t16 -k31 -M16 -T4 SRR25033384.filt.fastq.gz -NSRR25033384_k31
-Histex -G SRR25033384_k31 > SRR25033384_k31.histo
-genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
-smudgeplot.py hetmers -L 18 -t 4 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
-smudgeplot.py all -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs_text.smu
-conda deactivate
+```bash
+export TMPDIR=~/dia3/espectro/tmp
+mkdir -p $TMPDIR
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t16 -k31 -M16 -T6 SRR25033384.filt.fastq.gz -NSRR25033384_k31
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif Histex -G SRR25033384_k31 > SRR25033384_k31.histo
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 18 -t 6 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot all -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs.smu
 ```
 
 | GenomeScope | SmudgePlot | 
@@ -865,23 +833,19 @@ Vamos prosseguir com o processo de montagem. Utilizaremos dois montadores e comp
 
 #### Hifiasm
 
-```
-conda activate hifiasm
-hifiasm -f0 -o NRRLY27205.asm -t 5 SRR25033384.fq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif hifiasm -f0 -o NRRLY27205.asm -t 5 SRR25033384.filt.fastq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap1.p_ctg.gfa > NRRLY27205.asm.bp.hap1.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap2.p_ctg.gfa > NRRLY27205.asm.bp.hap2.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.p_ctg.gfa > NRRLY27205.asm.bp.p_ctg.fa
-conda deactivate
 ```
 
 A montagem deve levar cerca de 30 minutos, considerando o uso de 5 threads e requerendo aproximadamente 16 GB de RAM.
 
 #### Flye
 
-```
-conda activate flye
-flye  --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif flye --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
 
 ```
 
@@ -891,14 +855,12 @@ A montagem deve levar cerca de 45 minutos, considerando o uso de 5 threads e req
 
 Interaja com a equipe que usou um montador diferente e procure identificar as diferenças entre as montagens realizadas por ambos os softwares.
 
-Para visualizar as montagens, você pode usar ferramentas específicas, como o software Bandage, que é útil para visualizar gráficos de montagem de genomas. Certifique-se de instalar o Bandage e, em seguida, utilize-o para carregar os resultados das montagens produzidas pelos montadores HiFiASM e Flye. Isso permitirá que você examine e compare as montagens de forma mais detalhada.
+Para visualizar as montagens, você pode usar ferramentas específicas, como o software Bandage, que é útil para visualizar grafos de montagem de genomas. Certifique-se de instalar o Bandage e, em seguida, utilize-o para carregar os resultados das montagens produzidas pelos montadores HiFiASM e Flye. Isso permitirá que você examine e compare as montagens de forma mais detalhada.
 
-Utilize o Bandage para visualizar os arquivos GFA. Certifique-se de ativar o ambiente do Bandage após desativar qualquer outro ambiente utilizado anteriormente. O Bandage é um software com interface gráfica. Carregue o gráfico da montagem (Load Graph) e, em seguida, desenhe o gráfico (Draw Graph). Não deixe de discutir suas observações e resultados com seu instrutor e colegas.
+Utilize o Bandage para visualizar os arquivos GFA. O bandage está no mesmo container dos montadores, na imagem: `/data/cen5789_containers/cen5789-assembly.sif`. O Bandage é um software com interface gráfica. Carregue o grafo da montagem (Load Graph) e, em seguida, desenhe o grafo (Draw Graph). Não deixe de discutir suas observações e resultados com seu instrutor e colegas.
 
-```
-conda deactivate
-conda activate bandage
-Bandage
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif Bandage
 ```
 
 #### Métricas de continuidade
@@ -910,10 +872,8 @@ Certifique-se de copiar a montagem realizada com o outro programa antes de calcu
 
 Esses arquivos são essenciais para a análise das métricas de montagem.
 
-```
-conda activate quast
-quast.py --fungus --est-ref-size 13000000 --threads 5 NRRLY27205.asm.bp.hap1.p_ctg.fa NRRLY27205.asm.bp.hap2.p_ctg.fa NRRLY27205.asm.bp.p_ctg.fa NRRLY27205.flye/assembly.fasta
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif quast.py --fungus --est-ref-size 13000000 --threads 5 NRRLY27205.asm.bp.hap1.p_ctg.fa NRRLY27205.asm.bp.hap2.p_ctg.fa NRRLY27205.asm.bp.p_ctg.fa NRRLY27205.flye/assembly.fasta
 ```
 Revisite o arquivo report.html e analise cuidadosamente os valores de NG50 e o tamanho total da montagem. Certifique-se de inspecionar minuciosamente essas métricas a fim de assegurar a precisão e qualidade da montagem.
 
@@ -921,28 +881,24 @@ Revisite o arquivo report.html e analise cuidadosamente os valores de NG50 e o t
 
 ##### Espaço gênico
 
-```
-conda activate compleasm
-compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 5
-compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 5
-compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 5
-compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 5
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 5
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 5
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
 ```
 
 Por favor, elabore uma tabela que apresente os resultados obtidos com o `compleasm`.
 
 #### Telômeros
 
-Vamos verificar a presença de telômeros nos maiores contigs da montagem. Primeiramente, iremos realizar uma filtragem na montagem, mantendo apenas os contigs com um tamanho superior a 100 Kbp. Vamos utilizar uma combinação do programa `infoseq` do EMBOSS e a linguagem `awk` para extrair essas sequências. Certifique-se de executar esse processo para todos os arquivos FASTA das montagens."
+Vamos verificar a presença de telômeros nos maiores contigs da montagem. Primeiramente, iremos realizar uma filtragem na montagem, mantendo apenas os contigs com um tamanho superior a 100 Kbp. Vamos utilizar uma combinação do programa `infoseq` do EMBOSS e a linguagem `awk` para extrair essas sequências. Certifique-se de executar esse processo para todos os arquivos FASTA das montagens. Lembre que os programas do EMBOSS estão na imagem `cen5789-core.sif`.
 
-```
-conda activate emboss
-infoseq -auto -noheading -only -name -length NRRLY27205.asm.bp.hap1.p_ctg.fa | sed -r 's/ +/\t/g'| \
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif infoseq -auto -noheading -only -name -length NRRLY27205.asm.bp.hap1.p_ctg.fa | sed -r 's/ +/\t/g'| \
 awk '$2 >= 100000 {print "NRRLY27205.asm.bp.hap1.p_ctg.fa:"$1}' > NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.ids
 
-seqret @NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.ids NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
-conda deactivate
+apptainer exec /data/cen5789_containers/cen5789-core.sif seqret @NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.ids NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
 ```
 
 A repetição telomérica em fungos é notavelmente variável e irregular, especialmente no subfilo Saccharomycotina, onde elas se caracterizam por serem longas, altamente degeneradas e divergentes das repetições canônicas ([Steinberg-Neifach e Lue, 2015](https://pubmed.ncbi.nlm.nih.gov/25983743/); [Lue, 2021](https://www.frontiersin.org/articles/10.3389/fgene.2021.638790/full)).
@@ -951,16 +907,14 @@ Neste exercício, realizaremos uma busca por repetições que poderiam ser telom
 
 Para cada uma das suas montagens no formato FASTA, siga as seguintes etapas:
 
-```
-conda activate tidk
-tidk explore --minimum 4 --maximum 12 NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif tidk explore --minimum 4 --maximum 12 NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
 ```
 
 Analise os resultados e selecione a repetição mais abundante. Pode verificar se esta repetição identificada já foi encontrada nos telômeros de outros organismos [Telomerase Databasse](https://telomerase.asu.edu/sequences-telomere) ou no [TeloBase](http://cfb.ceitec.muni.cz/telobase/). Com essa repetição selecionada, vamos realizar uma busca e plotar sua posição ao longo dos contigs. Se for, de fato, uma repetição telomérica, ela deve ocorrer preferencialmente nas extremidades dos contigs.
 
-```
-tidk search --string ACACCCAT --output NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT --extension tsv --dir . NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif tidk search --string ACACCCAT --output NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT --extension tsv --dir . NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
 ```
 
 Agora, vamos representar graficamente o número de repetições encontradas ao longo dos maiores contigs, que podem ser potencialmente cromossomos. Certifique-se de fazer o download do script [plotTelomericRepeatPositions.R](plotTelomericRepeatPositions.R) do repostitório:

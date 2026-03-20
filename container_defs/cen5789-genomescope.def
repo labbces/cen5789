@@ -15,7 +15,7 @@ From: mambaorg/micromamba:1.5.10
         && rm -rf /var/lib/apt/lists/*
 
     micromamba create -y -n kmers -c conda-forge -c bioconda \
-        r-base r-devtools genomescope2 pip \
+        r-base r-devtools r-ggplot2 genomescope2 pip \
         && micromamba clean --all --yes
 
     # Smudgeplot
