@@ -66,7 +66,7 @@ From: mambaorg/micromamba:1.5.10
 
     #salmon
     cd /opt
-    https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz
+    wget https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz
     tar xzf salmon-1.10.0_linux_x86_64.tar.gz
     rm -rf salmon-1.10.0_linux_x86_64.tar.gz
 
