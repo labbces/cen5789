@@ -4,3 +4,4 @@ uniprot_sprot.fasta*
 token.txt
 .vscode
 *.sif
+tmp
