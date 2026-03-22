@@ -1,28 +1,37 @@
-#!/bin/bash
-#script must be run with sudo
+#!/usr/bin/env bash
+set -euo pipefail
 
-userdel -r cen5789
-adduser --quiet --home /data/home/cen5789 cen5789
-usermod -a -G sudo cen5789
-ln -s /data/home/cen5789 /home/cen5789
+# Must be run like this
+# while read -r host; do
+#  echo "=== $host ==="
+#  ssh -t aula@"$host" 'bash -s' < setting_env.sh
+# done < ips.txt
 
-apt update
-apt-get install -y libcurl4-openssl-dev zlib1g-dev libbz2-dev build-essential libudunits2-dev libgdal-dev gdal-bin
-apt install -y software-properties-common
-add-apt-repository -y ppa:apptainer/ppa
-apt update
-apt install -y apptainer
+echo "Authenticating sudo..."
+sudo -v   # asks password once
 
-rm  -rf /etc/singularity /usr/local/etc/singularity
+sudo userdel -r cen5789
+sudo adduser --quiet --home /data/home/cen5789 cen5789
+sudo usermod -a -G sudo cen5789
+sudo ln -s /data/home/cen5789 /home/cen5789
 
-mkdir -p /data/cen5789_containers/
+sudo apt update
+sudo apt-get install -y libcurl4-openssl-dev zlib1g-dev libbz2-dev build-essential libudunits2-dev libgdal-dev gdal-bin
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y ppa:apptainer/ppa
+sudo apt update
+sudo apt install -y apptainer
 
-wget -r -np -nd -A "*.sif" \
+sudo rm  -rf /etc/singularity /usr/local/etc/singularity
+
+sudo mkdir -p /data/cen5789_containers/
+
+sudo wget -r -np -nd -A "*.sif" \
      -P /data/cen5789_containers/ \
      https://labbces.cena.usp.br/shared/CEN5789/containers/
 
-chmod a+rx /data/cen5789_containers/
-chmod a+x /data/cen5789_containers/*.sif
+sudo chmod a+rx /data/cen5789_containers/
+sudo chmod a+x /data/cen5789_containers/*.sif
 
 #desktop setting for cen5789 user
 sudo -u cen5789 dbus-launch gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/FondoCENA.png
