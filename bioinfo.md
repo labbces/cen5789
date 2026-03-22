@@ -1156,8 +1156,8 @@ Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
 cd ~/dia7/
 mkdir FastQC_pre
 ID=DRR016125
-apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_1.fastq.gz
-apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_2.fastq.gz
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_1.fastq.gz
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_2.fastq.gz
 ```
 
 Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca mRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
@@ -1168,7 +1168,7 @@ Primeiro removemos adaptadores:
 
 ```bash
 cd ~/dia7
-apptainer exec cen5789-transcriptomics.sif bbduk.sh in=/opt/data/RAWREADS/${ID}_1.fastq.gz in2=/opt/data/RAWREADS/${ID}_2.fastq.gz out=CLEANREADS/${ID}_cleana_1.fastq.gz out2=CLEANREADS/${ID}_cleana_2.fastq.gz ref=adapters refstats=CLEANREADS/${ID}_cleana_adapters_refstats ktrim=r threads=10
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=/opt/data/RAWREADS/${ID}_1.fastq.gz in2=/opt/data/RAWREADS/${ID}_2.fastq.gz out=CLEANREADS/${ID}_cleana_1.fastq.gz out2=CLEANREADS/${ID}_cleana_2.fastq.gz ref=adapters refstats=CLEANREADS/${ID}_cleana_adapters_refstats ktrim=r threads=10
 ```
 
 Agora, vamos filtrar (excluir) as leituras que correspondem ao rRNA, utilizando como entrada as leituras nas quais os adaptadores foram removidos no passo anterior. Mas antes de prosseguirmos, é necessário fazer o download do banco de dados contendo as sequências de rRNA. Este banco é derivado do [SILVA NR](https://www.arb-silva.de/), e as sequências foram agrupadas com 90% de identidade.
@@ -1181,7 +1181,7 @@ wget https://labbces.cena.usp.br//CEN5789/transcriptomics/References/rRNA.tar.gz
 tar xvzf rRNA.tar.gz
 rm -rf rRNA.tar.gz
 cd ..
-apptainer exec cen5789-transcriptomics.sif bbduk.sh in=CLEANREADS/${ID}_cleana_1.fastq.gz in2=CLEANREADS/${ID}_cleana_2.fastq.gz out=CLEANREADS/${ID}_cleanf_1.fastq.gz out2=CLEANREADS/${ID}_cleanf_2.fastq.gz ref=References/rRNA_LSU_SILVA_Archaea.nr90.fasta,References/rRNA_LSU_SILVA_Bacteria.nr90.fasta,References/rRNA_LSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Archaea.nr90.fasta,References/rRNA_SSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Bacteria.nr90.fasta ktrim=f threads=10  minlength=85 refstats=CLEANREADS/${ID}_cleanf_rRNA_refstats
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=CLEANREADS/${ID}_cleana_1.fastq.gz in2=CLEANREADS/${ID}_cleana_2.fastq.gz out=CLEANREADS/${ID}_cleanf_1.fastq.gz out2=CLEANREADS/${ID}_cleanf_2.fastq.gz ref=References/rRNA_LSU_SILVA_Archaea.nr90.fasta,References/rRNA_LSU_SILVA_Bacteria.nr90.fasta,References/rRNA_LSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Archaea.nr90.fasta,References/rRNA_SSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Bacteria.nr90.fasta ktrim=f threads=10  minlength=85 refstats=CLEANREADS/${ID}_cleanf_rRNA_refstats
 ```
 
 Confira o arquivo `*_cleanf_rRNA_refstats` dentro da pasta `CLEANEADS`. Uma proporção elevada de leituras de rRNA pode indicar problemas com a amostra. Se teve algum problema realizando a limpeza das leituras, pode descarregar os arquivos já limpos [aqui](https://labbces.cena.usp.br//CEN5789/transcriptomics/CLEANREADS/).
@@ -1193,13 +1193,13 @@ Com as leituras limpas em mãos, podemos começar a planejar a estimativa dos n�
 Vamos pedir a ajuda do software Salmon, que está instalado no container `cen5789-transcriptomics.sif`, para verificar se o programa está funcionando corretamente. Execute o comando a seguir para verificar a ajuda do programa:
 
 ```bash
-apptainer exec cen5789-transcriptomics.sif salmon
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif salmon
 ```
 
 A última linha do bloco anterior deveria ter exibido a ajuda do programa, algo similar a:
 
-```
-salmon v1.10.0
+```bash
+salmon v1.11.4
 
 Usage:  salmon -h|--help or
         salmon -v|--version or
@@ -1209,9 +1209,10 @@ Usage:  salmon -h|--help or
 Commands:
      index      : create a salmon index
      quant      : quantify a sample
-     alevin     : single cell analysis
+     alevin     : removed; use alevin-fry for single-cell analysis
      swim       : perform super-secret operation
      quantmerge : merge multiple quantifications into a single file
+
 
 ```
 
@@ -1237,7 +1238,7 @@ Em seguida, podemos construir o índice para que o Salmon possa realizar a quant
 
 ```bash
 cat TAIR10_cdna_20101214_updated.gz TAIR10_genome.fasta.gz > gentrome.fa.gz
-apptainer exec cen5789-transcriptomics.sif salmon index -t gentrome.fa.gz -d decoys.txt -p 10 -i salmon_index --gencode
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif salmon index -t gentrome.fa.gz -d decoys.txt -p 10 -i salmon_index
 cd ../
 ```
 
@@ -1246,7 +1247,7 @@ Finalmente, podemos iniciar o processo de quantificação das amostras propriame
 ```bash
 mkdir -p ~/dia7/quantification
 cd ~/dia7/
-apptainer exec cen5789-transcriptomics.sif salmon quant -i References/salmon_index -l A -1 CLEANREADS/${ID}_cleanf_1.fastq.gz -2 CLEANREADS/${ID}_cleanf_2.fastq.gz --validateMappings -o ~/dia7/quantification/${ID} --threads 10 --seqBias --gcBias
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif salmon quant -i References/salmon_index -l A -1 CLEANREADS/${ID}_cleanf_1.fastq.gz -2 CLEANREADS/${ID}_cleanf_2.fastq.gz --validateMappings -o ~/dia7/quantification/${ID} --threads 10 --seqBias --gcBias
 ```
 
 Isso criará a pasta `quantification/${ID}`. Dentro dela, por favor, verifique o arquivo `logs/salmon_quant.log` e identifique o tipo de biblioteca detectado pelo Salmon e a taxa de mapeamento. Vamos tabular os resultados [neste arquivo](https://docs.google.com/spreadsheets/d/1EcOg9kpVz2dfL6DBEYUMTtU_jfslNgPpBeegi6N_kWc/edit?usp=sharing).
