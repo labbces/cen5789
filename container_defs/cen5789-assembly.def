@@ -30,7 +30,7 @@ From: mambaorg/micromamba:1.5.10
     git clone https://github.com/JustinChu/JupiterPlot.git /opt/jupiterplot
 
 %environment
-    export PATH=/opt/conda/envs/assembly/bin::/opt/HiFiAdapterFilt/:/opt/HiFiAdapterFilt/DB:/opt/jupiterplot:$PATH
+    export PATH=/opt/conda/envs/assembly/bin:/opt/HiFiAdapterFilt/:/opt/HiFiAdapterFilt/DB:/opt/jupiterplot:$PATH
 
 %runscript
     exec "$@"

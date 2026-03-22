@@ -1036,7 +1036,7 @@ O que significa o número 4751? Consulte o banco de dados de [taxonomia do NCBI]
 Agora, procederemos à visualização da montagem, juntamente com as leituras mapeadas nela e a anotação estrutural do genoma, usando o [Integrative Genomics Viewer (IGV)](https://igv.org/). Primeiro vamos mapear as leituras no genoma usando o `minimap2` e o `samtools`. Favor fazer uma cópia do seu arquivo de leituras na pasta de trabalho 'dia6'.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif minimap2 -H -x map-hifi -a -t 10 NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa SRR25033384.filt.fastq.gz | samtools view -b --fast --threads 6 |samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
+ apptainer exec /data/cen5789_containers/cen5789-assembly.sif minimap2 -H -x map-hifi -a -t 30 NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa SRR25033384.filt.fastq.gz |  apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
 apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools index NRRLY27205.asm.reads.sorted.bam
 ```
 
@@ -1108,10 +1108,10 @@ A tabela a seguir apresenta uma lista dos números de acesso do SRA para cada am
 | 15 | DRR016139 | ros1, dml2, dml3 triple mutant | sodium chloride |
 | 16 | DRR016140 | ros1, dml2, dml3 triple mutant | drought |
 
-Vamos descarregar os links de acceso dos arquivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário usar o container cen5789-transcriptomics.sif no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
+Vamos descarregar os links de acceso dos arquivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário usar o container `cen5789-transcriptomics.sif` no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastq --ftp DRR016125
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif ffq --ftp DRR016125
 ```
 
 Isso deve gerar uma saída semelhante a esta:
@@ -1156,7 +1156,8 @@ Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
 cd ~/dia7/
 mkdir FastQC_pre
 ID=DRR016125
-apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_[1-2].fastq.gz
+apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_1.fastq.gz
+apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_2.fastq.gz
 ```
 
 Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca mRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
