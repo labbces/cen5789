@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%post
+    apt-get update && apt-get install -y git build-essential wget unzip \
+        git \
+        build-essential \
+        wget \
+        unzip \
+        libgomp1 \
+        zlib1g-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+    micromamba create -y -n funcannot -c conda-forge -c bioconda \
+        python=3.8 \
+        gffread \
+        pip \
+        biopython==1.76 \
+        psutil==5.7.0 \
+        xlsxwriter==1.4.3 \
+        eggnog-mapper \
+        && micromamba clean --all --yes
+
+    micromamba run -n funcannot python -c "import sys; print(sys.version)"
+    micromamba run -n funcannot python -c "import distutils; print('distutils OK')"
+    micromamba run -n funcannot python -c "import Bio; print('biopython OK')"
+
+    export EGGNOG_DATA_DIR=/opt/data_eggnog
+    mkdir ${EGGNOG_DATA_DIR}
+    sed -i "s#BASE_URL = f'http://eggnogdb.embl.de/download/emapperdb#BASE_URL = f'http://eggnog5.embl.de/download/emapperdb#" /opt/conda/envs/funcannot/bin/download_eggnog_data.py
+
+    /opt/conda/envs/funcannot/bin/download_eggnog_data.py -P  -y
+
+%environment
+    export PATH=/opt/conda/envs/funcannot/bin:$PATH
+    export EGGNOG_DATA_DIR=/opt/data_eggnog
+
+%runscript
+    exec "$@"
