@@ -1,0 +1,69 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10
+
+%labels
+    Author Diego M. Riano-Pachon
+    Description Transcriptomics environment (R + Bioconductor + tools)
+
+%environment
+    export MAMBA_ROOT_PREFIX=/opt/conda
+    export PATH=/opt/conda/envs/transcriptomics/bin:$PATH
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+%files 
+    tmp/RAWREADS.tar.gz /opt/data/
+
+%post
+    # System deps (for R packages + tools)
+    apt-get update && apt-get install -y \
+        build-essential \
+        wget \
+        curl \
+        git \
+        libblas-dev \
+        liblapack-dev \
+        gfortran \
+        zlib1g-dev \
+        libcurl4-openssl-dev \
+        libxml2-dev \
+        libfreetype6-dev \
+        libfontconfig1-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Create micromamba env
+    micromamba create -y -n transcriptomics \
+        -c conda-forge -c bioconda \
+        python=3.11 \
+        r-base \
+        r-ggplot2 \
+        bioconductor-tximport \
+        bioconductor-deseq2 \
+        fastqc \
+        bbmap \
+        multiqc \
+        ffq \
+        && micromamba clean --all -y
+
+    # Install additional R packages inside the env
+    micromamba run -n transcriptomics R -e "
+        install.packages('BiocManager', repos='https://cloud.r-project.org');
+        BiocManager::install(version = '3.19', ask = FALSE, update = FALSE);
+        BiocManager::install(c('topGO','Rgraphviz'), ask = FALSE, update = FALSE);
+        install.packages(c(
+            'pheatmap','mclust','reshape2','ggplot2',
+            'readr','ggVennDiagram'
+        ), repos='https://cloud.r-project.org')
+    "
+
+    # Sanity checks (fail early if broken)
+    /opt/conda/bin/micromamba run -n transcriptomics python -c "import Bio; print('Biopython OK')"
+    /opt/conda/bin/micromamba run -n transcriptomics R -e "library(DESeq2); cat('DESeq2 OK\n')"
+
+    # Uncompressing data
+    cd /opt/data/
+    tar xvzf RAWREADS.tar.gz
+    rm RAWREADS.tar.gz
+
+%runscript
+    exec "$@"
