@@ -917,13 +917,11 @@ Analise os resultados e selecione a repetição mais abundante. Pode verificar s
 apptainer exec /data/cen5789_containers/cen5789-assembly.sif tidk search --string ACACCCAT --output NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT --extension tsv --dir . NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta
 ```
 
-Agora, vamos representar graficamente o número de repetições encontradas ao longo dos maiores contigs, que podem ser potencialmente cromossomos. Certifique-se de fazer o download do script [plotTelomericRepeatPositions.R](plotTelomericRepeatPositions.R) do repostitório:
+Agora, vamos representar graficamente o número de repetições encontradas ao longo dos maiores contigs, que podem ser potencialmente cromossomos. Certifique-se de fazer o download do script [plotTelomericRepeatPositions.R](utils/plotTelomericRepeatPositions.R) do repostitório:
 
-```
+```bash
 mv ~/Downloads/plotTelomericRepeatPositions.R ~/dia4
-conda activate genomescope2
-Rscript plotTelomericRepeatPositions.R NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT_telomeric_repeat_windows.tsv
-conda deactivate
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif Rscript plotTelomericRepeatPositions.R NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.tidk.ACACCCAT_telomeric_repeat_windows.tsv
 evince Rplots.pdf
 ```
 ### Comparando as montagens
@@ -932,14 +930,11 @@ As métricas revelam diferenças significativas entre as montagens geradas pelo 
 
 O JupiterPlot é uma ferramenta valiosa que nos permitirá criar gráficos e visualizações para analisar e comparar as montagens obtidas. Essas representações visuais tornarão mais fácil identificar e compreender as variações entre as montagens, tanto entre as diferentes ferramentas (HiFiASM e Flye) quanto dentro das montagens do mesmo haplótipo (haplótipos 1 e 2 do HiFiASM). Essa abordagem visual fornecerá insights importantes para nossas análises e ajudará a orientar a próxima etapa de nosso projeto.
 
-```
-conda activate jupiterplot
-git clone https://github.com/JustinChu/JupiterPlot.git
-JupiterPlot/jupiter t=5 m=100000 name=primary_vs_hap1 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap1.p_ctg.fa  ng=100 minBundleSize=5000
-JupiterPlot/jupiter t=5 m=100000 name=primary_vs_hap2 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
-JupiterPlot/jupiter t=5 m=100000 name=hap1_vs_hap2 ref=NRRLY27205.asm.bp.hap1.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
-JupiterPlot/jupiter t=5 m=10000 name=flye_vs_primary ref=NRRLY27205.flye/assembly.fasta fa=NRRLY27205.asm.bp.p_ctg.fa ng=100 minBundleSize=5000
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif JupiterPlot/jupiter t=5 m=100000 name=primary_vs_hap1 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap1.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif JupiterPlot/jupiter t=5 m=100000 name=primary_vs_hap2 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif JupiterPlot/jupiter t=5 m=100000 name=hap1_vs_hap2 ref=NRRLY27205.asm.bp.hap1.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif JupiterPlot/jupiter t=5 m=10000 name=flye_vs_primary ref=NRRLY27205.flye/assembly.fasta fa=NRRLY27205.asm.bp.p_ctg.fa ng=100 minBundleSize=5000
 ```
 
 Aqui está a figura que compara a montagem principal (primary assembly) com o haplótipo 1 do HiFiASM. Por favor, dê uma olhada nas outras figuras para uma análise completa. Cada uma delas oferece insights valiosos sobre as diferenças e semelhanças entre as montagens, e juntas, elas nos ajudarão a compreender melhor a qualidade e precisão das montagens geradas.
@@ -960,26 +955,22 @@ Antes de realizar a predição de genes, é imperativo mascarar os scaffolds/con
 
 Se você já possui uma boa biblioteca das repetições presentes em seu genoma, pode utilizar o [NGSEP](https://github.com/NGSEP/NGSEPcore) como um mascarador rápido, nos modos TransposonsFinder e GenomeAssemblyMask. Para isso, usaremos a biblioteca do [Dfam](https://www.dfam.org/) que temos disponível em formato [FASTA](https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta). Observe que, primeiro, é necessário acessar o repositório do NGSEP e fazer o download do aplicativo através do link de Releases. Baixe tanto o software quanto a biblioteca do Dfam na pasta "dia6". Caso a pasta não exista, crie-a.
 
-```
-conda activate redotable
+```bash
 mkdir -p ~/dia6
 cd ~/dia6
 wget https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta
 wget https://github.com/NGSEP/NGSEPcore/releases/download/v5.0.0/NGSEPcore_5.0.0.jar
-java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 4
+apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 4
 #Gerando uma versão soft-masked do genoma, com as repetições em letras minúsculas
-java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats
+apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats
 #Gerando uma versão hard-masked do genoma, substituindo as bases das repetições pela letra "N"
-java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -h 
-conda deactivate
+apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -h 
 ```
 
 Quantas bases foram mascaradas? Podemos usar o programa compseq do EMBOSS para verificar isso:
 
-```
-conda activate emboss
-compseq -word 1 -outfile stdout NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa 
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-core.sif compseq -word 1 -outfile stdout NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.hardmasked.fa 
 ```
 
 Você acha que essa forma de mascaramento foi apropriada? Dica: Não, não foi suficiente.
@@ -1006,8 +997,7 @@ Vamos a anotar o genoma usando [GALBA](https://github.com/Gaius-Augustus/GALBA).
 
 Vamos usar um container do singularity para rodar mais facilmente o GALBA, para que isso funcione linque os arquivos de montagem do genoma e as proteínas para o diretório HOME.
 
-```
-conda activate singularitycew
+```bash
 singularity build galba.sif docker://katharinahoff/galba-notebook:latest
 singularity shell -B $PWD:$PWD galba.sif
 cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
