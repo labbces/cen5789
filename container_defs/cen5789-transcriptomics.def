@@ -3,7 +3,7 @@ From: mambaorg/micromamba:1.5.10
 
 %labels
     Author Diego M. Riano-Pachon
-    Description Transcriptomics environment (R + Bioconductor + tools)
+    Description CEN5789 - Transcriptomics environment (R + Bioconductor + tools)
 
 %environment
     export MAMBA_ROOT_PREFIX=/opt/conda

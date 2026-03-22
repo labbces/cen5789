@@ -1,6 +1,10 @@
 Bootstrap: docker
 From: mambaorg/micromamba:1.5.10
 
+%labels
+    Author Diego M. Riano-Pachon
+    Description CEN5789 - ReDOTable environment
+
 %post
     apt-get update && apt-get install -y \
         wget \

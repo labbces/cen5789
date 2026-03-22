@@ -1,6 +1,10 @@
 Bootstrap: docker
 From: katharinahoff/galba-notebook:latest
 
+%labels
+    Author Diego M. Riano-Pachon
+    Description CEN5789 - GALBA environment from katharinahoff/galba-notebook:latest
+
 %environment
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8

@@ -1,6 +1,10 @@
 Bootstrap: docker
 From: mambaorg/micromamba:1.5.10
 
+%labels
+    Author Diego M. Riano-Pachon
+    Description CEN5789 - Functional Annotation environment
+
 %post
     apt-get update && apt-get install -y git build-essential wget unzip \
         git \

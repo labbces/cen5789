@@ -1,6 +1,10 @@
 Bootstrap: docker
 From: mambaorg/micromamba:1.5.10
 
+%labels
+    Author Diego M. Riano-Pachon
+    Description CEN5789 - Genome assembly environment
+
 %post
     apt-get update && apt-get install -y git build-essential wget \
         libgomp1 && rm -rf /var/lib/apt/lists/*

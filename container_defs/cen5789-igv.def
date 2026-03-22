@@ -2,8 +2,8 @@ Bootstrap: docker
 From: ubuntu:22.04
 
 %labels
-    Author YourName
-    Description IGV Desktop in Apptainer
+    Author Diego M. Riano-Pachon
+    Description CEN5789 - IGV environment
 
 %environment
     export LANG=C.UTF-8

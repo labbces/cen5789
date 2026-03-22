@@ -995,16 +995,13 @@ Finalmente descarregue um arquivo com essas proteinas em formato fasta.
 
 Vamos a anotar o genoma usando [GALBA](https://github.com/Gaius-Augustus/GALBA). Outras alternativas incluem o uso do [BRAKER](https://github.com/Gaius-Augustus/BRAKER) ou [EASEL](https://gitlab.com/PlantGenomicsLab/easel), porém, essas ferramentas exigem dados de RNA-Seq e são mais intensivas em termos computacionais. Em cenários reais, a recomendação é empregar várias estratégias e gerar um conjunto de genes previstos com base nos melhores resultados das ferramentas, utilizando, por exemplo [EVidenceModeler](https://github.com/EVidenceModeler/EVidenceModeler). Sempre é importante utilizar evidência extrínseca, e na maioria dos casos, o RNA-Seq é a fonte de dados que oferece os melhores resultados.
 
-Vamos usar um container do singularity para rodar mais facilmente o GALBA, para que isso funcione linque os arquivos de montagem do genoma e as proteínas para o diretório HOME.
-
 ```bash
-singularity build galba.sif docker://katharinahoff/galba-notebook:latest
-singularity shell -B $PWD:$PWD galba.sif
-cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia5/augustus
-export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia5/augustus
+cp ~/Downloads/sequence.fasta ~/dia6
+apptainer shell /data/cen5789_containers/cen5789-annotation.sif
+cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia6/augustus
+export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia6/augustus
 galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa --prot_seq=sequence.fasta
 exit
-conda deactivate
 ```
 
 Você pode encontrar o resultado da previsão de genes na pasta GALBA. A saída do programa GALBA é gerada principalmente em três arquivos distintos:
@@ -1017,28 +1014,19 @@ A previsão de genes para GALBA pode levar um tempo considerável. Portanto, est
 
 Por favor, analise esses arquivos para compreender o conteúdo presente. Discuta com seus colegas e seu professor para obter uma compreensão completa.
 
-Após o primeiro passo de anotação estrutural do genoma, é fundamental avaliar a qualidade da anotação. Uma maneira de realizar essa avaliação é examinando a completude. Nesse contexto, esperamos que o nível de completude da anotação seja pelo menos tão bom quanto a análise da completude do espaço gênico durante a avaliação do genoma. Lembre-se de que, anteriormente, avaliamos o genoma com o software `compleasm`. No entanto, a versão atual desse programa é destinada exclusivamente à avaliação de genomas. Para avaliar a previsão de genes, utilizaremos o [BUSCO](https://busco.ezlab.org/). Para isso, faremos uso de uma imagem do BUSCO executando com o Singularity, o que simplifica significativamente a instalação do software.
+Após o primeiro passo de anotação estrutural do genoma, é fundamental avaliar a qualidade da anotação. Uma maneira de realizar essa avaliação é examinando a completude. Nesse contexto, esperamos que o nível de completude da anotação seja pelo menos tão bom quanto a análise da completude do espaço gênico durante a avaliação do genoma. Lembre-se de que, anteriormente, avaliamos o genoma com o software `compleasm`. Para isso, faremos uso de uma imagem `cen5789-assembly.sif`.
 
-```
-conda activate singularitycew
-#singularity build busco.sif docker://ezlabgva/busco:v5.5.0_cv1
-singularity shell -B $PWD:$PWD busco.sif
-busco -i GALBA/galba.aa -o GALBA_BUSCO -m protein -l saccharomycetes_odb10 --cpu 10
-exit
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm protein -p GALBA/galba.aa -o GALBA_COMPLEASM -m protein -l saccharomycetes --threads 10
 ```
 
-Os resultados do BUSCO estão disponíveis na pasta GALBA_BUSCO. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do BUSCO das proteínas previstas com os resultados do `compleasm` para o genoma montado. Quantos genes foram preditos?
+Os resultados do `compleasm` estão disponíveis na pasta GALBA_COMPLEASM. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do `compleasm` das proteínas previstas com os resultados do `compleasm` para o genoma montado. Quantos genes foram preditos?
 
 Com a conclusão da anotação estrutural, estamos prontos para iniciar a anotação funcional. Para isso, faremos uso do banco de dados [EGGNOG](http://eggnog5.embl.de/) e da ferramenta de software [Eggnog-Mapper](http://eggnog-mapper.embl.de/). Procederemos à anotação das proteínas preditas, ou seja, dos produtos gênicos, utilizando os dados relacionados aos fungos do EGGNOG.". Antes de avançarmos nos exercícios, é essencial realizar a conversão do arquivo de anotação gerado por GALBA, que está no formato GFF, para o formato GTF. Faremos essa conversão utilizando a ferramenta `gffread`. Isso é um passo importante antes de prosseguir.
 
-```
-conda activate eggnogmapper
-export EGGNOG_DATA_DIR=/home/cen5789/dia6
-gffread --keep-genes -o GALBA/galba.gff3 GALBA/galba.gtf
-download_eggnog_data.py -P  -y
-emapper.py  -m diamond --cpu 10 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --target_orthologs all --tax_scope 4751
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-funcannot.sif gffread --keep-genes -o GALBA/galba.gff3 GALBA/galba.gtf
+apptainer exec /data/cen5789_containers/cen5789-funcannot.sif emapper.py -m diamond --cpu 10 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --target_orthologs all --tax_scope 4751
 ```
 
 O que significa o número 4751? Consulte o banco de dados de [taxonomia do NCBI](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=4751).
@@ -1047,18 +1035,15 @@ O que significa o número 4751? Consulte o banco de dados de [taxonomia do NCBI]
 
 Agora, procederemos à visualização da montagem, juntamente com as leituras mapeadas nela e a anotação estrutural do genoma, usando o [Integrative Genomics Viewer (IGV)](https://igv.org/). Primeiro vamos mapear as leituras no genoma usando o `minimap2` e o `samtools`. Favor fazer uma cópia do seu arquivo de leituras na pasta de trabalho 'dia6'.
 
-```
-conda activate jupiterplot
-minimap2 -H -x map-hifi -a -t 10 NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa SRR25033384.filt.fastq.gz | samtools view -b --fast --threads 6 |samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
-samtools index NRRLY27205.asm.reads.sorted.bam
-conda deactivate
+```bash
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif minimap2 -H -x map-hifi -a -t 10 NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa SRR25033384.filt.fastq.gz | samtools view -b --fast --threads 6 |samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools index NRRLY27205.asm.reads.sorted.bam
 ```
 
 Agora podemos inicializar o IGV, que tem ambiente gráfico. Primeiramente, carregaremos a montagem no menu __"File"__ -> __"Load From File"__, utilizando o arquivo `NRRLY27205.asm.bp.hap1.p_ctg.softmasked.fa`. Em seguida, utilizando o mesmo menu, procederemos ao carregamento do arquivo com as leituras mapeadas, denominado `NRRLY27205.asm.reads.sorted.bam`. Por fim, carregaremos o arquivo contendo a anotação do genoma a partir de `GALBA/galba.gtf`. Alternativamente pode usasr a versão online do [IGV](https://igv.org/app/), junto com os dados disponiveis [aqui](https://labbces.cena.usp.br/shared/CEN5789/dia7.tar.gz).
 
-```
-conda activate igv
-igv
+```bash
+apptainer exec /data/cen5789_containers/cen5789-igv.sif igv
 ```
 
 Por exemplo, localize o contig h1tg000003l nas posições que vão de 595,987 até 616,978. Quais são os significados das regiões coloridas nas leituras? E qual é a interpretação das regiões roxas?" Que significam as linhas pretas conectando partes de uma leitura? É possível que haja um gene anotado nesta região? Aqui pode consultar a documentação do [IGV](https://igv.org/doc/desktop/#UserGuide/tracks/alignments/viewing_alignments_basics/). Tente colorir os alinhamentos com base na fita de origem da leitura.
@@ -1088,7 +1073,7 @@ Crie uma pasta com o nome `dia7` dentro do diretório $HOME. Todos os exercício
 cd
 rm -rf ~/dia7
 mkdir dia7
-cd  dia7
+cd dia7
 ```
 
 ### Descarregando os dados de repositórios públicos
@@ -1123,11 +1108,10 @@ A tabela a seguir apresenta uma lista dos números de acesso do SRA para cada am
 | 15 | DRR016139 | ros1, dml2, dml3 triple mutant | sodium chloride |
 | 16 | DRR016140 | ros1, dml2, dml3 triple mutant | drought |
 
-Vamos descarregar os links de acceso dos arquivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário ativar o ambiente Conda denominado "transcriptomics," no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
+Vamos descarregar os links de acceso dos arquivos em formato `fastq.gz` para a mostra DRR016125. Para isso, é necessário usar o container cen5789-transcriptomics.sif no qual estão instalados todos os softwares que utilizaremos nas próximas semanas.
 
-```
-conda activate transcriptomics
-ffq --ftp DRR016125
+```bash
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastq --ftp DRR016125
 ```
 
 Isso deve gerar uma saída semelhante a esta:
@@ -1160,21 +1144,10 @@ Isso deve gerar uma saída semelhante a esta:
 
 Observe que existem duas linhas que começam com "url":, que são os endereços dos arquivos fastq.gz na internet, localizados no servidor do SRA do Instituto Europeu de Bioinformática. Você pode usar esses endereços com o programa "wget" ou "curl" para fazer o download dos arquivos para o seu computador. Isso precisaria ser repetido para cada uma das amostras deste experimento.
 
-Como esses arquivos são pesados, o professor já os baixou em um servidor do [CENA](https://labbces.cena.usp.br/CEN5789/transcriptomics/RAWREADS). Os arquivos contendo as leituras de todas as amostras requerem aproximadamente 30GB de armazenamento, um espaço que talvez não esteja disponível nos computadores que estamos usando. Portanto, cada aluno fará o download de apenas um par de arquivos (R1 e R2) de uma única amostra e trabalhará apenas com eles. Dessa forma, iremos paralelizar nosso trabalho, executando os processos de verificação de qualidade, limpeza e quantificação. Após a quantificação, compartilharemos os resultados de modo que todos os alunos tenham acesso às quantificações de todos os genes em todas as amostras. Siga as instruções do professor. 
+Como esses arquivos são pesados, o professor já os deixou preparados no container `cen5789-transcriptomics.sif`, também estão em um servidor do [CENA](https://labbces.cena.usp.br/CEN5789/transcriptomics/RAWREADS). Os arquivos contendo as leituras de todas as amostras requerem aproximadamente 30GB de armazenamento, conferir quanto espaco tem disponivel no seu computador, pode usar o comando `df -h` para isso. Cada aluno fará o download de apenas um par de arquivos (R1 e R2) de uma única amostra e trabalhará apenas com eles. Dessa forma, iremos paralelizar nosso trabalho, executando os processos de verificação de qualidade, limpeza e quantificação. Após a quantificação, compartilharemos os resultados de modo que todos os alunos tenham acesso às quantificações de todos os genes em todas as amostras. Siga as instruções do professor. 
 
-Faça o download dos seus dados na pasta "RAWREADS" dentro da pasta "dia7". Se essa pasta ainda não existir, crie-a. Lembre que estamos usando o ambiente conda chamado `transcriptomics`. Lembre-se também de substituir o identificador da SUA amostra.
+Dentro do container os dados estão na pasta `/opt/data/RAWREADS/`Lembre que estamos usando o container `cen5789-transcriptomics.sif`. Lembre-se também de substituir o identificador da SUA amostra.
 
-```
-mkdir -p ~/dia7/RAWREADS
-cd ~/dia7/RAWREADS
-ID=DRR016125
-curl -O https://labbces.cena.usp.br//CEN5789/transcriptomics/RAWREADS/${ID}_[1-2].fastq.gz
-```
-Se o comando `curl` não existe, pode tentar instalar assim:
-
-```
-sudo apt install curl
-```
 ### Pre-processando os dados de RNASeq
 
 Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
@@ -1182,7 +1155,8 @@ Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
 ```
 cd ~/dia7/
 mkdir FastQC_pre
-fastqc --threads 2 --nogroup  --outdir FastQC_pre RAWREADS/${ID}_[1-2].fastq.gz
+ID=DRR016125
+apptainer exec cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_[1-2].fastq.gz
 ```
 
 Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca mRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
