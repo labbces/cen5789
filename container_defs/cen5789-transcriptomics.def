@@ -7,7 +7,7 @@ From: mambaorg/micromamba:1.5.10
 
 %environment
     export MAMBA_ROOT_PREFIX=/opt/conda
-    export PATH=/opt/conda/envs/transcriptomics/bin:$PATH
+    export PATH=/opt/conda/envs/transcriptomics/bin:/opt/salmon-latest_linux_x86_64/bin:$PATH
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8
 
@@ -15,7 +15,6 @@ From: mambaorg/micromamba:1.5.10
     tmp/RAWREADS.tar.gz /opt/data/
 
 %post
-    # System deps (for R packages + tools)
     apt-get update && apt-get install -y \
         build-essential \
         wget \
@@ -29,40 +28,52 @@ From: mambaorg/micromamba:1.5.10
         libxml2-dev \
         libfreetype6-dev \
         libfontconfig1-dev \
+        graphviz \
+        libgraphviz-dev \
         && rm -rf /var/lib/apt/lists/*
 
-    # Create micromamba env
     micromamba create -y -n transcriptomics \
         -c conda-forge -c bioconda \
         python=3.11 \
-        r-base \
+        r-base=4.5 \
         r-ggplot2 \
+        r-readr \
+        r-reshape2 \
+        r-pheatmap \
+        r-mclust \
         bioconductor-tximport \
         bioconductor-deseq2 \
+        bioconductor-topgo \
+        bioconductor-rgraphviz \
         fastqc \
         bbmap \
         multiqc \
         ffq \
         && micromamba clean --all -y
 
-    # Install additional R packages inside the env
     micromamba run -n transcriptomics R -e "
         install.packages('BiocManager', repos='https://cloud.r-project.org');
         BiocManager::install(version = '3.22', ask = FALSE, update = FALSE);
-        BiocManager::install(c('topGO','Rgraphviz'), ask = FALSE, update = FALSE);
-        install.packages(c(
-            'pheatmap','mclust','reshape2','ggplot2',
-            'readr','ggVennDiagram'
-        ), repos='https://cloud.r-project.org')
+        install.packages(
+            c('ggVennDiagram'),
+            repos='https://cloud.r-project.org'
+        )
     "
 
-    # Sanity checks (fail early if broken)
-    /opt/conda/bin/micromamba run -n transcriptomics python -c "import Bio; print('Biopython OK')"
-    /opt/conda/bin/micromamba run -n transcriptomics R -e "library(DESeq2); cat('DESeq2 OK\n')"
+    micromamba run -n transcriptomics python -c "import sys; print(sys.version)"
+    micromamba run -n transcriptomics R -e "library(DESeq2); library(tximport); library(topGO); library(Rgraphviz); cat('R/Bioc OK\n')"
 
-    # Uncompressing data
+
+    #salmon
+    cd /opt
+    https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz
+    tar xzf salmon-1.10.0_linux_x86_64.tar.gz
+    rm -rf salmon-1.10.0_linux_x86_64.tar.gz
+
+
+    #RNASeq data
     cd /opt/data/
-    tar xvzf RAWREADS.tar.gz
+    tar xzf RAWREADS.tar.gz
     rm RAWREADS.tar.gz
 
 %runscript
