@@ -48,7 +48,7 @@ From: mambaorg/micromamba:1.5.10
     # Install additional R packages inside the env
     micromamba run -n transcriptomics R -e "
         install.packages('BiocManager', repos='https://cloud.r-project.org');
-        BiocManager::install(version = '3.19', ask = FALSE, update = FALSE);
+        BiocManager::install(version = '3.22', ask = FALSE, update = FALSE);
         BiocManager::install(c('topGO','Rgraphviz'), ask = FALSE, update = FALSE);
         install.packages(c(
             'pheatmap','mclust','reshape2','ggplot2',
