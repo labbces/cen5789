@@ -14,7 +14,7 @@ From: ubuntu:22.04
 
 %files
     tmp/diamond /opt/diamond/diamond
-    gm_key ~/.gm_key
+    #gm_key ~/.gm_key
 
 %post
     set -e
@@ -33,13 +33,17 @@ From: ubuntu:22.04
         bamtools \
         libgsl-dev \
         libboost-all-dev \
-        libsuitesparse-dev liblpsolve55-dev \
-        libsqlite3-dev libmysql++-dev \
-        libboost-iostreams-dev zlib1g-dev \
+        libsuitesparse-dev \
+        liblpsolve55-dev \
+        libsqlite3-dev \
+        libmysql++-dev \
+        libboost-iostreams-dev \
         libbamtools-dev \
-        samtools libhts-dev \
-        libboost-all-dev \
-        augustus augustus-data augustus-doc \
+        samtools \
+        libhts-dev \
+        augustus \
+        augustus-data \
+        augustus-doc \
         cm-super \
         dvipng \
         ffmpeg \
@@ -56,7 +60,8 @@ From: ubuntu:22.04
         libthread-queue-perl \
         libmath-utils-perl \
         libscalar-list-utils-perl \
-        curl
+        curl \
+        man-db 
         apt clean all && \
         rm -rf /var/lib/apt/lists/*
 
@@ -130,6 +135,7 @@ From: ubuntu:22.04
     git clone   --depth=1 https://github.com/tomasbruna/miniprothint.git
 
     #augustus
+    apt-get remove -y augustus augustus-data augustus-doc
     cd /opt 
     git clone https://github.com/Gaius-Augustus/Augustus.git  
     cd Augustus 
@@ -151,6 +157,12 @@ From: ubuntu:22.04
     # braker 
     cd /opt
     git clone https://github.com/Gaius-Augustus/BRAKER.git
+
+    # GALBA
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/GALBA.git
+    cp BRAKER/scripts/compute_accuracies.sh GALBA/scripts/compute_accuracies.sh
+    cp BRAKER/scripts/compare_intervals_exact.pl GALBA/scripts/compare_intervals_exact.pl
 
     # include ETP
     cd /opt
