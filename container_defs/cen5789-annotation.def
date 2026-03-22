@@ -2,16 +2,19 @@ Bootstrap: docker
 From: ubuntu:22.04
 
 %environment
-    export PATH=:$PATH:/opt/seqstats:/opt/cdbfasta:/opt/hisat2:/opt/diamond:/opt/TSEBRA/bin:/opt/MakeHub:/opt/miniprot:/opt/GALBA/scripts:/opt/miniprot-boundary-scorer:/opt/miniprothint:/opt/conda:/opt/Augustus/scripts/:/opt/Augustus/bin/
+    export PATH=:$PATH:/opt/seqstats:/opt/cdbfasta:/opt/hisat2:/opt/diamond:/opt/TSEBRA/bin:/opt/MakeHub:/opt/miniprot:/opt/GALBA/scripts:/opt/miniprot-boundary-scorer:/opt/miniprothint:/opt/conda:/opt/Augustus/scripts/:/opt/Augustus/bin/:/opt/BRAKER/scripts
+    export PATH=${PATH}:/opt/ETP/bin:/opt/ETP/tools:/opt/ETP/bin/gmes/ProtHint/bin:/opt/ETP/bin/gmes:/opt/compleasm_kit
     export AUGUSTUS_CONFIG_PATH=/opt/Augustus/config/
     export AUGUSTUS_BIN_PATH=/opt/Augustus/bin/
     export AUGUSTUS_SCRIPTS_PATH=/opt/Augustus/scripts/
+    export GENEMARK_PATH=/opt/ETP/bin
     export MAMBA_ROOT_PREFIX=/opt/conda
     export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
 
 %files
     tmp/diamond /opt/diamond/diamond
+    gm_key ~/.gm_key
 
 %post
     set -e
@@ -138,6 +141,22 @@ From: ubuntu:22.04
     micromamba install --quiet -c bioconda -c anaconda --yes \
     biopython pandas && \
     micromamba clean  --all -f -y
+
+    # compleasm
+    cd /opt
+    wget https://github.com/huangnengCSU/compleasm/releases/download/v0.2.5/compleasm-0.2.5_x64-linux.tar.bz2
+    tar -xvjf compleasm-0.2.5_x64-linux.tar.bz2
+    rm compleasm-0.2.5_x64-linux.tar.bz2
+
+    # braker 
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/BRAKER.git
+
+    # include ETP
+    cd /opt
+    git clone https://github.com/KatharinaHoff/GeneMark-ETP.git
+    mv GeneMark-ETP ETP
+    chmod a+x /opt/ETP/bin/*py /opt/ETP/bin/*pl /opt/ETP/tools/*
 
 %runscript
     exec "$@"
