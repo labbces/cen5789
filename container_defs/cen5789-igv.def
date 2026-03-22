@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    Author YourName
+    Description IGV Desktop in Apptainer
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export IGV_HOME=/opt/igv
+    export PATH=/opt/igv:$PATH
+
+%post
+    apt-get update && apt-get install -y \
+        openjdk-21-jre \
+        wget \
+        unzip \
+        ca-certificates \
+        libxext6 \
+        libxrender1 \
+        libxtst6 \
+        libxi6 \
+        libfreetype6 \
+        libasound2 \
+        && rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /opt/igv
+    cd /opt/igv
+
+    # Replace this with the current official "Command line IGV and igvtools for all platforms" ZIP URL
+    IGV_URL="https://data.broadinstitute.org/igv/projects/downloads/2.19/IGV_2.19.7.zip"
+
+    wget -O igv.zip "$IGV_URL"
+    unzip igv.zip
+    rm -f igv.zip
+
+    # Make launchers executable if present
+    find /opt/igv -maxdepth 2 -type f \( -name "igv.sh" -o -name "igv_hidpi.sh" -o -name "igvtools" \) -exec chmod +x {} \;
+
+    # Symlink a stable launcher name
+    if [ -f /opt/igv/igv.sh ]; then
+        ln -sf /opt/igv/igv.sh /usr/local/bin/igv
+    elif [ -f /opt/igv/IGV_*/igv.sh ]; then
+        ln -sf /opt/igv/IGV_*/igv.sh /usr/local/bin/igv
+    fi
+
+%runscript
+    exec igv "$@"
