@@ -1200,7 +1200,7 @@ apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif salmon
 A última linha do bloco anterior deveria ter exibido a ajuda do programa, algo similar a:
 
 ```bash
-salmon v1.11.4
+salmon v1.10.0
 
 Usage:  salmon -h|--help or
         salmon -v|--version or
@@ -1213,8 +1213,6 @@ Commands:
      alevin     : removed; use alevin-fry for single-cell analysis
      swim       : perform super-secret operation
      quantmerge : merge multiple quantifications into a single file
-
-
 ```
 
 A referência que usaremos é composta por todos os transcritos (cDNAs) anotados no genoma de _Arabidopsis thaliana_, os quais podem ser baixados do [TAIR](https://www.arabidopsis.org), também pode encontrar o arquivo [aqui](https://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz), descarreguelo dentro da sua pasta `~/dia7/` e dentro de uma subpasta chamada `References`. Esta referência precisa ser complementada com sequências decoy, ou seja, sequências que não deveriam estar presentes para a quantificação. Neste caso, usaremos o genoma completo como decoy. Recomendo a leitura [deste articulo](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02151-8) para entender a importância do uso de decoy em análises de RNASeq.
