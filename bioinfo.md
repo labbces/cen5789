@@ -960,6 +960,7 @@ mkdir -p ~/dia6
 cd ~/dia6
 wget https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta
 wget https://github.com/NGSEP/NGSEPcore/releases/download/v5.0.0/NGSEPcore_5.0.0.jar
+cp ../dia4/NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta .
 apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 12
 #Gerando uma versão soft-masked do genoma, com as repetições em letras minúsculas
 apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats
