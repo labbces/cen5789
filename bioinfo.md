@@ -764,7 +764,7 @@ apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetme
 E, por fim, uma vez que os pares de k-mers estejam prontos, um arquivo *_text.smu deve ser gerado. Trata-se de um histograma 2D, no qual para cada combinação de covA e covB, você encontrará a frequência com que essas duas coberturas ocorrem entre os het-mers (os pares de k-mers adjacentes um do outro).
 
 ```bash
-head SRR926312_kmerpairs_k17_text.smu
+head SRR926312_kmerpairs_k17.smu
 ```
 
 Se você ver três colunas, é um bom sinal. Você pode prosseguir para finalmente plotar o SmudgePlot. Eu encorajaria você a executar `smudgeplot plot -h` para ver todas as opções e entender o que elas significam, mas um comando minimalista como este deve funcionar:
