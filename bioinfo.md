@@ -720,7 +720,7 @@ Este processo opera com leituras de sequenciamento cruas ou limpas. A partir del
 Então, por favor, construa o banco de dados utilizando o `FastK`. Este processo levará alguns minutos (15-20). Certifique-se de utilizar o arquivo de leituras correto, e eu recomendaria nomear o banco de dados com o número de acesso do SRA correspondente. Vamos realizar estas analises com varios valores de k:{17,21,31,41,51,71}, e vamos comparar os resultados. No `FastK` você pode modificar o tamanho do k-mer com o argumento `-k`.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t4 -k17 -M16 -T6 SRR926312_[12].fastq.gz -NSRR926312_k17
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t4 -k17 -M16 -T12 SRR926312_[12].fastq.gz -NSRR926312_k17
 ```
 
 Agora, Você pode obter o espectro de k-mers a partir do banco de dados usando o Histex, uma ferramenta diferente da mesma suíte.
@@ -758,7 +758,7 @@ Neste exemplo, um limite de erro significativo seria 70x. Como regra geral, nenh
 O limite de erro é especificado pelo parâmetro '-L'. Temos 4 núcleos na nossa máquina, então você também pode executar a busca de pares de k-mers em paralelo (parâmetro -t). Ao executar, não se esqueça de usar os nomes de SUA amostra, e não o exemplo fornecido.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 70 -t 4 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 70 -t 12 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
 ```
 
 E, por fim, uma vez que os pares de k-mers estejam prontos, um arquivo *_text.smu deve ser gerado. Trata-se de um histograma 2D, no qual para cada combinação de covA e covB, você encontrará a frequência com que essas duas coberturas ocorrem entre os het-mers (os pares de k-mers adjacentes um do outro).
@@ -812,10 +812,10 @@ Vamos processá-lo com o GenomeScope2 para obter uma ideia das principais métri
 ```bash
 export TMPDIR=~/dia3/espectro/tmp
 mkdir -p $TMPDIR
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t16 -k31 -M16 -T6 SRR25033384.filt.fastq.gz -NSRR25033384_k31
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t16 -k31 -M16 -T12 SRR25033384.filt.fastq.gz -NSRR25033384_k31
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif Histex -G SRR25033384_k31 > SRR25033384_k31.histo
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 18 -t 6 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 18 -t 12 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot all -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs.smu
 ```
 
@@ -834,7 +834,7 @@ Vamos prosseguir com o processo de montagem. Utilizaremos dois montadores e comp
 #### Hifiasm
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif hifiasm -f0 -o NRRLY27205.asm -t 5 SRR25033384.filt.fastq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif hifiasm -f0 -o NRRLY27205.asm -t 12 SRR25033384.filt.fastq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap1.p_ctg.gfa > NRRLY27205.asm.bp.hap1.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap2.p_ctg.gfa > NRRLY27205.asm.bp.hap2.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.p_ctg.gfa > NRRLY27205.asm.bp.p_ctg.fa
@@ -845,7 +845,7 @@ A montagem deve levar cerca de 30 minutos, considerando o uso de 5 threads e req
 #### Flye
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif flye --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif flye --threads 12 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
 
 ```
 
@@ -882,10 +882,10 @@ Revisite o arquivo report.html e analise cuidadosamente os valores de NG50 e o t
 ##### Espaço gênico
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 12
 ```
 
 Por favor, elabore uma tabela que apresente os resultados obtidos com o `compleasm`.
