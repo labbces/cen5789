@@ -1,20 +1,20 @@
-# doing 192.168.112.15 pg-sala001
-# doing 192.168.112.247 pg-sala002
+# done 192.168.112.15 pg-sala001
+# done 192.168.112.247 pg-sala002
 # done 192.168.112.30 pg-sala003
-# doing 192.168.112.150 pg-sala004
+# done 192.168.112.150 pg-sala004
 # done 192.168.112.36 pg-sala005
-# doing 192.168.112.38 pg-sala006
-# doing 192.168.112.213 pg-sala007
-# doing 192.168.112.181 pg-sala008
-192.168.112.23 pg-sala009
-192.168.112.45 pg-sala010
-192.168.112.31 pg-sala011
-192.168.112.85 pg-sala012
-192.168.112.182 pg-sala013
-192.168.112.42 pg-sala014
-192.168.112.226 pg-sala015
-192.168.112.195 pg-sala016
-192.168.112.39 pg-sala017
-#192.168.112.0000 pg-sala018
-192.168.112.19 pg-sala019
-#192.168.112.0000 pg-sala020
+# done 192.168.112.38 pg-sala006
+# done 192.168.112.213 pg-sala007
+# done 192.168.112.181 pg-sala008
+# done 192.168.112.23 pg-sala009
+# done 192.168.112.45 pg-sala010
+# done 192.168.112.31 pg-sala011
+# done 192.168.112.85 pg-sala012
+# done 192.168.112.182 pg-sala013
+# done 192.168.112.42 pg-sala014
+# done 192.168.112.226 pg-sala015
+# done 192.168.112.195 pg-sala016
+# done 192.168.112.39 pg-sala017
+# dead 192.168.112.0000 pg-sala018
+# done 192.168.112.19 pg-sala019
+# dead 192.168.112.0000 pg-sala020
