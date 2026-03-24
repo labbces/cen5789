@@ -720,7 +720,7 @@ Este processo opera com leituras de sequenciamento cruas ou limpas. A partir del
 Então, por favor, construa o banco de dados utilizando o `FastK`. Este processo levará alguns minutos (15-20). Certifique-se de utilizar o arquivo de leituras correto, e eu recomendaria nomear o banco de dados com o número de acesso do SRA correspondente. Vamos realizar estas analises com varios valores de k:{17,21,31,41,51,71}, e vamos comparar os resultados. No `FastK` você pode modificar o tamanho do k-mer com o argumento `-k`.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t4 -k17 -M16 -T6 SRR926312_[12].fastq.gz -NSRR926312_k17
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t4 -k17 -M16 -T12 SRR926312_[12].fastq.gz -NSRR926312_k17
 ```
 
 Agora, Você pode obter o espectro de k-mers a partir do banco de dados usando o Histex, uma ferramenta diferente da mesma suíte.
@@ -758,13 +758,13 @@ Neste exemplo, um limite de erro significativo seria 70x. Como regra geral, nenh
 O limite de erro é especificado pelo parâmetro '-L'. Temos 4 núcleos na nossa máquina, então você também pode executar a busca de pares de k-mers em paralelo (parâmetro -t). Ao executar, não se esqueça de usar os nomes de SUA amostra, e não o exemplo fornecido.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 70 -t 4 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 70 -t 12 -o SRR926312_kmerpairs_k17 --verbose  SRR926312_k17.ktab
 ```
 
 E, por fim, uma vez que os pares de k-mers estejam prontos, um arquivo *_text.smu deve ser gerado. Trata-se de um histograma 2D, no qual para cada combinação de covA e covB, você encontrará a frequência com que essas duas coberturas ocorrem entre os het-mers (os pares de k-mers adjacentes um do outro).
 
 ```bash
-head SRR926312_kmerpairs_k17_text.smu
+head SRR926312_kmerpairs_k17.smu
 ```
 
 Se você ver três colunas, é um bom sinal. Você pode prosseguir para finalmente plotar o SmudgePlot. Eu encorajaria você a executar `smudgeplot plot -h` para ver todas as opções e entender o que elas significam, mas um comando minimalista como este deve funcionar:
@@ -812,10 +812,10 @@ Vamos processá-lo com o GenomeScope2 para obter uma ideia das principais métri
 ```bash
 export TMPDIR=~/dia3/espectro/tmp
 mkdir -p $TMPDIR
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t16 -k31 -M16 -T6 SRR25033384.filt.fastq.gz -NSRR25033384_k31
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif FastK -v -t16 -k31 -M16 -T12 SRR25033384.filt.fastq.gz -NSRR25033384_k31
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif Histex -G SRR25033384_k31 > SRR25033384_k31.histo
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif genomescope2 --input SRR25033384_k31.histo --output SRR25033384_k31.genomescope2 --ploidy 2 --kmer_length 31 --name_prefix SRR25033384_k31
-apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 18 -t 6 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
+apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot hetmers -L 18 -t 12 --verbose -o SRR25033384_k31_pairs SRR25033384_k31.ktab
 apptainer exec /data/cen5789_containers/cen5789-genomescope.sif smudgeplot all -o SRR25033384_k31_smudgeplot SRR25033384_k31_pairs.smu
 ```
 
@@ -834,22 +834,22 @@ Vamos prosseguir com o processo de montagem. Utilizaremos dois montadores e comp
 #### Hifiasm
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif hifiasm -f0 -o NRRLY27205.asm -t 5 SRR25033384.filt.fastq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif hifiasm -f0 -o NRRLY27205.asm -t 12 SRR25033384.filt.fastq.gz >  NRRLY27205.hifiasm.log 2> NRRLY27205.hifiasm.log
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap1.p_ctg.gfa > NRRLY27205.asm.bp.hap1.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.hap2.p_ctg.gfa > NRRLY27205.asm.bp.hap2.p_ctg.fa
 awk '/^S/{print ">"$2;print $3}' NRRLY27205.asm.bp.p_ctg.gfa > NRRLY27205.asm.bp.p_ctg.fa
 ```
 
-A montagem deve levar cerca de 30 minutos, considerando o uso de 5 threads e requerendo aproximadamente 16 GB de RAM.
+A montagem deve levar cerca de 15 minutos, considerando o uso de 12 threads e requerendo aproximadamente 3 GB de RAM.
 
 #### Flye
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif flye --threads 5 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif flye --threads 12 --pacbio-hifi SRR25033384.filt.fastq.gz --out-dir NRRLY27205.flye > NRRLY27205.flye.log 2> NRRLY27205.flye.log
 
 ```
 
-A montagem deve levar cerca de 45 minutos, considerando o uso de 5 threads e requerendo aproximadamente 7.5 GB de RAM.
+A montagem deve levar cerca de 17 minutos, considerando o uso de 12 threads e requerendo aproximadamente 7.5 GB de RAM.
 
 ### Examinando as montagens.
 
@@ -882,10 +882,10 @@ Revisite o arquivo report.html e analise cuidadosamente os valores de NG50 e o t
 ##### Espaço gênico
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 5
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 5
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap1.p_ctg.fa -o NRRLY27205.asm.bp.hap1.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.hap2.p_ctg.fa -o NRRLY27205.asm.bp.hap2.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.asm.bp.p_ctg.fa -o NRRLY27205.asm.bp.p_ctg.compleasm -l saccharomycetes -t 12
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm run -a NRRLY27205.flye/assembly.fasta -o NRRLY27205.flye/assembly.compleasm -l saccharomycetes -t 12
 ```
 
 Por favor, elabore uma tabela que apresente os resultados obtidos com o `compleasm`.
@@ -931,10 +931,10 @@ As métricas revelam diferenças significativas entre as montagens geradas pelo 
 O JupiterPlot é uma ferramenta valiosa que nos permitirá criar gráficos e visualizações para analisar e comparar as montagens obtidas. Essas representações visuais tornarão mais fácil identificar e compreender as variações entre as montagens, tanto entre as diferentes ferramentas (HiFiASM e Flye) quanto dentro das montagens do mesmo haplótipo (haplótipos 1 e 2 do HiFiASM). Essa abordagem visual fornecerá insights importantes para nossas análises e ajudará a orientar a próxima etapa de nosso projeto.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=5 m=100000 name=primary_vs_hap1 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap1.p_ctg.fa  ng=100 minBundleSize=5000
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=5 m=100000 name=primary_vs_hap2 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=5 m=100000 name=hap1_vs_hap2 ref=NRRLY27205.asm.bp.hap1.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=5 m=10000 name=flye_vs_primary ref=NRRLY27205.flye/assembly.fasta fa=NRRLY27205.asm.bp.p_ctg.fa ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=12 m=100000 name=primary_vs_hap1 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap1.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=12 m=100000 name=primary_vs_hap2 ref=NRRLY27205.asm.bp.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=12 m=100000 name=hap1_vs_hap2 ref=NRRLY27205.asm.bp.hap1.p_ctg.fa fa=NRRLY27205.asm.bp.hap2.p_ctg.fa  ng=100 minBundleSize=5000
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif jupiter t=12 m=10000 name=flye_vs_primary ref=NRRLY27205.flye/assembly.fasta fa=NRRLY27205.asm.bp.p_ctg.fa ng=100 minBundleSize=5000
 ```
 
 Aqui está a figura que compara a montagem principal (primary assembly) com o haplótipo 1 do HiFiASM. Por favor, dê uma olhada nas outras figuras para uma análise completa. Cada uma delas oferece insights valiosos sobre as diferenças e semelhanças entre as montagens, e juntas, elas nos ajudarão a compreender melhor a qualidade e precisão das montagens geradas.
@@ -960,7 +960,8 @@ mkdir -p ~/dia6
 cd ~/dia6
 wget https://labbces.cena.usp.br/shared/CEN5789/dia6/Dfam_curatedonly.fasta
 wget https://github.com/NGSEP/NGSEPcore/releases/download/v5.0.0/NGSEPcore_5.0.0.jar
-apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 4
+cp ../dia4/NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta .
+apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar TransposonsFinder -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats -d Dfam_curatedonly.fasta -t 12
 #Gerando uma versão soft-masked do genoma, com as repetições em letras minúsculas
 apptainer exec /data/cen5789_containers/cen5789-redotable.sif java -jar NGSEPcore_5.0.0.jar GenomeAssemblyMask -i NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.fasta -o NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa -d NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.repeats
 #Gerando uma versão hard-masked do genoma, substituindo as bases das repetições pela letra "N"
@@ -1000,7 +1001,7 @@ cp ~/Downloads/sequence.fasta ~/dia6
 apptainer shell /data/cen5789_containers/cen5789-annotation.sif
 cp -r $AUGUSTUS_CONFIG_PATH/ /home/cen5789/dia6/augustus
 export AUGUSTUS_CONFIG_PATH=/home/cen5789/dia6/augustus
-galba.pl --threads=10 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa --prot_seq=sequence.fasta
+galba.pl --threads=12 --species=KazachstaniaBulderi --genome=NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa --prot_seq=sequence.fasta
 exit
 ```
 
@@ -1017,7 +1018,7 @@ Por favor, analise esses arquivos para compreender o conteúdo presente. Discuta
 Após o primeiro passo de anotação estrutural do genoma, é fundamental avaliar a qualidade da anotação. Uma maneira de realizar essa avaliação é examinando a completude. Nesse contexto, esperamos que o nível de completude da anotação seja pelo menos tão bom quanto a análise da completude do espaço gênico durante a avaliação do genoma. Lembre-se de que, anteriormente, avaliamos o genoma com o software `compleasm`. Para isso, faremos uso de uma imagem `cen5789-assembly.sif`.
 
 ```bash
-apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm protein -p GALBA/galba.aa -o GALBA_COMPLEASM -m protein -l saccharomycetes --threads 10
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif compleasm protein -p GALBA/galba.aa -o GALBA_COMPLEASM -m protein -l saccharomycetes --threads 12
 ```
 
 Os resultados do `compleasm` estão disponíveis na pasta GALBA_COMPLEASM. Por favor, examine os vários arquivos e discuta-os com seus colegas e seu professor. Compare os resultados do `compleasm` das proteínas previstas com os resultados do `compleasm` para o genoma montado. Quantos genes foram preditos?
@@ -1026,7 +1027,7 @@ Com a conclusão da anotação estrutural, estamos prontos para iniciar a anota�
 
 ```bash
 apptainer exec /data/cen5789_containers/cen5789-funcannot.sif gffread --keep-genes -o GALBA/galba.gff3 GALBA/galba.gtf
-apptainer exec /data/cen5789_containers/cen5789-funcannot.sif emapper.py -m diamond --cpu 10 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --target_orthologs all --tax_scope 4751
+apptainer exec /data/cen5789_containers/cen5789-funcannot.sif emapper.py -m diamond --cpu 12 --itype proteins -i GALBA/galba.aa -o GALBA_EGGNOG --decorate_gff GALBA/galba.gtf --target_orthologs all --tax_scope 4751
 ```
 
 O que significa o número 4751? Consulte o banco de dados de [taxonomia do NCBI](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=4751).
@@ -1036,7 +1037,7 @@ O que significa o número 4751? Consulte o banco de dados de [taxonomia do NCBI]
 Agora, procederemos à visualização da montagem, juntamente com as leituras mapeadas nela e a anotação estrutural do genoma, usando o [Integrative Genomics Viewer (IGV)](https://igv.org/). Primeiro vamos mapear as leituras no genoma usando o `minimap2` e o `samtools`. Favor fazer uma cópia do seu arquivo de leituras na pasta de trabalho 'dia6'.
 
 ```bash
- apptainer exec /data/cen5789_containers/cen5789-assembly.sif minimap2 -H -x map-hifi -a -t 30 NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa SRR25033384.filt.fastq.gz |  apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
+apptainer exec /data/cen5789_containers/cen5789-assembly.sif minimap2 -H -x map-hifi -a -t 12 NRRLY27205.asm.bp.hap1.p_ctg.g100kbp.softmasked.fa SRR25033384.filt.fastq.gz |  apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools sort --threads 6 -o NRRLY27205.asm.reads.sorted.bam
 apptainer exec /data/cen5789_containers/cen5789-assembly.sif samtools index NRRLY27205.asm.reads.sorted.bam
 ```
 
@@ -1156,8 +1157,8 @@ Vamos a conferir a qualidade do sequenciamento usando o programa `fastqc`
 cd ~/dia7/
 mkdir FastQC_pre
 ID=DRR016125
-apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_1.fastq.gz
-apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --threads 2 --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_2.fastq.gz
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_1.fastq.gz
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif fastqc --nogroup  --outdir FastQC_pre /opt/data/RAWREADS/${ID}_2.fastq.gz
 ```
 
 Visualize os resultados e tome as decisões necessárias para realizar a limpeza das leituras. Lembre-se de que as bibliotecas dessas amostras foram criadas usando a tecnologia [TruSeq](https://www.illumina.com/content/dam/illumina-marketing/documents/products/datasheets/datasheet_truseq_sample_prep_kits.pdf), que pesca mRNA poliadenilados, e o cDNA foi gerado com iniciadores aleatórios (_random primers_).
@@ -1168,7 +1169,7 @@ Primeiro removemos adaptadores:
 
 ```bash
 cd ~/dia7
-apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=/opt/data/RAWREADS/${ID}_1.fastq.gz in2=/opt/data/RAWREADS/${ID}_2.fastq.gz out=CLEANREADS/${ID}_cleana_1.fastq.gz out2=CLEANREADS/${ID}_cleana_2.fastq.gz ref=adapters refstats=CLEANREADS/${ID}_cleana_adapters_refstats ktrim=r threads=10
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=/opt/data/RAWREADS/${ID}_1.fastq.gz in2=/opt/data/RAWREADS/${ID}_2.fastq.gz out=CLEANREADS/${ID}_cleana_1.fastq.gz out2=CLEANREADS/${ID}_cleana_2.fastq.gz ref=adapters refstats=CLEANREADS/${ID}_cleana_adapters_refstats ktrim=r threads=12
 ```
 
 Agora, vamos filtrar (excluir) as leituras que correspondem ao rRNA, utilizando como entrada as leituras nas quais os adaptadores foram removidos no passo anterior. Mas antes de prosseguirmos, é necessário fazer o download do banco de dados contendo as sequências de rRNA. Este banco é derivado do [SILVA NR](https://www.arb-silva.de/), e as sequências foram agrupadas com 90% de identidade.
@@ -1181,7 +1182,7 @@ wget https://labbces.cena.usp.br//CEN5789/transcriptomics/References/rRNA.tar.gz
 tar xvzf rRNA.tar.gz
 rm -rf rRNA.tar.gz
 cd ..
-apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=CLEANREADS/${ID}_cleana_1.fastq.gz in2=CLEANREADS/${ID}_cleana_2.fastq.gz out=CLEANREADS/${ID}_cleanf_1.fastq.gz out2=CLEANREADS/${ID}_cleanf_2.fastq.gz ref=References/rRNA_LSU_SILVA_Archaea.nr90.fasta,References/rRNA_LSU_SILVA_Bacteria.nr90.fasta,References/rRNA_LSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Archaea.nr90.fasta,References/rRNA_SSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Bacteria.nr90.fasta ktrim=f threads=10  minlength=85 refstats=CLEANREADS/${ID}_cleanf_rRNA_refstats
+apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif bbduk.sh in=CLEANREADS/${ID}_cleana_1.fastq.gz in2=CLEANREADS/${ID}_cleana_2.fastq.gz out=CLEANREADS/${ID}_cleanf_1.fastq.gz out2=CLEANREADS/${ID}_cleanf_2.fastq.gz ref=References/rRNA_LSU_SILVA_Archaea.nr90.fasta,References/rRNA_LSU_SILVA_Bacteria.nr90.fasta,References/rRNA_LSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Archaea.nr90.fasta,References/rRNA_SSU_SILVA_Eukarya.nr90.fasta,References/rRNA_SSU_SILVA_Bacteria.nr90.fasta ktrim=f threads=12  minlength=85 refstats=CLEANREADS/${ID}_cleanf_rRNA_refstats
 ```
 
 Confira o arquivo `*_cleanf_rRNA_refstats` dentro da pasta `CLEANEADS`. Uma proporção elevada de leituras de rRNA pode indicar problemas com a amostra. Se teve algum problema realizando a limpeza das leituras, pode descarregar os arquivos já limpos [aqui](https://labbces.cena.usp.br//CEN5789/transcriptomics/CLEANREADS/).
@@ -1199,7 +1200,7 @@ apptainer exec /data/cen5789_containers/cen5789-transcriptomics.sif salmon
 A última linha do bloco anterior deveria ter exibido a ajuda do programa, algo similar a:
 
 ```bash
-salmon v1.11.4
+salmon v1.10.0
 
 Usage:  salmon -h|--help or
         salmon -v|--version or
@@ -1212,8 +1213,6 @@ Commands:
      alevin     : removed; use alevin-fry for single-cell analysis
      swim       : perform super-secret operation
      quantmerge : merge multiple quantifications into a single file
-
-
 ```
 
 A referência que usaremos é composta por todos os transcritos (cDNAs) anotados no genoma de _Arabidopsis thaliana_, os quais podem ser baixados do [TAIR](https://www.arabidopsis.org), também pode encontrar o arquivo [aqui](https://labbces.cena.usp.br//CEN5789/transcriptomics/References/TAIR10_cdna_20101214_updated.gz), descarreguelo dentro da sua pasta `~/dia7/` e dentro de uma subpasta chamada `References`. Esta referência precisa ser complementada com sequências decoy, ou seja, sequências que não deveriam estar presentes para a quantificação. Neste caso, usaremos o genoma completo como decoy. Recomendo a leitura [deste articulo](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-020-02151-8) para entender a importância do uso de decoy em análises de RNASeq.

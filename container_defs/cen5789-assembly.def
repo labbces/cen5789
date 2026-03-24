@@ -7,7 +7,7 @@ From: mambaorg/micromamba:1.5.10
 
 %post
     apt-get update && apt-get install -y git build-essential wget \
-        libgomp1 && rm -rf /var/lib/apt/lists/*
+        libgomp1 libgl1 && rm -rf /var/lib/apt/lists/*
 
     micromamba create -y -n assembly -c conda-forge -c bioconda \
         flye \
